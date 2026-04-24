@@ -54,12 +54,7 @@ export default function Carousel() {
           id={`project-${item.id}`}
           key={item.id}
         >
-          <a
-            className="project-inner"
-            href={item.url}
-            target="_blank"
-            rel="noreferrer"
-          >
+          <div className="project-inner">
             <header className="project-header">
               <p className="project-index">Project {item.id}</p>
               <h2>{item.title}</h2>
@@ -107,7 +102,7 @@ export default function Carousel() {
                 <span>View Project →</span>
               </div>
             </div>
-          </a>
+          </div>
         </article>
       ))}
     </section>

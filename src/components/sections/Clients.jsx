@@ -11,9 +11,8 @@ export default function Clients() {
       <div className="marquee">
         <div className="marquee-track">
           {row.map((c, i) => (
-            <span className="marquee-item" key={i}>
-              <span className="bullet">◯</span>
-              {c}
+            <span className="marquee-item" key={i} title={c.name}>
+              <img src={c.logo} alt={c.name} loading="lazy" />
             </span>
           ))}
         </div>

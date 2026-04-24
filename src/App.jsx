@@ -30,6 +30,22 @@ export default function App() {
     // viewport — without this hook, ScrollTrigger reads the native scroll
     // (which Lenis has already intercepted) and pins drift.
     lenis.on("scroll", ScrollTrigger.update);
+
+    let lastY = 0;
+    lenis.on("scroll", ({ scroll }) => {
+      const y = scroll;
+      const delta = y - lastY;
+      const SHOW_AT_TOP = 80;
+      const THRESHOLD = 6;
+      if (y < SHOW_AT_TOP) {
+        document.body.classList.remove("chrome-hidden");
+      } else if (delta > THRESHOLD) {
+        document.body.classList.add("chrome-hidden");
+      } else if (delta < -THRESHOLD) {
+        document.body.classList.remove("chrome-hidden");
+      }
+      lastY = y;
+    });
     const tick = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
@@ -37,6 +53,7 @@ export default function App() {
       gsap.ticker.remove(tick);
       lenis.destroy();
       lenisInstance = null;
+      document.body.classList.remove("chrome-hidden");
     };
   }, []);
 

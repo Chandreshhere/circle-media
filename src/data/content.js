@@ -132,9 +132,22 @@ export const testimonials = [
 ];
 
 export const clients = [
-  "Investitute", "Northbound", "Halcyon", "Aperture",
-  "Formative", "Lumen", "Vantage", "Orbit",
-  "Meridian", "Solace", "Fable", "Kinfolk"
+  { name: "Park Avenue",           logo: "/logos/park-avenue.jpg" },
+  { name: "Pro Brew Republic",     logo: "/logos/pro-brew-republic.jpeg" },
+  { name: "Madmix",                logo: "/logos/madmix.png" },
+  { name: "Park Avenue Beer Shampoo", logo: "/logos/park-avenue-beer-shampoo.png" },
+  { name: "CamPure",               logo: "/logos/campure.jpg" },
+  { name: "Tushar Enterprises",    logo: "/logos/tushar.png" },
+  { name: "Zawaa",                 logo: "/logos/zawaa.jpg" },
+  { name: "Adam's Ale",            logo: "/logos/adams-ale.jpg" },
+  { name: "Currygram",             logo: "/logos/currygram.png" },
+  { name: "Exprto",                logo: "/logos/exprto.webp" },
+  { name: "Investitute",           logo: "/logos/investitute.jpg" },
+  { name: "Eduvest Connect",       logo: "/logos/eduvest-connect.png" },
+  { name: "SRF",                   logo: "/logos/srf.png" },
+  { name: "Outrider",              logo: "/logos/outrider.webp" },
+  { name: "Swastik Habitates",     logo: "/logos/swastik.png" },
+  { name: "Niket Mangal Group",    logo: "/logos/nm-group.png" },
 ];
 
 export const navLinks = [

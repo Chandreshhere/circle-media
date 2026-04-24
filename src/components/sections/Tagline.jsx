@@ -34,9 +34,9 @@ export default function Tagline() {
 
     const trig = ScrollTrigger.create({
       trigger: root,
-      start: "top 75%",
-      end: "bottom 25%",
-      scrub: true,
+      start: "top 95%",
+      end: "center 60%",
+      scrub: 0.4,
       onUpdate: (self) => {
         const progress = self.progress;
         const total = words.length;
