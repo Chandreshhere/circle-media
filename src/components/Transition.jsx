@@ -13,10 +13,9 @@ export default function Transition({ pathname }) {
       gsap.set(blocks, { scaleY: 1, transformOrigin: "top" });
       gsap.to(blocks, {
         scaleY: 0,
-        duration: 0.6,
-        stagger: 0.04,
-        ease: "power3.inOut",
-        delay: 0.1,
+        duration: 0.35,
+        stagger: 0.015,
+        ease: "power3.out",
       });
       return;
     }
@@ -24,16 +23,16 @@ export default function Transition({ pathname }) {
     tl.set(blocks, { scaleY: 0, transformOrigin: "top" });
     tl.to(blocks, {
       scaleY: 1,
-      duration: 0.45,
-      stagger: 0.04,
-      ease: "power3.inOut",
+      duration: 0.22,
+      stagger: 0.012,
+      ease: "power3.in",
     });
     tl.set(blocks, { transformOrigin: "bottom" });
     tl.to(blocks, {
       scaleY: 0,
-      duration: 0.45,
-      stagger: 0.04,
-      ease: "power3.inOut",
+      duration: 0.22,
+      stagger: 0.012,
+      ease: "power3.out",
     });
   }, [pathname]);
 

@@ -32,19 +32,30 @@ export default function App() {
     lenis.on("scroll", ScrollTrigger.update);
 
     let lastY = 0;
+    let dirAnchor = 0;
+    let currentDir = 0;
     lenis.on("scroll", ({ scroll }) => {
       const y = scroll;
       const delta = y - lastY;
-      const SHOW_AT_TOP = 80;
-      const THRESHOLD = 6;
-      if (y < SHOW_AT_TOP) {
+      lastY = y;
+      if (y < 80) {
         document.body.classList.remove("chrome-hidden");
-      } else if (delta > THRESHOLD) {
+        dirAnchor = y;
+        currentDir = 0;
+        return;
+      }
+      if (Math.abs(delta) < 0.5) return;
+      const dir = delta > 0 ? 1 : -1;
+      if (dir !== currentDir) {
+        currentDir = dir;
+        dirAnchor = y;
+      }
+      const moved = Math.abs(y - dirAnchor);
+      if (dir === 1 && moved > 40) {
         document.body.classList.add("chrome-hidden");
-      } else if (delta < -THRESHOLD) {
+      } else if (dir === -1 && moved > 20) {
         document.body.classList.remove("chrome-hidden");
       }
-      lastY = y;
     });
     const tick = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
