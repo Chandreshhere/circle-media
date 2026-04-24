@@ -1,0 +1,82 @@
+.reveal-hero,
+.reveal-img-holder {
+  width: 100vw;
+  height: 100svh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.reveal-hero {
+  flex-direction: column;
+  padding: 2em;
+  overflow: hidden;
+}
+
+.reveal-header-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 0.25em;
+}
+
+.reveal-header h1 {
+  font-size: clamp(4rem, 18vw, 16rem);
+  line-height: 0.9;
+  margin: 0;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.reveal-header {
+  position: relative;
+}
+
+.reveal-header-1 {
+  align-self: flex-start;
+  z-index: 1;
+}
+
+.reveal-header-2 {
+  align-self: flex-end;
+  z-index: 10;
+}
+
+.reveal-hero-footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 1em;
+  gap: 2em;
+}
+
+.reveal-hero-footer .mn {
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.reveal-img-holder {
+  padding: 0;
+}
+
+.reveal-img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  transform: translateY(-110%) scale(1) rotate(-15deg);
+  will-change: transform;
+}
+
+.reveal-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

@@ -1,0 +1,225 @@
+.carousel {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.project {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+}
+
+.project-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 10vh 7vw;
+  background: radial-gradient(
+      120% 90% at 85% 10%,
+      rgba(201, 255, 61, 0.12) 0%,
+      transparent 50%
+    ),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
+  color: var(--text);
+  overflow: hidden;
+}
+
+/* Per-project accent tints so each slide reads distinct during the stack reveal */
+#project-01 .project-inner {
+  background: radial-gradient(
+      120% 90% at 82% 14%,
+      rgba(201, 255, 61, 0.14) 0%,
+      transparent 55%
+    ),
+    linear-gradient(180deg, #0d0e0a 0%, var(--bg) 100%);
+}
+#project-02 .project-inner {
+  background: radial-gradient(
+      120% 90% at 15% 18%,
+      rgba(139, 92, 255, 0.18) 0%,
+      transparent 55%
+    ),
+    linear-gradient(180deg, #0c0a14 0%, var(--bg) 100%);
+}
+#project-03 .project-inner {
+  background: radial-gradient(
+      120% 90% at 80% 80%,
+      rgba(255, 120, 90, 0.15) 0%,
+      transparent 55%
+    ),
+    linear-gradient(180deg, #120e0c 0%, var(--bg) 100%);
+}
+#project-04 .project-inner {
+  background: radial-gradient(
+      120% 90% at 18% 85%,
+      rgba(90, 200, 255, 0.16) 0%,
+      transparent 55%
+    ),
+    linear-gradient(180deg, #080f14 0%, var(--bg) 100%);
+}
+
+.project-header {
+  max-width: 30ch;
+}
+
+.project-index {
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.project-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 8rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  font-style: normal;
+  margin: 0;
+  color: var(--text);
+}
+
+.project-tagline {
+  margin: 1.25rem 0 0;
+  font-size: clamp(1.1rem, 1.5vw, 1.5rem);
+  line-height: 1.35;
+  max-width: 36ch;
+  color: var(--text);
+  opacity: 0.82;
+  text-transform: none;
+  letter-spacing: 0.005em;
+  font-weight: 400;
+}
+
+.project-body {
+  position: absolute;
+  right: 7vw;
+  top: 22vh;
+  max-width: 36vw;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.project-stats {
+  display: flex;
+  gap: 3rem;
+}
+
+.project-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: flex-end;
+}
+
+.project-stat-v {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 6rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+}
+
+.project-stat-k {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.85;
+  font-weight: 500;
+}
+
+.project-services,
+.project-clients {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: right;
+}
+
+.project-services li,
+.project-clients li {
+  font-size: clamp(1rem, 1.4vw, 1.35rem);
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  text-transform: none;
+  color: var(--text);
+  opacity: 0.88;
+  font-weight: 500;
+}
+
+.project-clients li {
+  font-family: var(--font-body);
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+.project-info {
+  position: absolute;
+  bottom: 3rem;
+  left: 7vw;
+  right: 7vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+}
+
+.project-tags {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.project-tags p {
+  color: var(--text-dim);
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.project-url span {
+  color: var(--accent);
+  padding: 0.7rem 1.15rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .project-inner { padding: 8vh 6vw; }
+  .project-body {
+    position: static;
+    align-items: flex-start;
+    text-align: left;
+    max-width: 100%;
+    margin-top: 3rem;
+    gap: 1.75rem;
+  }
+  .project-services,
+  .project-clients { text-align: left; }
+  .project-stat { align-items: flex-start; }
+  .project-stats { gap: 2rem; }
+}

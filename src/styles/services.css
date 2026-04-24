@@ -1,0 +1,70 @@
+.services {
+  position: relative;
+  width: 100%;
+  padding: 12rem 1.25rem 8rem;
+  background: var(--bg);
+}
+
+.services .section-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6rem;
+  color: var(--text-dim);
+}
+
+.services .wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.service {
+  display: grid;
+  grid-template-columns: 80px 1fr 1.2fr;
+  gap: 3rem;
+  padding: 3rem 0;
+  border-top: 1px solid var(--border);
+  align-items: start;
+}
+
+.service:last-child { border-bottom: 1px solid var(--border); }
+
+.service .index p {
+  color: var(--text-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+.service .title h3 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 3.6vw, 3.6rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--text);
+}
+
+.service .copy p {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  line-height: 1.55;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text-dim);
+  max-width: 40ch;
+}
+
+.service .char {
+  display: inline-block;
+  position: relative;
+}
+
+.service .line {
+  display: block;
+  overflow: hidden;
+}
+
+@media (max-width: 820px) {
+  .service { grid-template-columns: 40px 1fr; }
+  .service .copy { grid-column: 1 / -1; }
+}
