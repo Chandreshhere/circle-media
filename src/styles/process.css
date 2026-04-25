@@ -4,8 +4,6 @@
   padding: 10rem 1.25rem;
   background: var(--bg);
   overflow: hidden;
-  /* Sits above the pinned .hero-inner (pinSpacing:false) so as this section
-     scrolls up into view during the pin, it covers the fixed ring. */
   z-index: 2;
 }
 
@@ -74,5 +72,28 @@
 }
 
 @media (max-width: 900px) {
-  .process-grid { grid-template-columns: 1fr; }
+  .process { padding: 5rem 1.25rem; }
+  .process .process-head {
+    flex-direction: column;
+    gap: 1.25rem;
+    margin: 0 auto 2.5rem;
+  }
+  /* 2x2 grid — left column left-aligned, right column right-aligned. */
+  .process-grid { grid-template-columns: 1fr 1fr; }
+  .process-step { min-height: auto; padding: 1.75rem 1.1rem; gap: 1rem; }
+  .process-step h3 { font-size: 1.25rem; }
+  .process-step p { font-size: 0.85rem; line-height: 1.5; }
+  .process-step .num { font-size: 0.7rem; }
+
+  .process-step:nth-child(2),
+  .process-step:nth-child(4) {
+    text-align: right;
+    align-items: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .process-step { padding: 1.5rem 0.9rem; }
+  .process-step h3 { font-size: 1.1rem; }
+  .process-step p { font-size: 0.8rem; }
 }

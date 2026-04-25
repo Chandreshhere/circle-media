@@ -80,3 +80,10 @@
   height: 100%;
   object-fit: contain;
 }
+
+@media (max-width: 900px) {
+  .reveal-hero { padding: 1rem; }
+  .reveal-header h1 { font-size: clamp(3rem, 18vw, 6rem); }
+  .reveal-hero-footer { gap: 1rem; padding-top: 0.75rem; flex-wrap: wrap; }
+  .reveal-hero-footer .mn { font-size: 0.78rem; letter-spacing: 0.05em; }
+}

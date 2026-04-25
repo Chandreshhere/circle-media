@@ -1,0 +1,43 @@
+/* Brush-script signature word that draws in on page open via SVG strokes.
+   Lives on the left empty area of subpage heroes.
+   The SVG itself handles the draw + fill animation — this CSS only places
+   and sizes the box on the page. */
+
+.page-signature {
+  position: absolute;
+  left: 3vw;
+  top: 10vh;
+  width: clamp(38rem, 82vw, 96rem);
+  height: clamp(13rem, 30vw, 34rem);
+  color: var(--accent);
+  pointer-events: none;
+  z-index: 1;
+  transform: rotate(-4deg);
+  transform-origin: left center;
+  filter: drop-shadow(0 6px 24px rgba(255, 122, 61, 0.18));
+  overflow: visible;
+}
+
+@media (max-width: 900px) {
+  .page-signature {
+    width: clamp(26rem, 110vw, 64rem);
+    height: clamp(13rem, 52vw, 24rem);
+    left: 4vw;
+    top: 7vh;
+  }
+}
+
+/* Inline-flow handwrite (used inside paragraphs/headings, e.g. Hero "marketing"). */
+.hero-split-handwrite {
+  display: inline-block;
+  vertical-align: baseline;
+  color: var(--accent);
+  width: 1em;            /* placeholder; overridden below by aspect ratio */
+  height: 1.05em;
+  margin: 0 0.05em -0.18em;
+  filter: drop-shadow(0 4px 14px rgba(255, 122, 61, 0.22));
+  /* Yellowtail glyphs are wider than they are tall — stretch the box so
+     letters don't get squished into a 1:1 inline frame. */
+  width: 4.2em;
+  overflow: visible;
+}

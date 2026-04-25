@@ -1,0 +1,151 @@
+.tagline {
+  position: relative;
+  width: 100%;
+  min-height: 140vh;
+  padding: 18vh 6vw 18vh;
+  overflow: hidden;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tagline-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      60vw 60vw at 20% 20%,
+      rgba(255, 122, 61, 0.06),
+      transparent 60%
+    ),
+    radial-gradient(
+      50vw 50vw at 80% 80%,
+      rgba(139, 92, 255, 0.05),
+      transparent 60%
+    );
+  z-index: 0;
+}
+
+.tagline-inner {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.tagline-heading {
+  --fill: 0%;
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: none;
+  font-size: clamp(2rem, 5vw, 5rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  text-align: left;
+
+  background-image: linear-gradient(
+    180deg,
+    #f4f4f0 0%,
+    #eaeae6 var(--fill),
+    #2e2e33 calc(var(--fill) + 0.5%),
+    #2e2e33 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.tagline-accent {
+  font-style: italic;
+  color: inherit;
+}
+
+/* Parallax images scattered around the heading */
+.tagline-img {
+  position: absolute;
+  z-index: 2;
+  will-change: transform;
+}
+
+.tagline-img img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  filter: saturate(0.95) contrast(1.05) brightness(0.65);
+  clip-path: inset(10% 0 10% 0 round 15%);
+}
+
+.tagline-img-1 {
+  top: 5%;
+  left: 3%;
+  width: 18vw;
+  max-width: 280px;
+}
+
+.tagline-img-2 {
+  top: 9%;
+  right: 4%;
+  width: 16vw;
+  max-width: 240px;
+}
+
+.tagline-img-3 {
+  top: 62%;
+  left: 5%;
+  width: 17vw;
+  max-width: 260px;
+}
+
+.tagline-img-4 {
+  bottom: 6%;
+  right: 7%;
+  width: 19vw;
+  max-width: 290px;
+}
+
+@media (max-width: 900px) {
+  .tagline {
+    min-height: 120vh;
+    padding: 14vh 5vw;
+  }
+
+  .tagline-heading {
+    font-size: clamp(2.8rem, 13vw, 6rem);
+  }
+
+  .tagline-img-1 {
+    width: 36vw;
+    top: 4%;
+    left: 4%;
+  }
+
+  .tagline-img-2 {
+    width: 32vw;
+    top: 6%;
+    right: 4%;
+  }
+
+  .tagline-img-3 {
+    width: 32vw;
+    top: 50%;
+    left: 5%;
+  }
+
+  .tagline-img-4 {
+    width: 38vw;
+    bottom: 6%;
+    right: 4%;
+  }
+}
+
+@media (max-width: 480px) {
+  .tagline { min-height: 100vh; padding: 12vh 5vw; }
+  .tagline-heading { font-size: clamp(2rem, 11vw, 3.4rem); }
+  .tagline-img { display: none; }
+  .tagline-img-1, .tagline-img-3 { display: block; width: 38vw; }
+}

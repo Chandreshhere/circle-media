@@ -1,46 +1,180 @@
-import { carouselItems } from "../data/content.js";
+import { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import BlurInText from "../components/fx/BlurInText.jsx";
-import FlyingImages from "../components/fx/FlyingImages.jsx";
+import HandwriteText from "../components/fx/HandwriteText.jsx";
 import Footer from "../components/sections/Footer.jsx";
 
+gsap.registerPlugin(ScrollTrigger);
+
+const WORK_ITEMS = [
+  {
+    id: "01",
+    slug: "instagram-feed",
+    title: "Instagram Feed",
+    tags: ["BRAND", "GRID"],
+    image: "/portfolio/feed/1.avif",
+    size: "lg",
+    align: "left",
+  },
+  {
+    id: "02",
+    slug: "instagram-posts",
+    title: "Instagram Posts",
+    tags: ["CAMPAIGN", "CONTENT"],
+    image: "/portfolio/posts/1.avif",
+    size: "md",
+    align: "right",
+  },
+  {
+    id: "03",
+    slug: "instagram-stories",
+    title: "Instagram Stories",
+    tags: ["EXPERIENTIAL", "FILM"],
+    image: "/portfolio/stories/1.avif",
+    size: "sm",
+    align: "left",
+  },
+  {
+    id: "04",
+    slug: "marketing-analytics",
+    title: "Marketing Analytics",
+    tags: ["PERFORMANCE", "META ADS"],
+    image: "/portfolio/analytics/1.avif",
+    size: "lg",
+    align: "right",
+  },
+];
+
 export default function WorkPage() {
-  const flyers = carouselItems.flatMap((i) => [i.main, i.bg]);
+  const cardsWrapRef = useRef(null);
+
+  useEffect(() => {
+    const wrap = cardsWrapRef.current;
+    if (!wrap) return;
+    const cards = Array.from(wrap.querySelectorAll(".work-card"));
+    const shapes = Array.from(wrap.querySelectorAll(".work-shape"));
+
+    cards.forEach((c) => {
+      gsap.set(c, { autoAlpha: 0, y: 60 });
+      ScrollTrigger.create({
+        trigger: c,
+        start: "top 88%",
+        once: true,
+        onEnter: () =>
+          gsap.to(c, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 1.1,
+            ease: "power3.out",
+          }),
+      });
+    });
+
+    const shapeTrigs = shapes.map((s) => {
+      const drift = Number(s.dataset.drift || 60);
+      return ScrollTrigger.create({
+        trigger: s,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 1,
+        onUpdate: (self) => {
+          gsap.set(s, { y: (0.5 - self.progress) * drift });
+        },
+      });
+    });
+
+    return () => {
+      shapeTrigs.forEach((t) => t.kill());
+      ScrollTrigger.getAll().forEach((t) => {
+        if (cards.includes(t.trigger)) t.kill();
+      });
+    };
+  }, []);
+
   return (
-    <div className="subpage">
-      <section className="subpage-hero">
-        <p className="crumb">[03] Work · Selected case studies</p>
-        <BlurInText as="h1" split="chars" stagger={0.02} blur={22}>
-          Proof, not promises.
-        </BlurInText>
-        <p className="sub">
-          A curated selection of campaigns, launches, identities and always-on
-          programmes — each a different shape of the same thesis: measure,
-          iterate, compound.
-        </p>
+    <>
+      <div className="work-page">
+        <section className="work-hero">
+        <div className="work-hero-grid">
+          <div className="work-hero-left">
+            <p className="work-hero-crumb">[03] Selected Work · 2019—2025</p>
+            <h1 className="work-hero-title">
+              <span className="line">We let the</span>
+              <span className="line">
+                <em className="work-hero-script">Work</em>
+              </span>
+              <span className="line">speak,</span>
+              <span className="line">loudly.</span>
+            </h1>
+          </div>
+
+          <div className="work-hero-right">
+            <nav className="work-hero-nav">
+              <a className="is-active" href="/work">Work,</a>
+              <a href="/services">Services,</a>
+              <a href="/about">About,</a>
+              <a href="/contact">Create with us</a>
+            </nav>
+
+            <BlurInText
+              as="p"
+              split="words"
+              stagger={0.02}
+              blur={10}
+              className="work-hero-copy"
+            >
+              Every campaign, experience and story we ship starts with strategy
+              and ends with impact. Our work moves real people and real
+              numbers — because we design for both.
+            </BlurInText>
+
+            <p className="work-hero-copy">
+              Every project on this page was built on trust, collaboration,
+              and a shared obsession with getting it right.
+            </p>
+
+            <p className="work-hero-scroll">[Scroll for the receipts ↓]</p>
+          </div>
+        </div>
+
+        <div className="work-hero-shape work-hero-shape-1" aria-hidden="true" />
+        <div className="work-hero-shape work-hero-shape-2" aria-hidden="true" />
+        <HandwriteText className="page-signature">Work</HandwriteText>
       </section>
 
-      <div className="work-grid">
-        {carouselItems.map((item) => (
-          <div className="work-tile" key={item.id}>
-            <img src={item.main} alt={item.title} />
-            <div className="overlay">
+      <section className="work-cards" ref={cardsWrapRef}>
+        <div className="work-shape work-shape-sq work-shape-a" data-drift="80" aria-hidden="true" />
+        <div className="work-shape work-shape-circle work-shape-b" data-drift="120" aria-hidden="true" />
+        <div className="work-shape work-shape-ring work-shape-c" data-drift="60" aria-hidden="true" />
+        <div className="work-shape work-shape-sq-outline work-shape-d" data-drift="140" aria-hidden="true" />
+        <div className="work-shape work-shape-circle work-shape-e" data-drift="90" aria-hidden="true" />
+        <div className="work-shape work-shape-sq work-shape-f" data-drift="100" aria-hidden="true" />
+        <div className="work-shape work-shape-ring work-shape-g" data-drift="70" aria-hidden="true" />
+
+        {WORK_ITEMS.map((item, i) => (
+          <Link
+            to={`/work/${item.slug}`}
+            key={item.id}
+            className={`work-card work-card-${item.size} work-card-${item.align}`}
+            style={{ "--row": i }}
+          >
+            <div className="work-card-img">
+              <img src={item.image} alt={item.title} loading="lazy" />
+            </div>
+            <div className="work-card-label">
               <div>
                 <h3>{item.title}</h3>
-                <span className="tag">{item.tags[0]}</span>
+                <p>{item.tags.join(" · ")}</p>
               </div>
+              <span className="work-card-arrow" aria-hidden="true">↗</span>
             </div>
-          </div>
+          </Link>
         ))}
-      </div>
-
-      <section style={{ padding: "4rem 0", borderTop: "1px solid var(--border)" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 1.25rem 2rem" }}>
-          <p style={{ color: "var(--text-dim)" }}>[Archive flight]</p>
-        </div>
-        <FlyingImages images={flyers} />
       </section>
-
+      </div>
       <Footer />
-    </div>
+    </>
   );
 }

@@ -17,9 +17,16 @@
   color: var(--text-dim);
 }
 
+.marquee-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
 .marquee {
   display: flex;
   white-space: nowrap;
+  overflow: hidden;
 }
 
 .marquee-track {
@@ -27,7 +34,14 @@
   align-items: center;
   gap: 4rem;
   padding-left: 4rem;
-  animation: marquee 55s linear infinite;
+  width: max-content;
+  animation: marquee-left 50s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track.is-reverse {
+  animation-name: marquee-right;
+  animation-duration: 60s;
 }
 
 .marquee-item {
@@ -59,13 +73,26 @@
   padding: 0.6rem 1rem;
 }
 
-@keyframes marquee {
+@keyframes marquee-left {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
 
+@keyframes marquee-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
 @media (max-width: 820px) {
+  .clients { padding: 4rem 0; }
+  .clients-head { flex-direction: column; gap: 0.75rem; margin: 0 auto 2rem; padding: 0 1.25rem; }
+  .marquee-stack { gap: 1rem; }
   .marquee-track { gap: 2rem; padding-left: 2rem; }
   .marquee-item { height: 70px; padding: 0 0.5rem; }
   .marquee-item img { max-width: 160px; }
+}
+
+@media (max-width: 480px) {
+  .marquee-item { height: 56px; }
+  .marquee-item img { max-width: 120px; padding: 0.4rem 0.75rem; }
 }

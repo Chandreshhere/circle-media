@@ -10,16 +10,22 @@ import "./styles/hero.css";
 import "./styles/portraits.css";
 import "./styles/services.css";
 import "./styles/carousel.css";
+import "./styles/what-we-do.css";
 import "./styles/archive.css";
 import "./styles/process.css";
 import "./styles/reveal.css";
 import "./styles/about.css";
 import "./styles/featured-work.css";
-import "./styles/stats.css";
+import "./styles/about-scroll.css";
 import "./styles/testimonials.css";
 import "./styles/clients.css";
 import "./styles/footer.css";
 import "./styles/subpage.css";
+import "./styles/contact.css";
+import "./styles/tagline.css";
+import "./styles/circle-ring.css";
+import "./styles/page-signature.css";
+import "./styles/story-carousel.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>

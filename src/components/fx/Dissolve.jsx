@@ -16,39 +16,60 @@ export default function Dissolve({ children, direction = "in", className = "" })
     const el = wrap.current;
     if (!el) return;
 
-    // Start state
+    const rect = el.getBoundingClientRect();
+    const alreadyInView =
+      direction === "in" && rect.top < window.innerHeight * 0.95;
+
+    // Above-the-fold path: leave the element in its natural rendered state.
+    // Avoids any chance of getting stuck at opacity:0 on route change.
+    if (alreadyInView) {
+      return;
+    }
+
     gsap.set(el, {
       opacity: direction === "in" ? 0 : 1,
-      filter: direction === "in" ? "blur(24px) saturate(0.3)" : "blur(0px)",
-      scale: direction === "in" ? 0.98 : 1,
+      filter: direction === "in" ? "blur(14px) saturate(0.5)" : "blur(0px)",
+      scale: direction === "in" ? 0.99 : 1,
       willChange: "opacity, filter, transform",
     });
+
+    const playIn = () => {
+      gsap.to(el, {
+        opacity: 1,
+        filter: "blur(0px) saturate(1)",
+        scale: 1,
+        duration: 0.65,
+        ease: "power3.out",
+      });
+    };
 
     const trig = ScrollTrigger.create({
       trigger: el,
       start: "top 85%",
       end: "bottom 15%",
-      onEnter: () => {
-        gsap.to(el, {
-          opacity: 1,
-          filter: "blur(0px) saturate(1)",
-          scale: 1,
-          duration: 1.4,
-          ease: "power3.out",
-        });
-      },
+      onEnter: playIn,
       onLeaveBack: () => {
         gsap.to(el, {
           opacity: 0,
-          filter: "blur(24px) saturate(0.3)",
-          scale: 0.98,
-          duration: 0.8,
+          filter: "blur(14px) saturate(0.5)",
+          scale: 0.99,
+          duration: 0.4,
           ease: "power2.inOut",
         });
       },
     });
 
-    return () => trig.kill();
+    // Safety: force-show after 1.5s if element is on-screen but trigger
+    // somehow hasn't fired (route-change edge cases).
+    const safety = setTimeout(() => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) playIn();
+    }, 1500);
+
+    return () => {
+      trig.kill();
+      clearTimeout(safety);
+    };
   }, [direction]);
 
   return (

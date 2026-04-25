@@ -189,9 +189,19 @@
 .t-role   { color: var(--text-mute); font-size: 0.8rem; margin-top: 2px; }
 
 @media (max-width: 900px) {
+  .testimonials { padding: 4rem 1.25rem; }
+  .testimonials-head {
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .testimonials-head h3 { font-size: 1.15rem; }
   .testimonials-bento { grid-template-columns: 1fr; }
-  .t-card--featured { min-height: unset; transform: none; }
+  .t-card { padding: 1.75rem 1.5rem; }
+  .t-card--featured { min-height: unset; transform: none; padding: 2rem 1.5rem; }
+  .t-card--featured blockquote { font-size: clamp(1.4rem, 6vw, 2rem); }
+  .t-card--mini { padding: 1.5rem 1.25rem; }
   .t-card--mini:nth-child(1),
   .t-card--mini:nth-child(2) { transform: none; }
-  .t-glyph { font-size: 12rem; }
+  .t-glyph { font-size: 9rem; top: -1.25rem; }
 }

@@ -4,10 +4,19 @@ import gsap from "gsap";
 export default function Transition({ pathname }) {
   const ref = useRef(null);
   const first = useRef(true);
+  const tlRef = useRef(null);
 
   useEffect(() => {
     if (!ref.current) return;
     const blocks = ref.current.querySelectorAll(".block");
+
+    // Kill any in-flight timeline so a fast click can't strand the blocks
+    // mid-cover (which would leave a white overlay over the new page).
+    if (tlRef.current) {
+      tlRef.current.kill();
+      tlRef.current = null;
+    }
+
     if (first.current) {
       first.current = false;
       gsap.set(blocks, { scaleY: 1, transformOrigin: "top" });
@@ -19,7 +28,13 @@ export default function Transition({ pathname }) {
       });
       return;
     }
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({
+      onComplete: () => {
+        gsap.set(blocks, { scaleY: 0 });
+        tlRef.current = null;
+      },
+    });
+    tlRef.current = tl;
     tl.set(blocks, { scaleY: 0, transformOrigin: "top" });
     tl.to(blocks, {
       scaleY: 1,

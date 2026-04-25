@@ -1,19 +1,19 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-import Nav from "./components/Nav.jsx";
-import SiteHeader from "./components/SiteHeader.jsx";
+import TopNav from "./components/TopNav.jsx";
 import Transition from "./components/Transition.jsx";
 import CursorFX from "./components/fx/CursorFX.jsx";
 
 import Home from "./pages/Home.jsx";
 import ServicesPage from "./pages/ServicesPage.jsx";
 import WorkPage from "./pages/WorkPage.jsx";
+import WorkDetailPage from "./pages/WorkDetailPage.jsx";
 import AboutPage from "./pages/AboutPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
 
@@ -22,9 +22,17 @@ export const getLenis = () => lenisInstance;
 
 export default function App() {
   const location = useLocation();
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    const lenis = new Lenis({ smoothWheel: true, lerp: 0.1 });
+    const lenis = new Lenis({
+      smoothWheel: true,
+      lerp: 0.09,
+      duration: 1.05,
+      wheelMultiplier: 1.05,
+      touchMultiplier: 1.6,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    });
     lenisInstance = lenis;
     // Drive ScrollTrigger from Lenis so pinned sections actually freeze the
     // viewport — without this hook, ScrollTrigger reads the native scroll
@@ -51,9 +59,9 @@ export default function App() {
         dirAnchor = y;
       }
       const moved = Math.abs(y - dirAnchor);
-      if (dir === 1 && moved > 40) {
+      if (dir === 1 && moved > 90) {
         document.body.classList.add("chrome-hidden");
-      } else if (dir === -1 && moved > 20) {
+      } else if (dir === -1 && moved > 60) {
         document.body.classList.remove("chrome-hidden");
       }
     });
@@ -68,13 +76,32 @@ export default function App() {
     };
   }, []);
 
-  useEffect(() => {
+  // Reset scroll BEFORE paint and before children mount their effects.
+  // useLayoutEffect runs synchronously after DOM commit, so the new page's
+  // BlurInText/Dissolve effects see scroll=0 when measuring rects.
+  useLayoutEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
     if (lenisInstance) {
       lenisInstance.scrollTo(0, { immediate: true, force: true });
-    } else {
-      window.scrollTo(0, 0);
     }
-    const id = requestAnimationFrame(() => ScrollTrigger.refresh());
+  }, [location.pathname]);
+
+  useEffect(() => {
+    // After paint: let Lenis recompute bounds for the new page, then refresh
+    // ScrollTriggers so any newly-mounted ones evaluate against scroll=0.
+    const id = requestAnimationFrame(() => {
+      if (lenisInstance) {
+        lenisInstance.resize();
+        lenisInstance.scrollTo(0, { immediate: true, force: true });
+      }
+      ScrollTrigger.refresh();
+    });
     return () => cancelAnimationFrame(id);
   }, [location.pathname]);
 
@@ -83,13 +110,12 @@ export default function App() {
       <Transition pathname={location.pathname} />
       <CursorFX />
       <div className="app">
-        <Nav />
-        <SiteHeader />
+        <TopNav />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/work" element={<WorkPage />} />
-          <Route path="/work/:slug" element={<WorkPage />} />
+          <Route path="/work/:slug" element={<WorkDetailPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
         </Routes>

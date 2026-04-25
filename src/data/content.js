@@ -2,32 +2,44 @@ export const services = [
   {
     id: "01",
     title: "Social Media Marketing",
+    tagline: "Always-on ecosystems that turn passive scrollers into brand advocates.",
+    image: "/assets/project/project1.jpg",
     copy: "We build always-on social ecosystems that turn passive scrollers into brand advocates. Strategy, content calendars, community management and reporting — all under one roof."
   },
   {
     id: "02",
-    title: "Content Creation",
-    copy: "From 9:16 reels to editorial photography, our in-house studio produces thumb-stopping assets engineered for the feed, the algorithm and the brand."
-  },
-  {
-    id: "03",
-    title: "Influencer Marketing",
-    copy: "We pair brands with creators who actually move the needle. Vetted talent, negotiated rates, end-to-end campaign management and attribution that ties posts to revenue."
-  },
-  {
-    id: "04",
-    title: "Performance Advertising",
+    title: "Performance Marketing",
+    tagline: "Meta, Google, TikTok — media mix engineered for compounding ROAS.",
+    image: "/assets/project/project2.jpg",
     copy: "Meta, Google, TikTok, YouTube — media mix modeling, creative testing frameworks and daily optimization to drive ROAS that compounds month over month."
   },
   {
-    id: "05",
-    title: "SEO & Organic Growth",
+    id: "03",
+    title: "Website Development",
+    tagline: "Fast, expressive sites built to convert and built to last.",
+    image: "/assets/project/project3.jpg",
+    copy: "Design systems, headless stacks and performance budgets. We ship sites that load fast, read clean and move people from landing page to decision without friction."
+  },
+  {
+    id: "04",
+    title: "Search Engine Optimization",
+    tagline: "Technical depth and editorial craft that earns trust long after the campaign.",
+    image: "/assets/project/project4.jpg",
     copy: "Technical audits, topical authority, digital PR and editorial content that earns impressions, clicks and trust long after the campaign ends."
   },
   {
-    id: "06",
-    title: "Brand & Art Direction",
+    id: "05",
+    title: "Branding & Content Planning",
+    tagline: "Identity systems and creative guardrails with an unmistakable voice.",
+    image: "/assets/project/project5.jpg",
     copy: "Identity systems, design principles and creative guardrails that give every touchpoint the same unmistakable voice — even when no one is watching."
+  },
+  {
+    id: "06",
+    title: "E-Commerce Listings",
+    tagline: "Listings engineered for discoverability, conversion and retention.",
+    image: "/assets/project/project6.jpg",
+    copy: "Amazon, Flipkart, Shopify — catalog architecture, A+ content, storefront design and review strategy that turn product pages into revenue engines."
   }
 ];
 
@@ -104,13 +116,6 @@ export const archive = [
   { name: "Cobalt Collective", year: "2018", images: ["img27", "img28", "img29", "img30"] },
   { name: "Nightfall", year: "2021", images: ["img31", "img32", "img33"] },
   { name: "Sprout", year: "2017", images: ["img34", "img35"] }
-];
-
-export const stats = [
-  { value: "6+", label: "Years in market" },
-  { value: "25+", label: "Brands partnered" },
-  { value: "100+", label: "Campaigns shipped" },
-  { value: "800+", label: "Ads produced" }
 ];
 
 export const testimonials = [

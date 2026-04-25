@@ -1,10 +1,25 @@
 .footer {
   position: relative;
   width: 100%;
-  background: var(--bg);
-  padding: 7rem 0 2rem;
+  background: #ff6a13;
+  padding: 2.5rem 0 1.25rem;
   overflow: hidden;
   border-top: 1px solid var(--border);
+  z-index: 2;
+  min-height: 60vh;
+  max-height: 60vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer,
+.footer * {
+  color: #000 !important;
+}
+
+.footer .f-outro-item:nth-child(even) {
+  -webkit-text-stroke: 1px #000 !important;
+  color: transparent !important;
 }
 
 .footer-grid {
@@ -150,8 +165,8 @@
 /* Outro marquee */
 
 .f-outro {
-  margin-top: 6rem;
-  padding: 1rem 0;
+  margin-top: auto;
+  padding: 0.6rem 0;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   overflow: hidden;
@@ -176,7 +191,7 @@
   align-items: center;
   gap: 3rem;
   font-family: var(--font-display);
-  font-size: clamp(5rem, 13vw, 13rem);
+  font-size: clamp(2.5rem, 7vw, 6rem);
   font-weight: 400;
   letter-spacing: -0.05em;
   line-height: 1;
@@ -202,17 +217,27 @@
 
 .f-bottom {
   max-width: 1400px;
-  margin: 2rem auto 0;
+  margin: 0.75rem auto 0;
   padding: 0 1.25rem;
   display: flex;
   justify-content: space-between;
   color: var(--text-mute);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
 @media (max-width: 900px) {
-  .footer-grid { grid-template-columns: 1fr; gap: 3rem; }
-  .f-meta { grid-template-columns: 1fr 1fr; }
+  .footer { padding: 2rem 0 1rem; min-height: auto; max-height: none; }
+  .footer-grid { grid-template-columns: 1fr; gap: 3rem; padding: 0 1.25rem; }
+  .f-meta { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .f-bottom { flex-direction: column; gap: 0.4rem; text-align: left; }
   .f-outro-item { font-size: clamp(3.5rem, 14vw, 7rem); }
+  .f-cta h2 { font-size: clamp(2.6rem, 12vw, 4.6rem); }
+  .f-email { padding: 0.75rem 1rem; font-size: 0.95rem; }
+}
+
+@media (max-width: 480px) {
+  .f-meta { grid-template-columns: 1fr; }
+  .f-social { width: 38px; height: 38px; font-size: 0.7rem; }
+  .f-outro-item { font-size: clamp(2.6rem, 14vw, 4.5rem); gap: 1.5rem; }
+  .f-outro-track { gap: 1.5rem; }
 }

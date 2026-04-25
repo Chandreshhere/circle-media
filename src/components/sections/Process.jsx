@@ -7,7 +7,13 @@ export default function Process() {
     <section className="process">
       <div className="process-head">
         <p className="label">[Method / 01–04]</p>
-        <BlurInText as="h2" split="words" stagger={0.08}>
+        <BlurInText
+          as="h2"
+          split="words"
+          stagger={0.035}
+          duration={0.55}
+          blur={12}
+        >
           A measured system that turns ideas into outcomes — then tunes itself.
         </BlurInText>
       </div>

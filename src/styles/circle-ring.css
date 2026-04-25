@@ -1,0 +1,153 @@
+/* Section is 200vh tall:
+   - first 100vh of scroll drives the descent (scale + ty + spin via scrub)
+   - at scroll 100vh GSAP pins .cring-inner with pinSpacing:false (no spacer)
+   - during scroll 100vh → 200vh the ring stays fixed and the footer (next
+     sibling, z-index 2) rises up over it. The .cring-text element lives
+     outside .cring-inner with z-index 5, so it paints over the footer. */
+.cring {
+  position: relative;
+  width: 100vw;
+  min-height: 200vh;
+  background: var(--bg);
+}
+
+.cring-inner {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: visible;
+}
+
+.cring-floaters {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.cring-ring {
+  --ring-rot: 0;
+  --ring-rot-auto: 0;
+  --ring-scale: 1;
+  --ring-y: 0;
+  position: absolute;
+  inset: 0;
+  transform:
+    translate3d(0, calc(var(--ring-y) * 1vh), 0)
+    scale(var(--ring-scale))
+    rotate3d(0, 0, 1, calc((var(--ring-rot) + var(--ring-rot-auto)) * 1deg));
+  transform-origin: 50% 50%;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.cring-floater {
+  --spread: 1;
+  position: absolute;
+  will-change: transform, opacity, filter;
+  translate:
+    calc(var(--tx, 0vmin) * var(--spread) - 50%)
+    calc(var(--ty, 0vmin) * var(--spread) - 50%);
+}
+
+.cring-floater-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  background: #fff;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  transform: rotate3d(0, 0, 1, calc((var(--ring-rot) + var(--ring-rot-auto)) * -1deg));
+  transform-origin: 50% 50%;
+  will-change: transform;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14%;
+}
+
+.cring-brand-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: none;
+  animation: cring-brand-in 0.55s ease both;
+}
+
+@keyframes cring-brand-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Sits absolute within .cring (200vh). Default transform centres it; the
+   onUpdate handler in CircleRing.jsx overrides transform on every scroll
+   tick so it slides down with the ring and rides up over the rising footer.
+   Higher z-index than .footer so it always paints on top. */
+.cring-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - 50vh));
+  transform-origin: 50% 50%;
+  width: max-content;
+  max-width: 90vw;
+  z-index: 5;
+  pointer-events: none;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--text);
+  text-align: center;
+  white-space: nowrap;
+  height: 1em;
+  will-change: transform;
+}
+
+.cring-phase {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% calc(-50% - 0.6vh);
+  white-space: nowrap;
+  opacity: 0;
+  filter: blur(10px);
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+.cring-phase.is-active {
+  opacity: 1;
+  filter: blur(0px);
+}
+
+@media (max-width: 820px) {
+  .cring-floater {
+    translate:
+      calc(var(--tx, 0vmin) * var(--spread) * 0.7 - 50%)
+      calc(var(--ty, 0vmin) * var(--spread) * 0.7 - 50%);
+    zoom: 0.7;
+  }
+  .cring-text {
+    font-size: clamp(1.8rem, 8vw, 3.4rem);
+    white-space: normal;
+  }
+}
+
+@media (max-width: 480px) {
+  .cring-floater {
+    translate:
+      calc(var(--tx, 0vmin) * var(--spread) * 0.55 - 50%)
+      calc(var(--ty, 0vmin) * var(--spread) * 0.55 - 50%);
+    zoom: 0.55;
+  }
+  .cring-text {
+    font-size: clamp(1.4rem, 9vw, 2.6rem);
+    max-width: 86vw;
+  }
+}

@@ -1,0 +1,166 @@
+.wwd {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+  color: #eaeae6;
+}
+
+/* Giant blurred WHAT / WE / DO letters behind the card stack. */
+.wwd-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3vh 4vw;
+  pointer-events: none;
+  user-select: none;
+}
+
+.wwd-bg span {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: min(18vw, 26vh);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: #eaeae6;
+  opacity: 0.38;
+  filter: blur(1px);
+  text-transform: uppercase;
+  display: block;
+}
+
+.wwd-bg span:nth-child(1) { align-self: flex-start; }
+.wwd-bg span:nth-child(2) { align-self: flex-end; }
+.wwd-bg span:nth-child(3) { align-self: flex-start; }
+
+/* Stage holds the 4 stacked cards centred in the pinned viewport. */
+.wwd-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1200px;
+}
+
+.wwd-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(640px, 46vw);
+  height: min(640px, 78vh);
+  padding: 3.2rem 3rem 2.5rem;
+  background: #dfe2e6;
+  border-radius: 18px;
+  color: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 30px 60px -20px rgba(0, 0, 0, 0.35),
+    0 12px 24px -12px rgba(0, 0, 0, 0.25);
+  transform-origin: 50% 60%;
+  will-change: transform;
+}
+
+/* Per-card tints so each one reads distinct as the stack builds. */
+.wwd-card:nth-child(1) { background: #ff9254; }
+.wwd-card:nth-child(2) { background: #9cc5ff; }
+.wwd-card:nth-child(3) { background: #f5dd4b; }
+.wwd-card:nth-child(4) { background: #b8e3a8; }
+
+.wwd-card-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.wwd-card-title span {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 4.2vw, 4rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: #0a0a0a;
+  text-transform: uppercase;
+  display: block;
+}
+
+.wwd-card-copy {
+  margin-top: 1.25rem;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.15vw, 1.25rem);
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+  text-transform: none;
+  color: #0a0a0a;
+  max-width: 36ch;
+}
+
+.wwd-card-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+}
+
+.wwd-card-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.wwd-card-items li {
+  font-family: var(--font-body);
+  font-size: clamp(1.1rem, 1.5vw, 1.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  text-transform: none;
+  color: #0a0a0a;
+  font-weight: 500;
+}
+
+.wwd-card-id {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: #0a0a0a;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 900px) {
+  .wwd-card {
+    width: min(82vw, 460px);
+    height: min(72vh, 560px);
+    padding: 2.2rem 2rem 1.8rem;
+    border-radius: 14px;
+  }
+
+  .wwd-bg span {
+    font-size: min(22vw, 22vh);
+  }
+}
+
+@media (max-width: 600px) {
+  .wwd-card {
+    width: 86vw;
+    height: min(70vh, 520px);
+    padding: 1.6rem 1.4rem 1.4rem;
+    border-radius: 12px;
+  }
+  .wwd-card-title span { font-size: clamp(1.6rem, 7.5vw, 2.4rem); }
+  .wwd-card-copy { font-size: 0.92rem; margin-top: 0.85rem; }
+  .wwd-card-items li { font-size: 1rem; }
+  .wwd-card-id { font-size: clamp(2rem, 9vw, 3.2rem); }
+  .wwd-card-footer { gap: 1rem; }
+  .wwd-bg { padding: 2vh 4vw; }
+  .wwd-bg span { font-size: min(22vw, 18vh); }
+}

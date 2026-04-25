@@ -1,85 +1,79 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitType from "split-type";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const PARALLAX_IMAGES = [
+  { src: "/assets/socials/whatsapp.jpeg", cls: "tagline-img tagline-img-1", speed: -90 },
+  { src: "/assets/socials/twitter-x.jpeg", cls: "tagline-img tagline-img-2", speed: 70 },
+  { src: "/assets/socials/snapchat.jpeg", cls: "tagline-img tagline-img-3", speed: -130 },
+  { src: "/assets/socials/facebook.jpeg", cls: "tagline-img tagline-img-4", speed: 110 },
+];
 
 export default function Tagline() {
   const rootRef = useRef(null);
   const headingRef = useRef(null);
+  const imagesRef = useRef([]);
 
   useEffect(() => {
-    const heading = headingRef.current;
     const root = rootRef.current;
-    if (!heading || !root) return;
+    const heading = headingRef.current;
+    if (!root || !heading) return;
 
-    const split = new SplitType(heading, {
-      types: "words",
-      wordClass: "tagline-word",
-    });
-    const words = split.words || [];
+    heading.style.setProperty("--fill", "0%");
 
-    const MAX_BLUR = 24;
-    const MAX_Y = 30;
-    const MAX_SCALE_OFFSET = 0.18;
-
-    gsap.set(words, {
-      opacity: 0,
-      filter: `blur(${MAX_BLUR}px)`,
-      y: MAX_Y,
-      scale: 1 + MAX_SCALE_OFFSET,
-      transformOrigin: "50% 50%",
-    });
-
-    const trig = ScrollTrigger.create({
+    const fillTrig = ScrollTrigger.create({
       trigger: root,
-      start: "top 95%",
-      end: "center 60%",
-      scrub: 0.4,
+      start: "top 80%",
+      end: "bottom 55%",
+      scrub: 0.6,
       onUpdate: (self) => {
-        const progress = self.progress;
-        const total = words.length;
-
-        words.forEach((word, index) => {
-          const wordProgress = index / total;
-          const nextWordProgress = (index + 1) / total;
-
-          let t = 0;
-          if (progress >= nextWordProgress) {
-            t = 1;
-          } else if (progress >= wordProgress) {
-            t =
-              (progress - wordProgress) / (nextWordProgress - wordProgress);
-          }
-
-          const eased = t * t * (3 - 2 * t);
-
-          gsap.to(word, {
-            opacity: eased,
-            filter: `blur(${(1 - eased) * MAX_BLUR}px)`,
-            y: (1 - eased) * MAX_Y,
-            scale: 1 + (1 - eased) * MAX_SCALE_OFFSET,
-            duration: 0.25,
-            ease: "power2.out",
-            overwrite: true,
-          });
-        });
+        heading.style.setProperty("--fill", `${self.progress * 100}%`);
       },
     });
 
+    const imgTrigs = imagesRef.current.map((el) => {
+      if (!el) return null;
+      const speed = Number(el.dataset.speed || 0);
+      return gsap.to(el, {
+        y: speed,
+        ease: "none",
+        scrollTrigger: {
+          trigger: root,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    });
+
     return () => {
-      trig.kill();
-      split.revert();
+      fillTrig.kill();
+      imgTrigs.forEach((t) => t?.scrollTrigger?.kill());
     };
   }, []);
 
   return (
     <section className="tagline" ref={rootRef}>
+      <div className="tagline-bg" aria-hidden="true" />
+
+      {PARALLAX_IMAGES.map((img, i) => (
+        <div
+          key={i}
+          className={img.cls}
+          data-speed={img.speed}
+          ref={(el) => (imagesRef.current[i] = el)}
+        >
+          <img src={img.src} alt="" />
+        </div>
+      ))}
+
       <div className="tagline-inner">
-        <h2 ref={headingRef}>
-          Circle the world with us. Build brands that compound,{" "}
-          <em>season after season.</em>
+        <h2 ref={headingRef} className="tagline-heading">
+          We offer tailored social media services to boost your online presence and engagement. Our expertise includes content creation, account management, and{" "}
+          <span className="tagline-accent">data-driven strategies.</span>{" "}
+          This will increase brand growth, traffic, and conversions.
         </h2>
       </div>
     </section>

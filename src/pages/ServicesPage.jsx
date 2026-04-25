@@ -1,32 +1,63 @@
 import { services } from "../data/content.js";
 import BlurInText from "../components/fx/BlurInText.jsx";
 import Dissolve from "../components/fx/Dissolve.jsx";
-import ShaderBackground from "../components/fx/ShaderBackground.jsx";
+import FlyingImages from "../components/fx/FlyingImages.jsx";
+import HandwriteText from "../components/fx/HandwriteText.jsx";
 import Footer from "../components/sections/Footer.jsx";
 
 export default function ServicesPage() {
   return (
-    <div className="subpage">
-      <section className="subpage-hero">
-        <ShaderBackground
-          colorA={[0.02, 0.02, 0.025]}
-          colorB={[0.1, 0.06, 0.2]}
-          intensity={0.55}
-        />
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <p className="crumb">[02] Services · Disciplines · Deliverables</p>
-          <BlurInText as="h1" split="chars" stagger={0.02} blur={22}>
-            Every lever we pull — under one roof.
-          </BlurInText>
-          <p className="sub">
-            Six disciplines, one team, one operating system. We plug into your
-            stack or run standalone — either way, the output is measured,
-            accountable and compounding.
-          </p>
+    <>
+      <div className="services-page">
+        <section className="services-hero">
+        <div className="services-hero-grid">
+          <div className="services-hero-left">
+            <p className="services-hero-crumb">[02] Services · Disciplines · Deliverables</p>
+            <h1 className="services-hero-title">
+              <span className="line">Every</span>
+              <span className="line">
+                <em className="services-hero-script">lever</em>
+              </span>
+              <span className="line">under one</span>
+              <span className="line">roof.</span>
+            </h1>
+          </div>
+
+          <div className="services-hero-right">
+            <nav className="services-hero-nav">
+              <a href="/work">Work,</a>
+              <a className="is-active" href="/services">Services,</a>
+              <a href="/about">Studio,</a>
+              <a href="/contact">Create with us</a>
+            </nav>
+
+            <BlurInText
+              as="p"
+              split="words"
+              stagger={0.02}
+              blur={10}
+              className="services-hero-copy"
+            >
+              Six disciplines, one team, one operating system. We plug into
+              your stack or run standalone — either way, the output is
+              measured, accountable and compounding.
+            </BlurInText>
+
+            <p className="services-hero-copy">
+              No retainers built for hours. Every engagement reports against
+              a number we set together on day one.
+            </p>
+
+            <p className="services-hero-scroll">[Scroll for the disciplines ↓]</p>
+          </div>
         </div>
+
+        <div className="services-hero-shape services-hero-shape-1" aria-hidden="true" />
+        <div className="services-hero-shape services-hero-shape-2" aria-hidden="true" />
+        <HandwriteText className="page-signature">Service</HandwriteText>
       </section>
 
-      <section className="subpage-body">
+      <section className="services-body">
         {services.map((s) => (
           <Dissolve key={s.id}>
             <div className="two-col">
@@ -42,7 +73,21 @@ export default function ServicesPage() {
         ))}
       </section>
 
+      <section className="services-flight">
+        <FlyingImages
+          layout="grid"
+          images={[
+            "/assets/services/service-left.jpeg",
+            "/assets/services/service-1.jpeg",
+            "/assets/services/service-right.jpeg",
+            "/assets/services/s1.jpg",
+            "/assets/services/s2.jpg",
+            "/assets/services/s3.jpg",
+          ]}
+        />
+      </section>
+      </div>
       <Footer />
-    </div>
+    </>
   );
 }
