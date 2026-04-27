@@ -83,7 +83,17 @@
 
 @media (max-width: 900px) {
   .reveal-hero { padding: 1rem; }
-  .reveal-header h1 { font-size: clamp(3rem, 18vw, 6rem); }
+  .reveal-header h1 { font-size: clamp(4.2rem, 24vw, 9rem); }
+  .reveal-header-1 { transform: translateY(-14rem); }
   .reveal-hero-footer { gap: 1rem; padding-top: 0.75rem; flex-wrap: wrap; }
   .reveal-hero-footer .mn { font-size: 0.78rem; letter-spacing: 0.05em; }
+}
+
+@media (max-width: 480px) {
+  .reveal-hero { padding: 0.75rem; }
+  .reveal-header h1 { font-size: clamp(3.4rem, 26vw, 7rem); }
+  .reveal-header-wrapper { gap: 0.15em; }
+  .reveal-header-1 { transform: translateY(-10rem); }
+  .reveal-hero-footer { gap: 0.75rem; padding-top: 0.5rem; }
+  .reveal-hero-footer .mn { font-size: 0.7rem; letter-spacing: 0.04em; }
 }

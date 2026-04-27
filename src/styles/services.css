@@ -249,59 +249,55 @@
 
 /* ---- Mobile fallback: stacked list, no pinning ---- */
 
+/* Mobile: keep the same scroll-driven progressive activation as desktop,
+   just re-stack the three columns vertically. List on top, media in the
+   middle, tagline below. The pin and JS are shared with desktop. */
 @media (max-width: 819px) {
   .services-stage {
-    height: auto;
     padding: 5rem 1.25rem 4rem;
   }
 
   .services-grid {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: 1.75rem;
+    align-items: start;
   }
 
   .services-list-viewport {
-    height: auto;
-    mask-image: none;
-    -webkit-mask-image: none;
-  }
-
-  .services-list {
-    position: static;
-    top: auto;
-    transform: none !important;
+    height: clamp(180px, 28vh, 240px);
   }
 
   .services-list-item {
-    transform: none;
-    opacity: 1;
-    color: var(--text);
-    border-top: 1px solid var(--border);
-    padding: 1rem 0;
-    font-size: clamp(1.25rem, 5vw, 1.75rem);
+    font-size: clamp(1.4rem, 6vw, 2.2rem);
+    text-align: center;
   }
-
-  .services-list-item:last-child { border-bottom: 1px solid var(--border); }
 
   .services-media {
     aspect-ratio: 4 / 3;
     max-width: 100%;
+    justify-self: stretch;
   }
 
-  .services-media-frame { opacity: 1; transform: none; }
-  .services-media-frame:not(:first-child) { display: none; }
+  .services-tagline {
+    min-height: 4rem;
+    text-align: center;
+  }
 
-  .services-tagline { min-height: 0; }
-  .services-tagline-line { position: static; opacity: 1; transform: none; }
-  .services-tagline-line:not(:first-child) { display: none; }
+  .services-tagline-line {
+    margin: 0 auto;
+    text-align: center;
+    font-size: clamp(0.95rem, 3.4vw, 1.1rem);
+  }
 
-  .services-counter { display: none; }
+  .services-counter { display: flex; }
 }
 
 @media (max-width: 480px) {
   .services-stage { padding: 4rem 1rem 3rem; }
-  .services-label { flex-direction: column; gap: 0.4rem; margin-bottom: 1.5rem; }
-  .services-grid { gap: 1.75rem; }
-  .services-list-item { font-size: 1.1rem; padding: 0.85rem 0; }
+  .services-label { flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
+  .services-grid { gap: 1.25rem; }
+  .services-list-viewport { height: clamp(150px, 24vh, 200px); }
+  .services-list-item { font-size: clamp(1.2rem, 6vw, 1.6rem); }
   .services-tagline-line { font-size: 0.92rem; }
+  .services-media { aspect-ratio: 3 / 2; }
 }

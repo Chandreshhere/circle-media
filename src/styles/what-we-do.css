@@ -67,10 +67,10 @@
 }
 
 /* Per-card tints so each one reads distinct as the stack builds. */
-.wwd-card:nth-child(1) { background: #ff9254; }
-.wwd-card:nth-child(2) { background: #9cc5ff; }
-.wwd-card:nth-child(3) { background: #f5dd4b; }
-.wwd-card:nth-child(4) { background: #b8e3a8; }
+.wwd-card:nth-child(1) { background: var(--c-red); }
+.wwd-card:nth-child(2) { background: var(--c-blue); }
+.wwd-card:nth-child(3) { background: var(--c-yellow); }
+.wwd-card:nth-child(4) { background: var(--c-mint); }
 
 .wwd-card-title {
   display: flex;
@@ -147,20 +147,40 @@
   .wwd-bg span {
     font-size: min(22vw, 22vh);
   }
+
+  /* Drop shadow on mobile reads softer at this scale */
+  .wwd-card {
+    box-shadow:
+      0 22px 44px -18px rgba(0, 0, 0, 0.4),
+      0 10px 18px -10px rgba(0, 0, 0, 0.25);
+  }
+
 }
 
 @media (max-width: 600px) {
   .wwd-card {
-    width: 86vw;
-    height: min(70vh, 520px);
+    width: 84vw;
+    height: min(68vh, 500px);
     padding: 1.6rem 1.4rem 1.4rem;
     border-radius: 12px;
   }
-  .wwd-card-title span { font-size: clamp(1.6rem, 7.5vw, 2.4rem); }
-  .wwd-card-copy { font-size: 0.92rem; margin-top: 0.85rem; }
-  .wwd-card-items li { font-size: 1rem; }
-  .wwd-card-id { font-size: clamp(2rem, 9vw, 3.2rem); }
+  .wwd-card-title span { font-size: clamp(1.5rem, 7.2vw, 2.2rem); }
+  .wwd-card-copy { font-size: 0.92rem; margin-top: 0.85rem; line-height: 1.4; }
+  .wwd-card-items li { font-size: 0.98rem; }
+  .wwd-card-id { font-size: clamp(2rem, 9vw, 3rem); }
   .wwd-card-footer { gap: 1rem; }
   .wwd-bg { padding: 2vh 4vw; }
   .wwd-bg span { font-size: min(22vw, 18vh); }
+}
+
+@media (max-width: 380px) {
+  .wwd-card {
+    width: 88vw;
+    height: min(64vh, 460px);
+    padding: 1.35rem 1.2rem 1.2rem;
+  }
+  .wwd-card-title span { font-size: clamp(1.3rem, 6.8vw, 1.8rem); }
+  .wwd-card-copy { font-size: 0.86rem; margin-top: 0.7rem; }
+  .wwd-card-items li { font-size: 0.9rem; }
+  .wwd-card-id { font-size: clamp(1.7rem, 8.5vw, 2.5rem); }
 }

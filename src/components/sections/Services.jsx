@@ -23,53 +23,45 @@ export default function Services() {
     const items = Array.from(list.querySelectorAll(".services-list-item"));
     if (!items.length) return;
 
-    const mm = gsap.matchMedia();
+    const itemH = items[0].getBoundingClientRect().height;
+    const total = items.length;
+    const travel = (total - 1) * itemH;
 
-    mm.add("(min-width: 820px)", () => {
-      const itemH = items[0].getBoundingClientRect().height;
-      const total = items.length;
-      const travel = (total - 1) * itemH;
+    gsap.set(list, { y: 0 });
 
-      gsap.set(list, { y: 0 });
+    const st = ScrollTrigger.create({
+      trigger: root,
+      start: "top top",
+      end: () => `+=${window.innerHeight * total}`,
+      pin: stage,
+      pinType: "transform",
+      pinSpacing: true,
+      scrub: 0.4,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        const p = self.progress;
+        const y = -p * travel;
+        gsap.set(list, { y });
 
-      const st = ScrollTrigger.create({
-        trigger: root,
-        start: "top top",
-        end: () => `+=${window.innerHeight * total}`,
-        pin: stage,
-        pinType: "transform",
-        pinSpacing: true,
-        scrub: 0.4,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const p = self.progress;
-          const y = -p * travel;
-          gsap.set(list, { y });
-
-          const idx = Math.min(total - 1, Math.floor(p * total));
-          if (idx !== activeRef.current) {
-            activeRef.current = idx;
-            setActive(idx);
-            setHistory((h) =>
-              [idx, ...h.filter((x) => x !== idx)].slice(0, STACK_DEPTH)
-            );
-          }
-        },
-        onRefresh: () => {
-          gsap.set(list, { y: 0 });
-          activeRef.current = 0;
-          setActive(0);
-          setHistory([0]);
-        },
-      });
-
-      return () => {
-        st.kill();
-      };
+        const idx = Math.min(total - 1, Math.floor(p * total));
+        if (idx !== activeRef.current) {
+          activeRef.current = idx;
+          setActive(idx);
+          setHistory((h) =>
+            [idx, ...h.filter((x) => x !== idx)].slice(0, STACK_DEPTH)
+          );
+        }
+      },
+      onRefresh: () => {
+        gsap.set(list, { y: 0 });
+        activeRef.current = 0;
+        setActive(0);
+        setHistory([0]);
+      },
     });
 
     return () => {
-      mm.revert();
+      st.kill();
     };
   }, []);
 

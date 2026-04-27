@@ -170,11 +170,26 @@ export default function FlyingImages({
         .flying-grid .flyer:last-child:nth-child(3n+1) {
           grid-column: 2;
         }
+        /* Mobile keeps the desktop 3-col layout — just bigger drop on the
+           middle column so the parallax-down feel reads more on a phone. */
         @media (max-width: 820px) {
-          .flying-grid { grid-template-columns: repeat(2, 1fr); }
-          .flying-grid .flyer:nth-child(3n+2) { margin-top: 0; }
-          .flying-grid .flyer:nth-child(5) { top: 0; }
-          .flying-grid .flyer:last-child:nth-child(3n+1) { grid-column: auto; }
+          .flying-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            padding: 12rem 1rem 5rem;
+          }
+          .flying-grid .flyer { margin-top: 6rem; }
+          .flying-grid .flyer:nth-child(3n+2) { margin-top: 22rem; }
+          .flying-grid .flyer:nth-child(5) { top: -16rem; }
+        }
+        @media (max-width: 480px) {
+          .flying-grid {
+            gap: 0.55rem;
+            padding: 9rem 0.85rem 4rem;
+          }
+          .flying-grid .flyer { margin-top: 4rem; }
+          .flying-grid .flyer:nth-child(3n+2) { margin-top: 14rem; }
+          .flying-grid .flyer:nth-child(5) { top: -10rem; }
         }
       `}</style>
     </div>

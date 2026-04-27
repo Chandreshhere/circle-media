@@ -506,12 +506,15 @@ a.cw-direct-v:hover { color: var(--accent); }
     right: auto;
     bottom: 1rem;
     transform: translateX(-50%);
+    max-width: calc(100vw - 1.5rem);
+    overflow-x: auto;
   }
-  .cw-act { padding: 0.7rem 0.8rem; font-size: 0.7rem; }
+  .cw-act { padding: 0.7rem 0.8rem; font-size: 0.7rem; flex-shrink: 0; }
   .cw-corner-tl { display: none; }
+  .cw-direct { grid-template-columns: 1fr 1fr; gap: 1.25rem 1.5rem; }
+  .cw-direct-block { gap: 0.4rem; }
 
   .cw-recap-row { grid-template-columns: 1fr; gap: 0.4rem; padding: 1rem 1.2rem; }
-  .cw-direct { grid-template-columns: 1fr; gap: 1.25rem; }
 }
 
 @media (max-width: 480px) {
@@ -531,4 +534,10 @@ a.cw-direct-v:hover { color: var(--accent); }
   .cw-act { padding: 0.6rem 0.55rem; font-size: 0.6rem; letter-spacing: 0.12em; }
   .cw-pill { padding: 0.5rem 0.85rem; }
   .cw-pill span { font-size: 0.85rem; }
+  .cw-direct { grid-template-columns: 1fr; gap: 1rem; }
+  .cw-direct-v { font-size: 0.95rem; }
+  .cw-social-h { font-size: 0.88rem; }
+  .cw-thanks { padding: 1.5rem 1.25rem; }
+  .cw-thanks-title { font-size: clamp(1.6rem, 9vw, 2.4rem); }
+  .cw-thanks-copy { font-size: 0.92rem; }
 }

@@ -72,6 +72,32 @@
   overflow: visible;
 }
 
+/* Left-to-right colour fill on the heading. A fixed multi-stop gradient
+   carries the palette; --splash drives only the gradient layer's width via
+   background-size. The text-coloured background sits beneath, so the rest
+   of the heading reads in the default colour until the wipe reaches it.
+   No calc() inside gradient stops — works on iOS Safari. */
+.about-title-splash {
+  --splash: 0%;
+  background-color: var(--text);
+  background-image: linear-gradient(
+    90deg,
+    var(--c-blue)   0%,
+    var(--c-pink)   25%,
+    var(--c-yellow) 50%,
+    var(--c-mint)   75%,
+    var(--c-red)    100%
+  );
+  background-size: var(--splash) 100%;
+  background-position: left center;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  will-change: background-size;
+}
+
 .about-panel-intro .about-panel-head {
   top: 5vh;
   left: 4vw;
@@ -222,19 +248,28 @@
 }
 
 /* Random scatter — irregular positions, no symmetry */
-.reveal-stat-1 { top: 18vh;   left: 7vw; }
-.reveal-stat-2 { top: 14vh;   right: 9vw; }
+.reveal-stat-1 { top: 28vh;   left: 7vw; }
+.reveal-stat-2 { top: 24vh;   right: 9vw; }
 .reveal-stat-3 { bottom: 14vh; left: 14vw; }
 .reveal-stat-4 { bottom: 10vh; right: 14vw; }
+
+.reveal-stat-1 .reveal-stat-v { color: var(--c-blue); }
+.reveal-stat-1 .reveal-stat-v sup { color: var(--c-blue); }
+.reveal-stat-2 .reveal-stat-v { color: var(--c-pink); }
+.reveal-stat-2 .reveal-stat-v sup { color: var(--c-pink); }
+.reveal-stat-3 .reveal-stat-v { color: var(--c-yellow); }
+.reveal-stat-3 .reveal-stat-v sup { color: var(--c-yellow); }
+.reveal-stat-4 .reveal-stat-v { color: var(--c-mint); }
+.reveal-stat-4 .reveal-stat-v sup { color: var(--c-mint); }
 
 @media (max-width: 900px) {
   .reveal-stat { width: 42vw; }
   .reveal-stat-v { font-size: clamp(3.2rem, 14vw, 5.5rem); }
   .reveal-stat-k { font-size: 0.85rem; }
-  .reveal-stat-1 { top: 14vh; left: 5vw; }
-  .reveal-stat-2 { top: 11vh; right: 5vw; }
+  .reveal-stat-1 { top: 22vh; left: 5vw; }
+  .reveal-stat-2 { top: 19vh; right: 2vw; }
   .reveal-stat-3 { bottom: 12vh; left: 5vw; }
-  .reveal-stat-4 { bottom: 8vh; right: 5vw; }
+  .reveal-stat-4 { bottom: 8vh; right: 2vw; }
 }
 
 /* ——— Panel 2: Process (cinematic floating cards) ——— */
@@ -369,9 +404,18 @@
   width: clamp(20rem, 24vw, 26rem);
 }
 
+.process-float-1 .process-float-num,
+.process-float-1 figcaption h3 { color: var(--c-blue); }
+.process-float-2 .process-float-num,
+.process-float-2 figcaption h3 { color: var(--c-pink); }
+.process-float-3 .process-float-num,
+.process-float-3 figcaption h3 { color: var(--c-yellow); }
+.process-float-4 .process-float-num,
+.process-float-4 figcaption h3 { color: var(--c-mint); }
+
 @media (max-width: 900px) {
   .about-panel-process { flex-basis: 230vw; }
-  .process-float { width: 68vw; }
+  .process-float { width: 52vw; }
   .process-float-1 { top: 10vh;    left: 5vw;   }
   .process-float-2 { top: auto; bottom: 6vh; left: 60vw;  }
   .process-float-3 { top: 8vh;     left: 115vw; }
@@ -523,4 +567,23 @@
   .about-stat-v { font-size: clamp(2.4rem, 12vw, 4rem); }
   .about-stat-k { font-size: 0.62rem; letter-spacing: 0.18em; }
   .about-banner-stack { height: 32vh; }
+
+  .about-title { top: 12vh; font-size: clamp(2.4rem, 12vw, 4rem); }
+  .about-body { font-size: 0.95rem; max-width: 32ch; line-height: 1.5; }
+  .about-stamp { font-size: 0.7rem; letter-spacing: 0.14em; }
+
+  .reveal-stat { width: 46vw; gap: 0.5rem; }
+  .reveal-stat-v { font-size: clamp(2.6rem, 14vw, 4.2rem); }
+  .reveal-stat-k { font-size: 0.74rem; letter-spacing: 0.14em; max-width: 18ch; }
+  .reveal-stats-kicker { font-size: 0.72rem; letter-spacing: 0.22em; left: 5vw; }
+
+  .process-float figcaption h3 { font-size: 1.2rem; }
+  .process-float figcaption p { font-size: 0.85rem; line-height: 1.45; }
+  .process-float-num { font-size: 0.66rem; letter-spacing: 0.2em; }
+
+  .quote-line { font-size: clamp(2.4rem, 16vw, 5rem); }
+  .about-quote-sub { font-size: 0.92rem; line-height: 1.45; }
+
+  .about-banner-caption h3 { font-size: clamp(1.4rem, 7vw, 2rem); }
+  .about-banner-caption { gap: 1rem; }
 }

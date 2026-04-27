@@ -32,8 +32,9 @@ export default function Reveal() {
       scrub: true,
       onUpdate: (self) => {
         const p = self.progress;
+        const endY = window.innerWidth <= 900 ? 6 : 0;
         gsap.set(img, {
-          y: `${-110 + 110 * p}%`,
+          y: `${-110 + (110 + endY) * p}%`,
           rotation: -15 + 15 * p,
         });
       },
@@ -97,11 +98,12 @@ export default function Reveal() {
       )
       .to(about, { x: panelShift, duration: 3.2 }, 1.0);
 
-    let quoteTrig;
+    // Quote fill setup
     let quoteResize;
+    let lines;
     if (quoteRef.current) {
       const stack = quoteRef.current.querySelector(".about-quote-stack");
-      const lines = quoteRef.current.querySelectorAll(".quote-line");
+      lines = quoteRef.current.querySelectorAll(".quote-line");
       lines.forEach((l) => l.style.setProperty("--fill", "0%"));
 
       const syncStackWidth = () => {
@@ -114,28 +116,84 @@ export default function Reveal() {
         stack.style.setProperty("--quote-width", `${Math.ceil(widest) + 12}px`);
       };
       syncStackWidth();
-      quoteResize = () => syncStackWidth();
+      if (document.fonts?.ready) {
+        document.fonts.ready.then(() => {
+          syncStackWidth();
+          ScrollTrigger.refresh();
+        });
+      }
+      quoteResize = () => {
+        syncStackWidth();
+        ScrollTrigger.refresh();
+      };
       window.addEventListener("resize", quoteResize);
-
-      quoteTrig = ScrollTrigger.create({
-        trigger: quoteRef.current,
-        containerAnimation: pinTl,
-        start: "left 95%",
-        end: "left 20%",
-        scrub: 0.6,
-        onUpdate: (self) => {
-          const p = Math.min(self.progress * 1.15, 1);
-          const fill = `${p * 100}%`;
-          lines.forEach((line) => line.style.setProperty("--fill", fill));
-        },
-      });
     }
+
+    // Title splash setup
+    const introPanel = about.querySelector(".about-panel-intro");
+    const splashTitle = introPanel?.querySelector(".about-title-splash");
+    if (splashTitle) splashTitle.style.setProperty("--splash", "0%");
+
+    // Fills are computed from the about element's animated x value plus each
+    // panel's static offsetLeft. This avoids getBoundingClientRect entirely,
+    // which on iOS Safari can return inconsistent values during nested
+    // transform animations (the pin uses transform pinning + about uses its
+    // own x tween). Triggered on every gsap.ticker frame so it tracks
+    // whatever scroll mechanism is driving the pin.
+    // Wider window on mobile = more scroll distance to traverse 0→1 = slower
+    // perceived fill. The title gets a wider/slower window than the quote so
+    // each animation paces well for its panel size.
+    const computeFromLeft = (left, vwLocal, mode) => {
+      const isMobile = vwLocal <= 900;
+      let start, end, boost;
+      if (isMobile && mode === "title") {
+        start = vwLocal * 1.20;
+        end   = vwLocal * -0.60;
+        boost = 1.0;
+      } else if (isMobile && mode === "quote") {
+        start = vwLocal * 1.05;
+        end   = vwLocal * -0.20;
+        boost = 1.10;
+      } else {
+        start = vwLocal * 0.92;
+        end   = vwLocal * 0.25;
+        boost = 1.15;
+      }
+      const span = start - end;
+      const p = Math.max(0, Math.min(1, (start - left) / span));
+      return Math.min(p * boost, 1);
+    };
+
+    let lastSplash = -1;
+    let lastFill = -1;
+    const tickFills = () => {
+      const vw = window.innerWidth;
+      const aboutX = parseFloat(gsap.getProperty(about, "x")) || 0;
+      if (introPanel && splashTitle) {
+        const left = aboutX + introPanel.offsetLeft;
+        const p = computeFromLeft(left, vw, "title") * 100;
+        if (Math.abs(p - lastSplash) > 0.1) {
+          lastSplash = p;
+          splashTitle.style.setProperty("--splash", `${p}%`);
+        }
+      }
+      if (quoteRef.current && lines && lines.length) {
+        const left = aboutX + quoteRef.current.offsetLeft;
+        const p = computeFromLeft(left, vw, "quote") * 100;
+        if (Math.abs(p - lastFill) > 0.1) {
+          lastFill = p;
+          const fill = `${p}%`;
+          lines.forEach((line) => line.style.setProperty("--fill", fill));
+        }
+      }
+    };
+    gsap.ticker.add(tickFills);
 
     return () => {
       descend.kill();
       pinTl.scrollTrigger?.kill();
       pinTl.kill();
-      if (quoteTrig) quoteTrig.kill();
+      gsap.ticker.remove(tickFills);
       if (quoteResize) window.removeEventListener("resize", quoteResize);
       countTrigs.forEach((t) => t?.scrollTrigger?.kill());
       ScrollTrigger.getAll().forEach((t) => {
@@ -213,7 +271,7 @@ export default function Reveal() {
         <div className="reveal-about-clip">
           <div className="reveal-about" ref={aboutRef}>
             <article className="about-panel about-panel-intro">
-              <h2 className="about-title" data-float data-drift="50" data-spin="1.5">
+              <h2 className="about-title about-title-splash" data-float data-drift="50" data-spin="1.5">
                 Circle is a digital<br />
                 marketing agency.
               </h2>

@@ -62,14 +62,21 @@ export default function TopNav() {
       return;
     }
 
+    // Match the CSS breakpoints so the animation lands at the same dimensions
+    // CSS would render — otherwise clearProps causes a visible jump.
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const targetW = Math.min(vw - 32, 1200);
-    const targetH = 58;
-    const targetTop = 16;
+    const isXSmall = vw <= 480;
+    const isMobile = vw <= 900;
+
+    const targetW = isMobile
+      ? vw - (isXSmall ? 16 : 24)         // calc(100vw - 1rem | 1.5rem)
+      : Math.min(vw - 32, 1200);
+    const targetH = isXSmall ? 46 : isMobile ? 52 : 58;
+    const targetTop = isXSmall ? 5.6 : 16; // 0.35rem | 1rem
     const targetLeft = (vw - targetW) / 2;
 
-    const startW = 200;
+    const startW = isMobile ? Math.min(160, targetW) : 200;
 
     inner.classList.add("is-compact");
     gsap.set(el, {

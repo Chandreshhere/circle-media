@@ -22,9 +22,27 @@
   .page-signature {
     width: clamp(26rem, 110vw, 64rem);
     height: clamp(13rem, 52vw, 24rem);
-    left: 4vw;
+    left: 36vw;
     top: 7vh;
   }
+}
+
+@media (max-width: 480px) {
+  .page-signature {
+    width: clamp(22rem, 130vw, 48rem);
+    height: clamp(10rem, 60vw, 18rem);
+    left: 30vw;
+    top: 5vh;
+  }
+}
+
+/* Per-page nudges — Work stays at the global right position above; Service
+   sits a touch further left so the script reads centred under its title. */
+@media (max-width: 900px) {
+  .services-hero .page-signature { left: 24vw; }
+}
+@media (max-width: 480px) {
+  .services-hero .page-signature { left: 18vw; }
 }
 
 /* Inline-flow handwrite (used inside paragraphs/headings, e.g. Hero "marketing"). */

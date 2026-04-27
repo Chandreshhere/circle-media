@@ -218,26 +218,48 @@
 .f-bottom {
   max-width: 1400px;
   margin: 0.75rem auto 0;
-  padding: 0 1.25rem;
+  padding: 0.75rem 1.25rem 0;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
   color: var(--text-mute);
   font-size: 0.8rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.f-bottom p { margin: 0; line-height: 1.3; }
+
 @media (max-width: 900px) {
-  .footer { padding: 2rem 0 1rem; min-height: auto; max-height: none; }
-  .footer-grid { grid-template-columns: 1fr; gap: 3rem; padding: 0 1.25rem; }
-  .f-meta { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-  .f-bottom { flex-direction: column; gap: 0.4rem; text-align: left; }
-  .f-outro-item { font-size: clamp(3.5rem, 14vw, 7rem); }
-  .f-cta h2 { font-size: clamp(2.6rem, 12vw, 4.6rem); }
-  .f-email { padding: 0.75rem 1rem; font-size: 0.95rem; }
+  .footer { padding: 1.4rem 0 0.75rem; min-height: auto; max-height: 75vh; }
+  .footer-grid { grid-template-columns: 1fr; gap: 1.4rem; padding: 0 1.25rem; }
+  .f-meta { grid-template-columns: 1fr 1fr; gap: 0.9rem 1rem; }
+  .f-bottom {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    text-align: center;
+    padding: 0.6rem 1.25rem 0;
+    margin-top: 0.5rem;
+  }
+  .f-outro-item { font-size: clamp(2.2rem, 10vw, 4rem); gap: 1.25rem; }
+  .f-cta h2 { font-size: clamp(2.2rem, 10vw, 3.8rem); }
+  .f-cta { gap: 0.75rem; }
+  .f-email { padding: 0.6rem 0.85rem; font-size: 0.9rem; gap: 0.5rem; margin-top: 0.6rem; }
 }
 
 @media (max-width: 480px) {
-  .f-meta { grid-template-columns: 1fr; }
+  .footer { padding: 1.1rem 0 0.65rem; max-height: 70vh; }
+  .footer-grid { gap: 1.15rem; padding: 0 1rem; }
+  .f-cta h2 { font-size: clamp(2.2rem, 13vw, 3.6rem); }
+  .f-cta { gap: 0.95rem; }
+  .f-email { margin-top: 1rem; padding: 0.7rem 0.95rem; font-size: 0.88rem; }
+  .f-meta { grid-template-columns: 1fr 1fr; gap: 1.1rem 1.25rem; }
+  .f-meta-k { font-size: 0.65rem; }
+  .f-meta-v { font-size: 0.85rem; }
   .f-social { width: 38px; height: 38px; font-size: 0.7rem; }
-  .f-outro-item { font-size: clamp(2.6rem, 14vw, 4.5rem); gap: 1.5rem; }
-  .f-outro-track { gap: 1.5rem; }
+  .f-social-row { gap: 0.45rem; flex-wrap: wrap; }
+  .f-outro-item { font-size: clamp(2.4rem, 14vw, 4rem); gap: 1.25rem; }
+  .f-outro-track { gap: 1.25rem; }
+  .f-bottom { padding: 0.5rem 1rem 0; font-size: 0.72rem; gap: 0.3rem; }
 }

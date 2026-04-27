@@ -16,13 +16,23 @@
   pointer-events: none;
   background:
     radial-gradient(
-      60vw 60vw at 20% 20%,
-      rgba(255, 122, 61, 0.06),
+      60vw 60vw at 18% 18%,
+      rgba(var(--c-pink-rgb), 0.07),
       transparent 60%
     ),
     radial-gradient(
-      50vw 50vw at 80% 80%,
-      rgba(139, 92, 255, 0.05),
+      55vw 55vw at 82% 30%,
+      rgba(var(--c-yellow-rgb), 0.06),
+      transparent 60%
+    ),
+    radial-gradient(
+      50vw 50vw at 78% 82%,
+      rgba(var(--c-blue-rgb), 0.07),
+      transparent 60%
+    ),
+    radial-gradient(
+      45vw 45vw at 22% 75%,
+      rgba(var(--c-mint-rgb), 0.05),
       transparent 60%
     );
   z-index: 0;
@@ -110,42 +120,56 @@
 
 @media (max-width: 900px) {
   .tagline {
-    min-height: 120vh;
-    padding: 14vh 5vw;
+    min-height: 110vh;
+    padding: 12vh 5vw;
   }
 
   .tagline-heading {
-    font-size: clamp(2.8rem, 13vw, 6rem);
+    font-size: clamp(2.6rem, 11vw, 5rem);
+    line-height: 1.08;
   }
 
   .tagline-img-1 {
-    width: 36vw;
-    top: 4%;
-    left: 4%;
+    width: 24vw;
+    top: 3%;
+    left: 3%;
   }
 
   .tagline-img-2 {
-    width: 32vw;
-    top: 6%;
-    right: 4%;
+    width: 22vw;
+    top: 5%;
+    right: 3%;
   }
 
   .tagline-img-3 {
-    width: 32vw;
-    top: 50%;
-    left: 5%;
+    width: 22vw;
+    top: 60%;
+    left: 4%;
   }
 
   .tagline-img-4 {
-    width: 38vw;
-    bottom: 6%;
+    width: 26vw;
+    bottom: 5%;
     right: 4%;
   }
 }
 
-@media (max-width: 480px) {
-  .tagline { min-height: 100vh; padding: 12vh 5vw; }
-  .tagline-heading { font-size: clamp(2rem, 11vw, 3.4rem); }
-  .tagline-img { display: none; }
-  .tagline-img-1, .tagline-img-3 { display: block; width: 38vw; }
+@media (max-width: 600px) {
+  .tagline { min-height: 100vh; padding: 10vh 5vw; }
+  .tagline-heading { font-size: clamp(2rem, 10.5vw, 3.6rem); line-height: 1.1; }
+  .tagline-img-1 { width: 26vw; top: 2%; }
+  .tagline-img-2 { width: 24vw; top: 3%; }
+  .tagline-img-3 { width: 24vw; top: 62%; }
+  .tagline-img-4 { width: 28vw; bottom: 4%; }
+}
+
+@media (max-width: 420px) {
+  .tagline { min-height: 90vh; padding: 9vh 5vw; }
+  .tagline-heading { font-size: clamp(1.85rem, 10.5vw, 3rem); }
+  /* All four images visible — sized down so they read like accents around
+     the heading without crowding. */
+  .tagline-img-1 { width: 28vw; top: 1%; }
+  .tagline-img-2 { width: 26vw; top: 2%; }
+  .tagline-img-3 { width: 26vw; top: 64%; }
+  .tagline-img-4 { width: 30vw; bottom: 3%; }
 }

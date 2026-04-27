@@ -173,6 +173,9 @@
   .about-h-header {
     padding: 1.25rem 1.25rem;
   }
+  .about-h-eyebrow { font-size: 0.78rem; gap: 0.7rem; letter-spacing: 0.12em; }
+  .about-h-eyebrow-line { width: 36px; }
+  .about-h-hint { font-size: 0.74rem; letter-spacing: 0.16em; }
   .about-h-track {
     padding: 0 1.25rem;
     gap: 1.25rem;
@@ -189,9 +192,11 @@
 }
 
 @media (max-width: 480px) {
-  .about-h-panel { width: 88vw; padding: 1.5rem 1.2rem; min-height: 56vh; }
-  .about-h-title { font-size: clamp(2.2rem, 10vw, 3.4rem); }
-  .about-h-copy { font-size: 0.88rem; }
-  .about-h-panel-end { width: 88vw; }
-  .about-h-title-end { font-size: clamp(2.4rem, 12vw, 3.6rem); }
+  .about-h-header { padding: 1rem 1rem; }
+  .about-h-panel { width: 86vw; padding: 1.5rem 1.2rem; min-height: 54vh; gap: 1rem; }
+  .about-h-panel-meta { font-size: 0.72rem; letter-spacing: 0.14em; }
+  .about-h-title { font-size: clamp(2rem, 10vw, 3rem); }
+  .about-h-copy { font-size: 0.88rem; line-height: 1.5; }
+  .about-h-panel-end { width: 86vw; }
+  .about-h-title-end { font-size: clamp(2.2rem, 12vw, 3.4rem); }
 }

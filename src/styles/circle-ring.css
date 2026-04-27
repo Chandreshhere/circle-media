@@ -32,10 +32,11 @@
   --ring-rot-auto: 0;
   --ring-scale: 1;
   --ring-y: 0;
+  --ring-y-mult: 1;
   position: absolute;
   inset: 0;
   transform:
-    translate3d(0, calc(var(--ring-y) * 1vh), 0)
+    translate3d(0, calc(var(--ring-y) * var(--ring-y-mult) * 1vh), 0)
     scale(var(--ring-scale))
     rotate3d(0, 0, 1, calc((var(--ring-rot) + var(--ring-rot-auto)) * 1deg));
   transform-origin: 50% 50%;
@@ -126,28 +127,41 @@
   filter: blur(0px);
 }
 
+/* Mobile: shrink the circles via scale on the inner badge AND multiply the
+   orbit translate so the ring spreads wider. Two independent levers — the
+   parent transform:scale was coupling both. --ring-y-mult bumps how far
+   the ring drifts down during scroll, mobile-only. */
 @media (max-width: 820px) {
+  .cring-ring { --ring-y-mult: 1.16; }
   .cring-floater {
     translate:
-      calc(var(--tx, 0vmin) * var(--spread) * 0.7 - 50%)
-      calc(var(--ty, 0vmin) * var(--spread) * 0.7 - 50%);
-    zoom: 0.7;
+      calc(var(--tx, 0vmin) * 1.3 - 50%)
+      calc(var(--ty, 0vmin) * 1.3 - 50%);
+  }
+  .cring-floater-inner {
+    scale: 0.6;
   }
   .cring-text {
     font-size: clamp(1.8rem, 8vw, 3.4rem);
     white-space: normal;
+    text-wrap: balance;
+    line-height: 1.1;
   }
 }
 
 @media (max-width: 480px) {
+  .cring-ring { --ring-y-mult: 1.23; }
   .cring-floater {
     translate:
-      calc(var(--tx, 0vmin) * var(--spread) * 0.55 - 50%)
-      calc(var(--ty, 0vmin) * var(--spread) * 0.55 - 50%);
-    zoom: 0.55;
+      calc(var(--tx, 0vmin) * 1.38 - 50%)
+      calc(var(--ty, 0vmin) * 1.38 - 50%);
+  }
+  .cring-floater-inner {
+    scale: 0.5;
   }
   .cring-text {
-    font-size: clamp(1.4rem, 9vw, 2.6rem);
-    max-width: 86vw;
+    font-size: clamp(1.3rem, 8.5vw, 2.4rem);
+    max-width: 88vw;
+    line-height: 1.12;
   }
 }

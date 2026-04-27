@@ -48,7 +48,12 @@ export default function CircleRing() {
       floatersRef.current.querySelectorAll(".cring-floater")
     );
 
-    gsap.set(nodes, { "--spread": 0, opacity: 0, filter: "blur(18px)" });
+    // Floaters always render at their full orbit position. The earlier
+    // bunch-to-spread intro (animating --spread from 0→1) was unreliable on
+    // iOS Safari — calc() of a length × an animated unitless var inside the
+    // standalone `translate` property could silently fail, leaving every
+    // floater stacked at centre. Now we only fade them in.
+    gsap.set(nodes, { opacity: 0, filter: "blur(18px)" });
     gsap.set(ring, {
       "--ring-rot": 0,
       "--ring-rot-auto": 0,
@@ -75,7 +80,6 @@ export default function CircleRing() {
       .to(
         nodes,
         {
-          "--spread": 1,
           opacity: 1,
           filter: "blur(0px)",
           duration: 1.4,

@@ -24,6 +24,19 @@
   --accent: #ff7a3d;
   --accent-rgb: 255, 122, 61;
   --accent-2: #8b5cff;
+  /* Brand palette — used for multi-color tints (cards, slide backgrounds,
+     gradients, decorative shapes). Pull these whenever a section needs
+     variety beyond the primary orange accent. */
+  --c-blue:   #4D6CB3;
+  --c-red:    #F16754;
+  --c-pink:   #EE5789;
+  --c-yellow: #F6AF2D;
+  --c-mint:   #5ABE79;
+  --c-blue-rgb:   77, 108, 179;
+  --c-red-rgb:    241, 103, 84;
+  --c-pink-rgb:   238, 87, 137;
+  --c-yellow-rgb: 246, 175, 45;
+  --c-mint-rgb:   90, 190, 121;
   --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.16);
   --font-display: "Neue Haas Grotesk Display Pro", "Satoshi", sans-serif;
@@ -44,6 +57,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  overscroll-behavior-y: none;
 }
 
 body {

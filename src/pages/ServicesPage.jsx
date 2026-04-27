@@ -57,18 +57,22 @@ export default function ServicesPage() {
         <HandwriteText className="page-signature">Service</HandwriteText>
       </section>
 
-      <section className="services-body">
-        {services.map((s) => (
+      <section className="services-body services-list-page">
+        {services.map((s, i) => (
           <Dissolve key={s.id}>
-            <div className="two-col">
-              <div>
-                <p className="label">[{s.id}]</p>
+            <article
+              className={`svc-card svc-card-${(i % 5) + 1} ${
+                i % 2 ? "svc-card-flip" : ""
+              }`}
+            >
+              <span className="svc-card-num">{s.id}</span>
+              <div className="svc-card-body">
+                <p className="svc-card-tag">{s.tagline}</p>
+                <h3 className="svc-card-title">{s.title}</h3>
+                <p className="svc-card-copy">{s.copy}</p>
               </div>
-              <div>
-                <h3>{s.title}</h3>
-                <p>{s.copy}</p>
-              </div>
-            </div>
+              <span className="svc-card-arrow" aria-hidden="true">↗</span>
+            </article>
           </Dissolve>
         ))}
       </section>
