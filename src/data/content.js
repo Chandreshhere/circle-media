@@ -1,44 +1,49 @@
+// Service images sourced from Unsplash (free, professional). Each is picked
+// to be instantly recognisable for its discipline — Instagram-on-phone for
+// social, GA-style dashboards for performance, code editor for web dev,
+// search-bar SERP for SEO, brand-identity workspace for branding, online
+// shopping cart for e-commerce.
 export const services = [
   {
     id: "01",
     title: "Social Media Marketing",
     tagline: "Always-on ecosystems that turn passive scrollers into brand advocates.",
-    image: "/assets/project/project1.jpg",
+    image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=900&q=80",
     copy: "We build always-on social ecosystems that turn passive scrollers into brand advocates. Strategy, content calendars, community management and reporting — all under one roof."
   },
   {
     id: "02",
     title: "Performance Marketing",
     tagline: "Meta, Google, TikTok — media mix engineered for compounding ROAS.",
-    image: "/assets/project/project2.jpg",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80",
     copy: "Meta, Google, TikTok, YouTube — media mix modeling, creative testing frameworks and daily optimization to drive ROAS that compounds month over month."
   },
   {
     id: "03",
     title: "Website Development",
     tagline: "Fast, expressive sites built to convert and built to last.",
-    image: "/assets/project/project3.jpg",
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=900&q=80",
     copy: "Design systems, headless stacks and performance budgets. We ship sites that load fast, read clean and move people from landing page to decision without friction."
   },
   {
     id: "04",
     title: "Search Engine Optimization",
     tagline: "Technical depth and editorial craft that earns trust long after the campaign.",
-    image: "/assets/project/project4.jpg",
+    image: "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?auto=format&fit=crop&w=900&q=80",
     copy: "Technical audits, topical authority, digital PR and editorial content that earns impressions, clicks and trust long after the campaign ends."
   },
   {
     id: "05",
     title: "Branding & Content Planning",
     tagline: "Identity systems and creative guardrails with an unmistakable voice.",
-    image: "/assets/project/project5.jpg",
+    image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=900&q=80",
     copy: "Identity systems, design principles and creative guardrails that give every touchpoint the same unmistakable voice — even when no one is watching."
   },
   {
     id: "06",
     title: "E-Commerce Listings",
     tagline: "Listings engineered for discoverability, conversion and retention.",
-    image: "/assets/project/project6.jpg",
+    image: "https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=900&q=80",
     copy: "Amazon, Flipkart, Shopify — catalog architecture, A+ content, storefront design and review strategy that turn product pages into revenue engines."
   }
 ];
