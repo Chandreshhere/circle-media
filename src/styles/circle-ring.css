@@ -145,11 +145,19 @@
   .cring-floater-inner {
     scale: 0.6;
   }
+  /* CSS default has to match the JS scrub start frame on mobile
+     (TEXT_START_VH = -20). top:50% of the 140vh section is 70vh from
+     section top; the -20vh translate puts the text at 50vh from viewport
+     top — i.e. exactly the ring's centre.
+     z-index 1 (below footer's z-index 2) so the text passes BEHIND the
+     footer as the footer rises into view. */
   .cring-text {
     font-size: clamp(1.8rem, 8vw, 3.4rem);
     white-space: normal;
     text-wrap: balance;
     line-height: 1.1;
+    transform: translate(-50%, calc(-50% - 20vh));
+    z-index: 1;
   }
 }
 

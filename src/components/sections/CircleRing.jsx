@@ -110,6 +110,10 @@ export default function CircleRing() {
     const DESCENT_FRAC = 1 / TOTAL_SCROLL_FACTOR;
     let lastPhase = "intro";
 
+    const isTextTouch =
+      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+      window.innerWidth <= 900;
+
     const scrollTrig = ScrollTrigger.create({
       trigger: section,
       start: "top top",
@@ -131,7 +135,35 @@ export default function CircleRing() {
         );
         ring.style.setProperty("--ring-y", String(pDescendEased * 90));
 
-        const yVh = -50 + pDescend * 150;
+        // Mobile: section scrolls naturally (no JS pin). Three phases:
+        //   1. Descent (Y 0→100vh): text starts at ring centre (50vh from
+        //      viewport top) and descends down with the ring, ending at
+        //      ~85vh.
+        //   2. Bridge (Y 100→140vh): text continues down to ~100vh —
+        //      the viewport's bottom edge, where the footer is about to
+        //      enter from below.
+        //   3. Footer ride (Y > 140vh): the next sibling (.footer) is now
+        //      rising into view; the text glues to the footer's top edge
+        //      and rises with it instead of sitting in the middle of the
+        //      footer overlapping its content.
+        // Math assumes mobile section is 140vh, top:50% of section = 70vh.
+        let yVh;
+        if (isTextTouch) {
+          const scrollVh = p * TOTAL_SCROLL_FACTOR * 100;
+          if (pDescend < 1) {
+            yVh = -20 + pDescend * 135;
+          } else if (scrollVh < 140) {
+            // Bridge: smoothly ramp yVh from 115 (text @ 85vh) to 170
+            // (text @ 100vh, footer top entry point).
+            yVh = 115 + (scrollVh - 100) * (55 / 40);
+          } else {
+            // Footer ride: yVh held at 170 so text vertical = 240 - Y,
+            // which is exactly the footer's top edge as it rises.
+            yVh = 170;
+          }
+        } else {
+          yVh = -50 + pDescend * 150;
+        }
         text.style.transform = `translate(-50%, calc(-50% + ${yVh}vh))`;
 
         const phase = p > TEXT_SWITCH_AT ? "outro" : "intro";
@@ -142,25 +174,30 @@ export default function CircleRing() {
       },
     });
 
-    // Pin runs on every device now. Previously skipped on touch because
-    // pin-via-transform fought iOS native scroll — but with normalizeScroll
-    // enabled at the App level, ScrollTrigger samples scroll through its own
-    // RAF loop, so the pin stays locked on mobile too. This restores the
-    // descent + footer-overlap effect on phones.
-    const pinTrig = ScrollTrigger.create({
-      trigger: section,
-      start: "top+=50% top",
-      end: () => `+=${window.innerHeight * 1.6}`,
-      pin: inner,
-      pinType: "transform",
-      pinSpacing: false,
-      anticipatePin: 1,
-    });
+    // GSAP pin is desktop-only. On touch the inner is already pinned by
+    // `position: sticky` in the CSS — adding a second pin via transform
+    // fights with native scroll on iOS, causing the "footer locked" /
+    // "can't scroll up" symptoms users were reporting.
+    const isTouch =
+      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+      window.innerWidth <= 900;
+    let pinTrig = null;
+    if (!isTouch) {
+      pinTrig = ScrollTrigger.create({
+        trigger: section,
+        start: "top+=50% top",
+        end: () => `+=${window.innerHeight * 1.6}`,
+        pin: inner,
+        pinType: "transform",
+        pinSpacing: false,
+        anticipatePin: 1,
+      });
+    }
 
     return () => {
       introTrig.kill();
       scrollTrig.kill();
-      pinTrig.kill();
+      if (pinTrig) pinTrig.kill();
       intro.kill();
       autoSpin.kill();
     };
