@@ -89,23 +89,28 @@ export default function App() {
       }
     };
 
-    // syncTouch is Lenis's iOS-specific mode: it keeps native touch
-    // momentum (so the scroll feel is the same as the rest of iOS) but
-    // synchronises Lenis's RAF loop with the native scroll position, so
-    // ScrollTrigger pins read the same scroll value the native browser
-    // is rendering. This is the combination that fixes both:
-    //   (a) pins not locking / bouncing past the footer on iOS
-    //   (b) scroll feeling sluggish when smoothTouch was on
-    // syncTouch is the official Lenis recommendation over smoothTouch.
+    // syncTouch is Lenis's touch-aware smoothing mode (works on both iOS
+    // and Android). It keeps native touch input feel but synchronises
+    // Lenis's RAF loop with the rendered scroll position, so ScrollTrigger
+    // pins read the same value the browser is painting. Combined with a
+    // high touchInertiaMultiplier and touchMultiplier, a single swipe
+    // produces sustained, smooth scroll across the page instead of
+    // stopping abruptly when the finger lifts.
     const lenis = new Lenis({
       smoothWheel: true,
       syncTouch: isTouch,
-      syncTouchLerp: 0.1,
-      touchInertiaMultiplier: 25,
+      // Lower lerp = smoother, higher lerp = snappier. 0.075 gives a
+      // glide-like feel without lagging behind the finger.
+      syncTouchLerp: 0.075,
+      // Boost inertia so a single swipe carries far instead of stopping
+      // when the finger lifts.
+      touchInertiaMultiplier: 40,
       lerp: 0.09,
       duration: 1.05,
       wheelMultiplier: 1.05,
-      touchMultiplier: isTouch ? 1.4 : 1.6,
+      // Higher touchMultiplier = more scroll per pixel of finger travel.
+      // 2.0 makes long-page navigation feel light without overshooting.
+      touchMultiplier: isTouch ? 2.0 : 1.6,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
     lenisInstance = lenis;
