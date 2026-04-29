@@ -19,12 +19,15 @@ export default function Transition({ pathname }) {
 
     if (first.current) {
       first.current = false;
+      // Initial page-load reveal: longer duration + softer ease so the
+      // blocks lift away gradually instead of snapping. The smaller
+      // stagger keeps the rows feeling unified rather than zip-like.
       gsap.set(blocks, { scaleY: 1, transformOrigin: "top" });
       gsap.to(blocks, {
         scaleY: 0,
-        duration: 0.35,
-        stagger: 0.015,
-        ease: "power3.out",
+        duration: 0.85,
+        stagger: 0.02,
+        ease: "power2.inOut",
       });
       return;
     }
@@ -38,16 +41,16 @@ export default function Transition({ pathname }) {
     tl.set(blocks, { scaleY: 0, transformOrigin: "top" });
     tl.to(blocks, {
       scaleY: 1,
-      duration: 0.22,
-      stagger: 0.012,
-      ease: "power3.in",
+      duration: 0.32,
+      stagger: 0.018,
+      ease: "power2.in",
     });
     tl.set(blocks, { transformOrigin: "bottom" });
     tl.to(blocks, {
       scaleY: 0,
-      duration: 0.22,
-      stagger: 0.012,
-      ease: "power3.out",
+      duration: 0.32,
+      stagger: 0.018,
+      ease: "power2.out",
     });
   }, [pathname]);
 

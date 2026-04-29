@@ -56,19 +56,24 @@ export default function Hero() {
       lenis?.start();
     };
 
-    const tl = gsap.timeline({ delay: 0.95, onComplete: unlock }); // wait out the page Transition
+    // Start the entrance slightly before the Transition fully clears so
+    // the two animations cross-fade instead of running back-to-back (which
+    // is what made the load read as "two distinct stages, then a pop").
+    // Longer duration + softer ease + slightly larger stagger gives a calm
+    // settling-in feel instead of snapping.
+    const tl = gsap.timeline({ delay: 0.7, onComplete: unlock });
     tl.to(items, {
       opacity: 1,
       y: 0,
       filter: "blur(0px)",
-      duration: 1.1,
-      ease: "power3.out",
-      stagger: 0.12,
+      duration: 1.4,
+      ease: "power2.out",
+      stagger: 0.14,
     });
     // Belt-and-suspenders: even if onComplete misses (e.g. tab backgrounded
-    // through the entrance), force-unlock after 3.5s so we never leave the
+    // through the entrance), force-unlock after 4.5s so we never leave the
     // page un-scrollable.
-    const failsafe = setTimeout(unlock, 3500);
+    const failsafe = setTimeout(unlock, 4500);
     return () => {
       clearTimeout(failsafe);
       tl.kill();

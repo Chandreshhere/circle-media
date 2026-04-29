@@ -1,3 +1,13 @@
+/* Hide the hero entrance items at first paint so they don't flash visible
+   before the GSAP useEffect fires its initial gsap.set(opacity:0). Without
+   this rule, the page renders the items at full opacity for one frame,
+   then JS hides them, then animates them in — that single-frame flash is
+   what reads as a "glitchy" load. */
+[data-hero-reveal] {
+  opacity: 0;
+  will-change: transform, opacity, filter;
+}
+
 /* Split hero: particle-forming logo on the left, tagline on the right.
    Fills the viewport; the next section (Process) scrolls up over a solid
    background, so no pin logic is needed here. */
