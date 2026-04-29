@@ -13,19 +13,9 @@ gsap.registerPlugin(ScrollTrigger);
 // biggest mobile-stability win.
 ScrollTrigger.config({ ignoreMobileResize: true });
 
-// On touch devices, normalize the scroll: ScrollTrigger reads scroll through
-// its own RAF loop instead of the native compositor's momentum scroll. This
-// is the GSAP-recommended fix for "pin not locked / horizontal section
-// bouncing on iOS" — it eliminates the desync between native momentum scroll
-// (compositor thread) and pin transforms (main thread). Layout / effects are
-// unchanged; only the way scroll position is sampled changes.
-if (
-  typeof window !== "undefined" &&
-  (window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
-    window.innerWidth <= 900)
-) {
-  ScrollTrigger.normalizeScroll(true);
-}
+// (Mobile pin smoothness is now handled by Lenis with smoothTouch; running
+// ScrollTrigger.normalizeScroll on top of Lenis would double-smooth and
+// felt sluggish, so it's intentionally not enabled here.)
 
 import TopNav from "./components/TopNav.jsx";
 import Transition from "./components/Transition.jsx";
@@ -64,10 +54,11 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // Mobile / touch devices skip Lenis entirely — native iOS Safari and
-    // Android scroll is hardware-accelerated and significantly smoother
-    // than a JS-driven smooth-scroll loop on phones. Lenis on touch is
-    // what was producing the jitter, momentum lock, and pin desync.
+    // Lenis runs on every device now. Mobile uses `smoothTouch` so the
+    // touch-driven scroll feels just as smooth as the desktop wheel scroll,
+    // and pinned sections sample scroll through Lenis's RAF loop instead
+    // of fighting native iOS momentum (which is what made earlier mobile
+    // scroll feel jittery / inconsistent).
     const isTouch =
       window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
       window.innerWidth <= 900;
@@ -98,21 +89,13 @@ export default function App() {
       }
     };
 
-    if (isTouch) {
-      const onScroll = () => handleY(window.scrollY);
-      window.addEventListener("scroll", onScroll, { passive: true });
-      return () => {
-        window.removeEventListener("scroll", onScroll);
-        document.body.classList.remove("chrome-hidden");
-      };
-    }
-
     const lenis = new Lenis({
       smoothWheel: true,
-      lerp: 0.09,
-      duration: 1.05,
+      smoothTouch: isTouch,
+      lerp: isTouch ? 0.12 : 0.09,
+      duration: isTouch ? 0.9 : 1.05,
       wheelMultiplier: 1.05,
-      touchMultiplier: 1.6,
+      touchMultiplier: isTouch ? 1.4 : 1.6,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
     lenisInstance = lenis;

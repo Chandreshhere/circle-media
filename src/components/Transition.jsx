@@ -19,6 +19,15 @@ export default function Transition({ pathname }) {
 
     if (first.current) {
       first.current = false;
+      // Skip the first-load block-reveal on the home route — the hero has
+      // its own entrance animation, and overlaying the page-cover blocks
+      // on top of it makes the home reload feel doubled-up. Page-to-page
+      // transitions (the timeline below) still run normally on every
+      // route, including / .
+      if (pathname === "/") {
+        gsap.set(blocks, { scaleY: 0 });
+        return;
+      }
       // Initial page-load reveal: longer duration + softer ease so the
       // blocks lift away gradually instead of snapping. The smaller
       // stagger keeps the rows feeling unified rather than zip-like.
