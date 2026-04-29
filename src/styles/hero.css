@@ -28,6 +28,10 @@
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  /* Pre-paint the column with the page bg so there's no white flash where
+     the logo will render before the WebGL canvas paints its first frame
+     (visible as a "white square" on hard reload, especially on mobile). */
+  background: var(--bg);
 }
 
 /* Soft right-edge fade so the canvas dissolves into the copy column

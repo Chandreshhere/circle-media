@@ -503,7 +503,10 @@ const DynamicBackground = ({ logoPath = "/logoonly.png", bgColor = "#050506" }) 
         height: "100%",
         zIndex: 0,
         pointerEvents: "none",
-        backgroundColor: "transparent",
+        // Match the WebGL clearColor so the brief moment between canvas
+        // mount and the first WebGL frame doesn't paint a white box where
+        // the logo is supposed to be.
+        backgroundColor: bgColor,
         mixBlendMode: "normal",
         display: "block",
       }}
