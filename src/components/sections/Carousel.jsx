@@ -7,21 +7,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Carousel() {
   useEffect(() => {
-    const section = document.querySelector(".carousel");
-    if (!section) return;
-
-    // Touch fallback: skip the pinned clip-path stack, drop the `.is-touch`
-    // class on the section so CSS lets the projects flow naturally one after
-    // another. The pin/scrub combination on iOS Safari was the source of the
-    // section "bouncing" against native scroll.
-    const isTouch =
-      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
-      window.innerWidth <= 900;
-    if (isTouch) {
-      section.classList.add("carousel-touch");
-      return;
-    }
-
     const carouselSectionPinnedHeight =
       window.innerHeight * carouselItems.length;
 
@@ -55,6 +40,8 @@ export default function Carousel() {
       end: `+=${carouselSectionPinnedHeight}`,
       pin: true,
       pinSpacing: true,
+      pinType: "transform",
+      anticipatePin: 1,
     });
     trigs.push(pin);
 

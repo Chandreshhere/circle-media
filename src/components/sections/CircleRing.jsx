@@ -107,73 +107,60 @@ export default function CircleRing() {
     // keeps spinning at a steady pace while the footer rises.
     const baseRot = 360;
     const TOTAL_SCROLL_FACTOR = 2.6;
-    const DESCENT_FRAC = 1 / TOTAL_SCROLL_FACTOR; // 100/260
+    const DESCENT_FRAC = 1 / TOTAL_SCROLL_FACTOR;
     let lastPhase = "intro";
 
-    // GSAP pin is desktop-only. On touch the inner is already pinned by
-    // `position: sticky` in the CSS — adding a second pin via transform
-    // fights with native scroll on iOS, causing the "footer locked" /
-    // "can't scroll up" symptoms users were reporting.
-    const isTouch =
-      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
-      window.innerWidth <= 900;
+    const scrollTrig = ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: () => `+=${window.innerHeight * TOTAL_SCROLL_FACTOR}`,
+      scrub: 1.2,
+      onUpdate: (self) => {
+        const p = self.progress;
+        const pDescend = clamp01(p / DESCENT_FRAC);
+        const pDescendEased = 1 - (1 - pDescend) * (1 - pDescend);
+        const pPostPin = clamp01((p - DESCENT_FRAC) / (1 - DESCENT_FRAC));
 
-    // On mobile we also skip the scroll-driven scrub: dragging --ring-y /
-    // --ring-scale on every scroll frame is what made the logo appear to
-    // "fall" / jump downward on every touch. The intro animation still plays
-    // and the autospin keeps the ring lively, just without the descent.
-    let scrollTrig = null;
-    if (!isTouch) {
-      scrollTrig = ScrollTrigger.create({
-        trigger: section,
-        start: "top top",
-        end: () => `+=${window.innerHeight * TOTAL_SCROLL_FACTOR}`,
-        scrub: 1.2,
-        onUpdate: (self) => {
-          const p = self.progress;
-          const pDescend = clamp01(p / DESCENT_FRAC);
-          const pDescendEased = 1 - (1 - pDescend) * (1 - pDescend);
-          const pPostPin = clamp01((p - DESCENT_FRAC) / (1 - DESCENT_FRAC));
+        ring.style.setProperty(
+          "--ring-rot",
+          String(baseRot + pDescend * 360 + pPostPin * 720)
+        );
+        ring.style.setProperty(
+          "--ring-scale",
+          String(1 + pDescendEased * 1.4)
+        );
+        ring.style.setProperty("--ring-y", String(pDescendEased * 90));
 
-          ring.style.setProperty(
-            "--ring-rot",
-            String(baseRot + pDescend * 360 + pPostPin * 720)
-          );
-          ring.style.setProperty(
-            "--ring-scale",
-            String(1 + pDescendEased * 1.4)
-          );
-          ring.style.setProperty("--ring-y", String(pDescendEased * 90));
+        const yVh = -50 + pDescend * 150;
+        text.style.transform = `translate(-50%, calc(-50% + ${yVh}vh))`;
 
-          const yVh = -50 + pDescend * 150;
-          text.style.transform = `translate(-50%, calc(-50% + ${yVh}vh))`;
+        const phase = p > TEXT_SWITCH_AT ? "outro" : "intro";
+        if (phase !== lastPhase) {
+          lastPhase = phase;
+          setPhaseId(phase);
+        }
+      },
+    });
 
-          const phase = p > TEXT_SWITCH_AT ? "outro" : "intro";
-          if (phase !== lastPhase) {
-            lastPhase = phase;
-            setPhaseId(phase);
-          }
-        },
-      });
-    }
-
-    let pinTrig = null;
-    if (!isTouch) {
-      pinTrig = ScrollTrigger.create({
-        trigger: section,
-        start: "top+=50% top",
-        end: () => `+=${window.innerHeight * 1.6}`,
-        pin: inner,
-        pinType: "transform",
-        pinSpacing: false,
-        anticipatePin: 1,
-      });
-    }
+    // Pin runs on every device now. Previously skipped on touch because
+    // pin-via-transform fought iOS native scroll — but with normalizeScroll
+    // enabled at the App level, ScrollTrigger samples scroll through its own
+    // RAF loop, so the pin stays locked on mobile too. This restores the
+    // descent + footer-overlap effect on phones.
+    const pinTrig = ScrollTrigger.create({
+      trigger: section,
+      start: "top+=50% top",
+      end: () => `+=${window.innerHeight * 1.6}`,
+      pin: inner,
+      pinType: "transform",
+      pinSpacing: false,
+      anticipatePin: 1,
+    });
 
     return () => {
       introTrig.kill();
-      if (scrollTrig) scrollTrig.kill();
-      if (pinTrig) pinTrig.kill();
+      scrollTrig.kill();
+      pinTrig.kill();
       intro.kill();
       autoSpin.kill();
     };

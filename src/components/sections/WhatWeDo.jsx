@@ -50,27 +50,6 @@ export default function WhatWeDo() {
     const cards = cardRefs.current.filter(Boolean);
     if (!root || cards.length === 0) return;
 
-    // On touch we skip the pinned scroll-driven stack entirely. The cards
-    // become a vertical flow (CSS handles via `.wwd-touch`), and a simple
-    // fade-in plays as each enters view — no pin, no scrub.
-    const isTouch =
-      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
-      window.innerWidth <= 900;
-    if (isTouch) {
-      root.classList.add("wwd-touch");
-      const trigs = cards.map((card) => {
-        gsap.set(card, { autoAlpha: 0, y: 40 });
-        return ScrollTrigger.create({
-          trigger: card,
-          start: "top 85%",
-          once: true,
-          onEnter: () =>
-            gsap.to(card, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }),
-        });
-      });
-      return () => trigs.forEach((t) => t.kill());
-    }
-
     // Every card starts below the viewport. As the user scrolls, cards rise
     // one at a time — 01, then 02, 03, 04 — each landing slightly offset/
     // rotated behind the next. Base offset of -50/-50 percent keeps cards
@@ -93,6 +72,7 @@ export default function WhatWeDo() {
         pin: true,
         pinType: "transform",
         pinSpacing: true,
+        anticipatePin: 1,
         invalidateOnRefresh: true,
       },
     });

@@ -40,19 +40,6 @@ export default function AboutScroll() {
     const track = trackRef.current;
     if (!root || !track) return;
 
-    // On touch devices the JS-driven pin + horizontal scrub fights native
-    // scroll inertia on iOS / Android — what showed up as "bouncing" /
-    // "jittering". On mobile we instead let the viewport scroll horizontally
-    // natively (CSS `overflow-x: auto` + `scroll-snap`) so users swipe the
-    // panels, which is the right gesture on a phone anyway.
-    const isTouch =
-      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
-      window.innerWidth <= 900;
-    if (isTouch) {
-      root.classList.add("about-h-touch");
-      return;
-    }
-
     const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
 
     const tween = gsap.to(track, {
@@ -62,9 +49,16 @@ export default function AboutScroll() {
         trigger: root,
         start: "top top",
         end: () => `+=${distance()}`,
-        scrub: 0.6,
+        // scrub: true (no smoothing) + pinType: transform (GPU translate
+        // instead of position:fixed) is what makes the horizontal scrub
+        // sit still during iOS momentum scroll instead of "bouncing".
+        // Default pin uses position:fixed which Safari paints out-of-sync
+        // with the momentum scroll — that's the bounce the user reports.
+        scrub: true,
         pin: true,
         pinSpacing: true,
+        pinType: "transform",
+        anticipatePin: 1,
         invalidateOnRefresh: true,
       },
     });

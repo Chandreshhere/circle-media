@@ -13,6 +13,20 @@ gsap.registerPlugin(ScrollTrigger);
 // biggest mobile-stability win.
 ScrollTrigger.config({ ignoreMobileResize: true });
 
+// On touch devices, normalize the scroll: ScrollTrigger reads scroll through
+// its own RAF loop instead of the native compositor's momentum scroll. This
+// is the GSAP-recommended fix for "pin not locked / horizontal section
+// bouncing on iOS" — it eliminates the desync between native momentum scroll
+// (compositor thread) and pin transforms (main thread). Layout / effects are
+// unchanged; only the way scroll position is sampled changes.
+if (
+  typeof window !== "undefined" &&
+  (window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+    window.innerWidth <= 900)
+) {
+  ScrollTrigger.normalizeScroll(true);
+}
+
 import TopNav from "./components/TopNav.jsx";
 import Transition from "./components/Transition.jsx";
 import CursorFX from "./components/fx/CursorFX.jsx";
@@ -30,6 +44,24 @@ export const getLenis = () => lenisInstance;
 export default function App() {
   const location = useLocation();
   const isFirstRender = useRef(true);
+
+  // Mobile-only safety net: hard-reload sometimes leaves the body / html with
+  // a stale lock (overflow:hidden from a previous mobile-menu open, or a
+  // leftover `lenis-stopped` class from a prior desktop session served from
+  // the same SW cache). On iOS this manifests as "scroll stuck after every
+  // reload". Clear those once on mount, defensively, so native scroll is
+  // guaranteed to work.
+  useEffect(() => {
+    const isTouch =
+      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+      window.innerWidth <= 900;
+    if (!isTouch) return;
+    document.documentElement.classList.remove("lenis", "lenis-smooth", "lenis-stopped");
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.height = "";
+    document.documentElement.style.overflow = "";
+  }, []);
 
   useEffect(() => {
     // Mobile / touch devices skip Lenis entirely — native iOS Safari and

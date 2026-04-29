@@ -25,21 +25,6 @@ export default function Reveal() {
     const about = aboutRef.current;
     if (!holder || !img || !about) return;
 
-    // Mobile fallback: skip the multi-stage pinned scroll animation entirely.
-    // On iOS/Android the descend + horizontal panel scrub fights native
-    // momentum scroll and was the source of the "logo image flying down" /
-    // "page won't scroll smoothly" reports. On touch we render the hero and
-    // about panels as a static vertical stack via CSS class `is-touch`.
-    const isTouchDevice =
-      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
-      window.innerWidth <= 900;
-    if (isTouchDevice) {
-      holder.classList.add("reveal-touch");
-      gsap.set(img, { clearProps: "transform" });
-      gsap.set(about, { clearProps: "transform,opacity" });
-      return;
-    }
-
     const descend = ScrollTrigger.create({
       trigger: holder,
       start: "top bottom",
@@ -89,6 +74,7 @@ export default function Reveal() {
         pin: true,
         pinType: "transform",
         pinSpacing: true,
+        anticipatePin: 1,
         invalidateOnRefresh: true,
       },
     });

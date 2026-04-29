@@ -157,46 +157,6 @@
 
 }
 
-/* Touch fallback: cards flow as a vertical stack instead of a pinned 3D
-   stage. No GSAP pin, no scrub — the section sizes itself to its content
-   and each card fades in as it enters view. */
-.wwd.wwd-touch {
-  height: auto;
-  min-height: auto;
-  overflow: visible;
-  padding: 4rem 1.25rem 5rem;
-}
-.wwd.wwd-touch .wwd-bg {
-  position: relative;
-  inset: auto;
-  flex-direction: row;
-  justify-content: center;
-  gap: 1rem;
-  padding: 0 0 2rem;
-}
-.wwd.wwd-touch .wwd-bg span {
-  font-size: clamp(2.4rem, 12vw, 4.5rem);
-  filter: none;
-  opacity: 0.5;
-}
-.wwd.wwd-touch .wwd-stage {
-  position: relative;
-  inset: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
-  perspective: none;
-}
-.wwd.wwd-touch .wwd-card {
-  position: relative;
-  top: auto;
-  left: auto;
-  width: min(86vw, 440px);
-  height: auto;
-  min-height: 380px;
-  transform: none !important;
-}
 
 @media (max-width: 600px) {
   .wwd-card {

@@ -56,8 +56,16 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  overscroll-behavior-y: none;
+  /* clip avoids creating a scroll container — important on iOS Safari, where
+     `overflow-x: hidden` on html has been observed to lock vertical touch
+     scroll after a hard reload. */
+  overflow-x: clip;
+}
+
+/* Belt-and-suspenders: explicitly allow vertical pan on phones so no
+   in-page touch handler can accidentally swallow the scroll gesture. */
+@media (max-width: 900px) {
+  html, body { touch-action: pan-y; }
 }
 
 body {
