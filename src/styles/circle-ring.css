@@ -132,6 +132,10 @@
    parent transform:scale was coupling both. --ring-y-mult bumps how far
    the ring drifts down during scroll, mobile-only. */
 @media (max-width: 820px) {
+  /* Shorter section on mobile — 200vh of pinned scroll for one section is
+     too much for a phone, and the long pin compounds with native momentum
+     scroll to make the footer feel "locked" before it releases. */
+  .cring { min-height: 140vh; }
   .cring-ring { --ring-y-mult: 1.16; }
   .cring-floater {
     translate:

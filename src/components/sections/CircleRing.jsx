@@ -142,24 +142,30 @@ export default function CircleRing() {
       },
     });
 
-    // Pin lasts beyond the section's natural bottom so the ring stays visible
-    // behind the rising footer (which is now capped at 60vh in footer.css).
-    // The footer takes up the top 60vh of the viewport once it scrolls in;
-    // the bottom 40vh keeps showing the pinned ring behind it.
-    const pinTrig = ScrollTrigger.create({
-      trigger: section,
-      start: "top+=50% top",
-      end: () => `+=${window.innerHeight * 1.6}`,
-      pin: inner,
-      pinType: "transform",
-      pinSpacing: false,
-      anticipatePin: 1,
-    });
+    // GSAP pin is desktop-only. On touch the inner is already pinned by
+    // `position: sticky` in the CSS — adding a second pin via transform
+    // fights with native scroll on iOS, causing the "footer locked" /
+    // "can't scroll up" symptoms users were reporting.
+    const isTouch =
+      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+      window.innerWidth <= 900;
+    let pinTrig = null;
+    if (!isTouch) {
+      pinTrig = ScrollTrigger.create({
+        trigger: section,
+        start: "top+=50% top",
+        end: () => `+=${window.innerHeight * 1.6}`,
+        pin: inner,
+        pinType: "transform",
+        pinSpacing: false,
+        anticipatePin: 1,
+      });
+    }
 
     return () => {
       introTrig.kill();
       scrollTrig.kill();
-      pinTrig.kill();
+      if (pinTrig) pinTrig.kill();
       intro.kill();
       autoSpin.kill();
     };

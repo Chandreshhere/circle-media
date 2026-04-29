@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import DynamicBackground from "../fx/DynamicBackground.jsx";
-import { getLenis } from "../../App.jsx";
+import { getLenis as getTrueLenis } from "../../App.jsx";
 
 export default function Hero() {
   const copyRef = useRef(null);
@@ -12,12 +12,15 @@ export default function Hero() {
     const items = root.querySelectorAll("[data-hero-reveal]");
     gsap.set(items, { opacity: 0, y: 24, filter: "blur(14px)" });
 
-    // Lock scroll until the hero entrance animation finishes. The site uses
-    // Lenis for smooth scrolling, so CSS overflow:hidden alone won't stop
-    // wheel/touch input — we have to call lenis.stop()/start(). Belt-and-
-    // suspenders: also block native wheel/touchmove/keydown so anything
-    // outside Lenis (e.g. browser scroll-restoration) can't sneak through.
-    const lenis = getLenis();
+    // Touch devices skip the scroll-lock entirely. The Hero entrance
+    // animation still plays, but the user can scroll past it any time —
+    // locking native scroll on phones is too risky (a stuck timeline or
+    // missed onComplete leaves the page un-scrollable, with no recovery).
+    const isTouch =
+      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+      window.innerWidth <= 900;
+
+    const lenis = getTrueLenis();
     lenis?.stop();
     lenis?.scrollTo(0, { immediate: true, force: true });
 
@@ -35,17 +38,21 @@ export default function Hero() {
         e.stopPropagation();
       }
     };
-    window.addEventListener("wheel", block, { passive: false });
-    window.addEventListener("touchmove", block, { passive: false });
-    window.addEventListener("keydown", blockKeys, { passive: false });
+    if (!isTouch) {
+      window.addEventListener("wheel", block, { passive: false });
+      window.addEventListener("touchmove", block, { passive: false });
+      window.addEventListener("keydown", blockKeys, { passive: false });
+    }
 
     let unlocked = false;
     const unlock = () => {
       if (unlocked) return;
       unlocked = true;
-      window.removeEventListener("wheel", block);
-      window.removeEventListener("touchmove", block);
-      window.removeEventListener("keydown", blockKeys);
+      if (!isTouch) {
+        window.removeEventListener("wheel", block);
+        window.removeEventListener("touchmove", block);
+        window.removeEventListener("keydown", blockKeys);
+      }
       lenis?.start();
     };
 
@@ -58,7 +65,12 @@ export default function Hero() {
       ease: "power3.out",
       stagger: 0.12,
     });
+    // Belt-and-suspenders: even if onComplete misses (e.g. tab backgrounded
+    // through the entrance), force-unlock after 3.5s so we never leave the
+    // page un-scrollable.
+    const failsafe = setTimeout(unlock, 3500);
     return () => {
+      clearTimeout(failsafe);
       tl.kill();
       unlock();
     };

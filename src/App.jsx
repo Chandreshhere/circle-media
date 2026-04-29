@@ -25,25 +25,18 @@ export default function App() {
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    const lenis = new Lenis({
-      smoothWheel: true,
-      lerp: 0.09,
-      duration: 1.05,
-      wheelMultiplier: 1.05,
-      touchMultiplier: 1.6,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    });
-    lenisInstance = lenis;
-    // Drive ScrollTrigger from Lenis so pinned sections actually freeze the
-    // viewport — without this hook, ScrollTrigger reads the native scroll
-    // (which Lenis has already intercepted) and pins drift.
-    lenis.on("scroll", ScrollTrigger.update);
+    // Mobile / touch devices skip Lenis entirely — native iOS Safari and
+    // Android scroll is hardware-accelerated and significantly smoother
+    // than a JS-driven smooth-scroll loop on phones. Lenis on touch is
+    // what was producing the jitter, momentum lock, and pin desync.
+    const isTouch =
+      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+      window.innerWidth <= 900;
 
     let lastY = 0;
     let dirAnchor = 0;
     let currentDir = 0;
-    lenis.on("scroll", ({ scroll }) => {
-      const y = scroll;
+    const handleY = (y) => {
       const delta = y - lastY;
       lastY = y;
       if (y < 80) {
@@ -64,7 +57,31 @@ export default function App() {
       } else if (dir === -1 && moved > 60) {
         document.body.classList.remove("chrome-hidden");
       }
+    };
+
+    if (isTouch) {
+      const onScroll = () => handleY(window.scrollY);
+      window.addEventListener("scroll", onScroll, { passive: true });
+      return () => {
+        window.removeEventListener("scroll", onScroll);
+        document.body.classList.remove("chrome-hidden");
+      };
+    }
+
+    const lenis = new Lenis({
+      smoothWheel: true,
+      lerp: 0.09,
+      duration: 1.05,
+      wheelMultiplier: 1.05,
+      touchMultiplier: 1.6,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
+    lenisInstance = lenis;
+    // Drive ScrollTrigger from Lenis so pinned sections actually freeze the
+    // viewport — without this hook, ScrollTrigger reads the native scroll
+    // (which Lenis has already intercepted) and pins drift.
+    lenis.on("scroll", ScrollTrigger.update);
+    lenis.on("scroll", ({ scroll }) => handleY(scroll));
     const tick = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
