@@ -200,3 +200,33 @@
   .about-h-panel-end { width: 86vw; }
   .about-h-title-end { font-size: clamp(2.2rem, 12vw, 3.4rem); }
 }
+
+/* Touch devices: native horizontal scroll instead of GSAP-pinned scrub. The
+   viewport becomes the scroll container; panels snap into place as the user
+   swipes. No pin, no scrub, no jitter. */
+.about-h-touch {
+  height: auto;
+  overflow: visible;
+}
+.about-h-touch .about-h-header {
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+.about-h-touch .about-h-viewport {
+  height: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.about-h-touch .about-h-viewport::-webkit-scrollbar { display: none; }
+.about-h-touch .about-h-track {
+  transform: none !important;
+  height: auto;
+  padding: 1rem 1.25rem 2.5rem;
+}
+.about-h-touch .about-h-panel,
+.about-h-touch .about-h-panel-end {
+  scroll-snap-align: center;
+}

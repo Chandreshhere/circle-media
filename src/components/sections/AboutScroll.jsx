@@ -40,6 +40,19 @@ export default function AboutScroll() {
     const track = trackRef.current;
     if (!root || !track) return;
 
+    // On touch devices the JS-driven pin + horizontal scrub fights native
+    // scroll inertia on iOS / Android — what showed up as "bouncing" /
+    // "jittering". On mobile we instead let the viewport scroll horizontally
+    // natively (CSS `overflow-x: auto` + `scroll-snap`) so users swipe the
+    // panels, which is the right gesture on a phone anyway.
+    const isTouch =
+      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+      window.innerWidth <= 900;
+    if (isTouch) {
+      root.classList.add("about-h-touch");
+      return;
+    }
+
     const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
 
     const tween = gsap.to(track, {

@@ -14,6 +14,26 @@
   clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
 }
 
+/* Touch fallback: stack the projects as a normal vertical flow instead of
+   absolutely-stacked clip-path slides, since the JS clip animation is
+   skipped on mobile. */
+.carousel.carousel-touch {
+  height: auto;
+  overflow: visible;
+}
+.carousel.carousel-touch .project {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: auto;
+  min-height: 70vh;
+  clip-path: none;
+  border-bottom: 1px solid var(--border);
+}
+.carousel.carousel-touch .project:last-child {
+  border-bottom: 0;
+}
+
 .project-inner {
   position: relative;
   display: block;

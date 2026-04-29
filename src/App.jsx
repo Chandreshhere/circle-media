@@ -6,6 +6,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// On iOS Safari and Android Chrome, the address bar grows/shrinks during
+// scroll, which triggers a ScrollTrigger.refresh() and causes pinned/scrubbed
+// sections to recalculate mid-scroll — the visible result is jitter and
+// "bouncing". Telling ScrollTrigger to ignore those resizes is the single
+// biggest mobile-stability win.
+ScrollTrigger.config({ ignoreMobileResize: true });
+
 import TopNav from "./components/TopNav.jsx";
 import Transition from "./components/Transition.jsx";
 import CursorFX from "./components/fx/CursorFX.jsx";

@@ -110,38 +110,6 @@ export default function CircleRing() {
     const DESCENT_FRAC = 1 / TOTAL_SCROLL_FACTOR; // 100/260
     let lastPhase = "intro";
 
-    const scrollTrig = ScrollTrigger.create({
-      trigger: section,
-      start: "top top",
-      end: () => `+=${window.innerHeight * TOTAL_SCROLL_FACTOR}`,
-      scrub: 1.2,
-      onUpdate: (self) => {
-        const p = self.progress;
-        const pDescend = clamp01(p / DESCENT_FRAC);
-        const pDescendEased = 1 - (1 - pDescend) * (1 - pDescend);
-        const pPostPin = clamp01((p - DESCENT_FRAC) / (1 - DESCENT_FRAC));
-
-        ring.style.setProperty(
-          "--ring-rot",
-          String(baseRot + pDescend * 360 + pPostPin * 720)
-        );
-        ring.style.setProperty(
-          "--ring-scale",
-          String(1 + pDescendEased * 1.4)
-        );
-        ring.style.setProperty("--ring-y", String(pDescendEased * 90));
-
-        const yVh = -50 + pDescend * 150;
-        text.style.transform = `translate(-50%, calc(-50% + ${yVh}vh))`;
-
-        const phase = p > TEXT_SWITCH_AT ? "outro" : "intro";
-        if (phase !== lastPhase) {
-          lastPhase = phase;
-          setPhaseId(phase);
-        }
-      },
-    });
-
     // GSAP pin is desktop-only. On touch the inner is already pinned by
     // `position: sticky` in the CSS — adding a second pin via transform
     // fights with native scroll on iOS, causing the "footer locked" /
@@ -149,6 +117,46 @@ export default function CircleRing() {
     const isTouch =
       window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
       window.innerWidth <= 900;
+
+    // On mobile we also skip the scroll-driven scrub: dragging --ring-y /
+    // --ring-scale on every scroll frame is what made the logo appear to
+    // "fall" / jump downward on every touch. The intro animation still plays
+    // and the autospin keeps the ring lively, just without the descent.
+    let scrollTrig = null;
+    if (!isTouch) {
+      scrollTrig = ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: () => `+=${window.innerHeight * TOTAL_SCROLL_FACTOR}`,
+        scrub: 1.2,
+        onUpdate: (self) => {
+          const p = self.progress;
+          const pDescend = clamp01(p / DESCENT_FRAC);
+          const pDescendEased = 1 - (1 - pDescend) * (1 - pDescend);
+          const pPostPin = clamp01((p - DESCENT_FRAC) / (1 - DESCENT_FRAC));
+
+          ring.style.setProperty(
+            "--ring-rot",
+            String(baseRot + pDescend * 360 + pPostPin * 720)
+          );
+          ring.style.setProperty(
+            "--ring-scale",
+            String(1 + pDescendEased * 1.4)
+          );
+          ring.style.setProperty("--ring-y", String(pDescendEased * 90));
+
+          const yVh = -50 + pDescend * 150;
+          text.style.transform = `translate(-50%, calc(-50% + ${yVh}vh))`;
+
+          const phase = p > TEXT_SWITCH_AT ? "outro" : "intro";
+          if (phase !== lastPhase) {
+            lastPhase = phase;
+            setPhaseId(phase);
+          }
+        },
+      });
+    }
+
     let pinTrig = null;
     if (!isTouch) {
       pinTrig = ScrollTrigger.create({
@@ -164,7 +172,7 @@ export default function CircleRing() {
 
     return () => {
       introTrig.kill();
-      scrollTrig.kill();
+      if (scrollTrig) scrollTrig.kill();
       if (pinTrig) pinTrig.kill();
       intro.kill();
       autoSpin.kill();
