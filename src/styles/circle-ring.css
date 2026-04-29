@@ -136,7 +136,7 @@
      too much for a phone, and the long pin compounds with native momentum
      scroll to make the footer feel "locked" before it releases. */
   .cring { min-height: 140vh; }
-  .cring-ring { --ring-y-mult: 1.3; }
+  .cring-ring { --ring-y-mult: 1.16; }
   .cring-floater {
     translate:
       calc(var(--tx, 0vmin) * 1.3 - 50%)
@@ -162,7 +162,7 @@
 }
 
 @media (max-width: 480px) {
-  .cring-ring { --ring-y-mult: 1.4; }
+  .cring-ring { --ring-y-mult: 1.23; }
   .cring-floater {
     translate:
       calc(var(--tx, 0vmin) * 1.38 - 50%)
