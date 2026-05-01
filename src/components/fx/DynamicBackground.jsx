@@ -8,7 +8,7 @@ import gsap from "gsap";
 //
 // Sizes off its parent element, not the window — so it can live inside a
 // half-width hero column without stretching.
-const DynamicBackground = ({ logoPath = "/logoonly.png", bgColor = "#050506" }) => {
+const DynamicBackground = ({ logoPath = "/newlogo.png", bgColor = "#050506" }) => {
   const canvasRef = useRef(null);
   const animationFrameRef = useRef(null);
   const programRef = useRef(null);

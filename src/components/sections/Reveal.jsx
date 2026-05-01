@@ -266,7 +266,7 @@ export default function Reveal() {
         </div>
 
         <div className="reveal-img" ref={imgRef}>
-          <img src="/logoonly.png" alt="" />
+          <img src="/newlogo.png" alt="" />
         </div>
 
         <div className="reveal-about-clip">

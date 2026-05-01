@@ -84,7 +84,7 @@ export default function Hero() {
   return (
     <section className="hero-split">
       <div className="hero-split-particles" aria-hidden="true">
-        <DynamicBackground logoPath="/logoonly.png" bgColor="#050506" />
+        <DynamicBackground logoPath="/newlogo.png" bgColor="#050506" />
       </div>
 
       <div className="hero-split-content" ref={copyRef}>

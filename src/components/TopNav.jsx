@@ -152,7 +152,7 @@ export default function TopNav() {
     <header className="topnav" ref={headerRef}>
       <div className="topnav-inner" ref={innerRef}>
         <a href="/" className="tn-item topnav-logo">
-          <img src="/logoonly.png" alt="Circle" className="tn-logo-img" />
+          <img src="/newlogo.png" alt="Circle" className="tn-logo-img" />
           <span className="tn-logo-word">Circle</span>
         </a>
         <nav className="tn-item topnav-links">

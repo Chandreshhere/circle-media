@@ -92,6 +92,12 @@
   color: var(--accent);
   font-style: italic;
   letter-spacing: -0.04em;
+  /* Override globals.css `span { font-size: 0.9rem; ... }` so the accent
+     word inherits the parent <h1>'s display sizing instead of shrinking. */
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  text-transform: none;
 }
 
 .hero-split-sub {

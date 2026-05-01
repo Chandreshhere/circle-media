@@ -13,9 +13,19 @@ gsap.registerPlugin(ScrollTrigger);
 // biggest mobile-stability win.
 ScrollTrigger.config({ ignoreMobileResize: true });
 
-// (Mobile pin smoothness is now handled by Lenis with smoothTouch; running
-// ScrollTrigger.normalizeScroll on top of Lenis would double-smooth and
-// felt sluggish, so it's intentionally not enabled here.)
+// On touch devices, normalize the scroll: ScrollTrigger samples the touch
+// input through its own RAF loop and feeds the *exact rendered scroll
+// position* to every pin transform. Without this, pins read Lenis's
+// smoothed/synced position which drifts from the native momentum scroll
+// — that drift is what reads as "bouncing past the footer / horizontal
+// section overshooting" on phones.
+if (
+  typeof window !== "undefined" &&
+  (window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+    window.innerWidth <= 900)
+) {
+  ScrollTrigger.normalizeScroll(true);
+}
 
 import TopNav from "./components/TopNav.jsx";
 import Transition from "./components/Transition.jsx";
@@ -54,11 +64,12 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // Lenis runs on every device now. Mobile uses `smoothTouch` so the
-    // touch-driven scroll feels just as smooth as the desktop wheel scroll,
-    // and pinned sections sample scroll through Lenis's RAF loop instead
-    // of fighting native iOS momentum (which is what made earlier mobile
-    // scroll feel jittery / inconsistent).
+    // Touch / mobile: native iOS Safari and Android scroll is hardware-
+    // accelerated and is the single source of scroll truth. Pin transforms
+    // are kept in sync with native momentum via ScrollTrigger.normalizeScroll
+    // (configured at module-load above). Adding Lenis on top would
+    // introduce a second, lagged scroll position and is what was causing
+    // the pins to bounce / overshoot the footer.
     const isTouch =
       window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
       window.innerWidth <= 900;
@@ -89,34 +100,25 @@ export default function App() {
       }
     };
 
-    // syncTouch is Lenis's touch-aware smoothing mode (works on both iOS
-    // and Android). It keeps native touch input feel but synchronises
-    // Lenis's RAF loop with the rendered scroll position, so ScrollTrigger
-    // pins read the same value the browser is painting. Combined with a
-    // high touchInertiaMultiplier and touchMultiplier, a single swipe
-    // produces sustained, smooth scroll across the page instead of
-    // stopping abruptly when the finger lifts.
+    if (isTouch) {
+      const onScroll = () => handleY(window.scrollY);
+      window.addEventListener("scroll", onScroll, { passive: true });
+      return () => {
+        window.removeEventListener("scroll", onScroll);
+        document.body.classList.remove("chrome-hidden");
+      };
+    }
+
+    // Desktop only: Lenis for smooth wheel scroll.
     const lenis = new Lenis({
       smoothWheel: true,
-      syncTouch: isTouch,
-      // Lower lerp = smoother, higher lerp = snappier. 0.075 gives a
-      // glide-like feel without lagging behind the finger.
-      syncTouchLerp: 0.075,
-      // Boost inertia so a single swipe carries far instead of stopping
-      // when the finger lifts.
-      touchInertiaMultiplier: 40,
       lerp: 0.09,
       duration: 1.05,
       wheelMultiplier: 1.05,
-      // Higher touchMultiplier = more scroll per pixel of finger travel.
-      // 2.0 makes long-page navigation feel light without overshooting.
-      touchMultiplier: isTouch ? 2.0 : 1.6,
+      touchMultiplier: 1.6,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
     lenisInstance = lenis;
-    // Drive ScrollTrigger from Lenis so pinned sections actually freeze the
-    // viewport — without this hook, ScrollTrigger reads the native scroll
-    // (which Lenis has already intercepted) and pins drift.
     lenis.on("scroll", ScrollTrigger.update);
     lenis.on("scroll", ({ scroll }) => handleY(scroll));
     const tick = (time) => lenis.raf(time * 1000);
