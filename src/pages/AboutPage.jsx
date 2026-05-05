@@ -33,10 +33,10 @@ const PRINCIPLES = [
 ];
 
 const STATS = [
-  { v: "25", suf: "+", k: "Brands grown" },
-  { v: "6",  suf: "yrs", k: "Compounding" },
-  { v: "100", suf: "+", k: "Campaigns shipped" },
-  { v: "800", suf: "+", k: "Ads in market" },
+  { v: "15",  suf: "+", k: "Number of Clients" },
+  { v: "6",   suf: "+", k: "Years of Experience" },
+  { v: "8",   suf: "+", k: "Ecommerce Sites" },
+  { v: "5",   suf: "+", k: "Social Media Handles" },
 ];
 
 const VALUES = [

@@ -11,27 +11,12 @@ gsap.registerPlugin(ScrollTrigger);
 const range = (n) => Array.from({ length: n }, (_, i) => i + 1);
 
 const COLLECTIONS = {
-  "instagram-feed": {
-    eyebrow: "[01] Instagram · Feed",
-    title: "Instagram Feed",
-    script: "Feed",
-    intro:
-      "A feed is a first impression. We design grids that feel composed at a glance and reward a longer scroll — typography, palette and pacing tuned so every nine squares tell one story.",
-    bullets: [
-      "Grid-systems built for nine-tile rhythm",
-      "Brand-true typography and palette",
-      "Templated foundations, hand-tuned hero posts",
-      "Refreshed monthly, measured weekly",
-    ],
-    images: range(14).map((n) => `/portfolio/feed/${n}.avif`),
-    layout: "cylinder",
-  },
   "instagram-posts": {
-    eyebrow: "[02] Instagram · Posts",
+    eyebrow: "[01] Instagram · Posts",
     title: "Instagram Posts",
     script: "Posts",
     intro:
-      "Single posts, carousels, reels covers — built to stop the thumb. Every frame earns its place: a hook, a turn, a payoff. Then we ship at the cadence the algorithm rewards.",
+      "Single-frame creatives engineered to stop the scroll. Every frame earns its place: a hook, a turn, a payoff — then we ship at the cadence the algorithm rewards.",
     bullets: [
       "Hook-first concepting, scroll-tested copy",
       "Carousel architecture with a payoff per slide",
@@ -42,11 +27,11 @@ const COLLECTIONS = {
     layout: "grid-4",
   },
   "instagram-stories": {
-    eyebrow: "[03] Instagram · Stories",
+    eyebrow: "[02] Instagram · Stories",
     title: "Instagram Stories",
     script: "Stories",
     intro:
-      "Stories are the daily handshake — closer, faster, more honest. We build sequences that move people from a tap to a click, with motion, polls and stickers that feel like the brand, not like a template.",
+      "Vertical narratives that keep audiences swiping forward. Sequences built to move people from a tap to a click — motion, polls and stickers that feel like the brand, not like a template.",
     bullets: [
       "Sequenced narratives, not one-off frames",
       "Polls, quizzes and stickers that earn reach",
@@ -56,16 +41,61 @@ const COLLECTIONS = {
     images: range(5).map((n) => `/portfolio/stories/${n}.avif`),
     layout: "cylinder",
   },
-  "marketing-analytics": {
-    eyebrow: "[04] Marketing · Analytics",
-    title: "Marketing Analytics",
+  "curated-feeds": {
+    eyebrow: "[03] Instagram · Feed",
+    title: "Curated Feeds",
+    script: "Feeds",
+    intro:
+      "Cohesive grids that read like a magazine cover. Every nine squares compose at a glance and reward a longer scroll — typography, palette and pacing tuned so the feed becomes the brand.",
+    bullets: [
+      "Grid systems built for nine-tile rhythm",
+      "Brand-true typography and palette",
+      "Templated foundations, hand-tuned hero posts",
+      "Refreshed monthly, measured weekly",
+    ],
+    images: range(14).map((n) => `/portfolio/feed/${n}.avif`),
+    layout: "cylinder",
+  },
+  "reels-short-video": {
+    eyebrow: "[04] Reels · Short Video",
+    title: "Reels & Short Video",
+    script: "Reels",
+    intro:
+      "Short-form video built for the algorithm. Hook in three seconds, payoff in fifteen — concepted, shot and cut for the platforms that decide the next scroll.",
+    bullets: [
+      "Concepts shaped by hook and platform native",
+      "On-set direction, edit and motion in-house",
+      "Sound-design and captions baked in",
+      "Cut-downs, alts and A/B variants per launch",
+    ],
+    images: range(11).map((n) => `/portfolio/posts/${n}.avif`),
+    layout: "grid-4",
+  },
+  "brand-identity": {
+    eyebrow: "[05] Brand · Identity",
+    title: "Brand Identity",
+    script: "Identity",
+    intro:
+      "Identity systems with a voice you'll recognise anywhere. From naming and logo to type, tone and templates — the kit that makes every touchpoint sound like one brand.",
+    bullets: [
+      "Naming, logo, mark and wordmark",
+      "Type system + colour with usage rules",
+      "Brand voice and editorial guidelines",
+      "Templates and components for the in-house team",
+    ],
+    images: range(10).map((n) => `/portfolio/feed/${n}.avif`),
+    layout: "cylinder",
+  },
+  "analytics-dashboards": {
+    eyebrow: "[06] Analytics · Dashboards",
+    title: "Analytics Dashboards",
     script: "Analytics",
     intro:
-      "One-stop solution to all your marketing needs. We pair creative with the numbers that prove it — dashboards, reporting and weekly read-outs that turn data into the next decision.",
+      "Reporting frames that make growth measurable at a glance. We pair creative with the numbers that prove it — dashboards, weekly read-outs and the next decision, on one page.",
     bullets: [
-      "20+ Clients across D2C, retail and services",
-      "5+ Social media handles managed end-to-end",
-      "META Ads — Facebook and Instagram, full-funnel",
+      "20+ clients across D2C, retail and services",
+      "5+ social handles managed end-to-end",
+      "META + Google ads, full-funnel reporting",
       "Weekly performance read-outs, monthly retunes",
     ],
     images: ["/portfolio/analytics/1.avif", "/portfolio/analytics/2.avif"],

@@ -1,10 +1,23 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import DynamicBackground from "../fx/DynamicBackground.jsx";
 import { getLenis as getTrueLenis } from "../../App.jsx";
 
+const HERO_SERVICES = [
+  "social media marketing",
+  "e-commerce listings & optimisation",
+];
+
 export default function Hero() {
   const copyRef = useRef(null);
+  const [serviceIdx, setServiceIdx] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setServiceIdx((i) => (i + 1) % HERO_SERVICES.length);
+    }, 2200);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     const root = copyRef.current;
@@ -95,13 +108,22 @@ export default function Hero() {
         </p>
 
         <h1 className="hero-split-title" data-hero-reveal>
-          A digital marketing agency specializing in
-          <span className="hero-split-accent"> social media.</span>
+          <span className="hero-split-title-lead">
+            A digital marketing agency specializing in
+          </span>
+          <span className="hero-split-accent">
+            <span
+              key={serviceIdx}
+              className="hero-split-accent-text"
+            >
+              {HERO_SERVICES[serviceIdx]}
+            </span>
+          </span>
         </h1>
 
         <p className="hero-split-sub" data-hero-reveal>
-          Content, community, influencer and performance — engineered to move
-          the number that matters.
+          Content, community and performance — engineered to move the number
+          that matters.
         </p>
 
         <p className="hero-split-scroll" data-hero-reveal>

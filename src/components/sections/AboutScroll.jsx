@@ -103,9 +103,9 @@ export default function AboutScroll() {
               <span className="about-h-kick">Circle</span>
             </div>
             <h2 className="about-h-title about-h-title-end">
-              <span>Circle the</span>
-              <span>world</span>
-              <span>with us.</span>
+              <span>Expand your</span>
+              <span>radius</span>
+              <span>with circle.</span>
             </h2>
           </article>
         </div>

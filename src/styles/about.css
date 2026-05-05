@@ -251,7 +251,7 @@
 .reveal-stat-1 { top: 28vh;   left: 7vw; }
 .reveal-stat-2 { top: 24vh;   right: 9vw; }
 .reveal-stat-3 { bottom: 14vh; left: 14vw; }
-.reveal-stat-4 { bottom: 10vh; right: 14vw; }
+.reveal-stat-4 { bottom: 10vh; right: 6vw; }
 
 .reveal-stat-1 .reveal-stat-v { color: var(--c-blue); }
 .reveal-stat-1 .reveal-stat-v sup { color: var(--c-blue); }

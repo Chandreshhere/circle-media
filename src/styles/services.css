@@ -1,11 +1,17 @@
-.services-scroll {
+/* "Our Work" — left column lists deliverable categories that the user scrolls
+   through (pin / scrub on the section). Right column is a realistic 3D iPhone
+   centred horizontally with two cards drifting on each side. The carousel is
+   100% scroll-driven — JS rewrites each card's transform / opacity / blur as
+   scroll progresses, with the strip gliding smoothly right-to-left. */
+
+.work-scroll {
   position: relative;
   width: 100%;
   background: var(--bg);
   color: var(--text);
 }
 
-.services-stage {
+.work-stage {
   position: relative;
   width: 100%;
   height: 100vh;
@@ -15,52 +21,61 @@
   flex-direction: column;
 }
 
-.services-label {
+.work-label {
   display: flex;
   justify-content: space-between;
-  color: var(--text-dim);
-  font-size: 0.8rem;
   margin-bottom: clamp(2rem, 4vh, 4rem);
 }
 
-.services-label p {
+.work-label p {
   color: var(--text-dim);
   font-size: 0.8rem;
   letter-spacing: 0.08em;
 }
 
-.services-grid {
+.work-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: 1.1fr 0.6fr 0.6fr;
+  /* minmax(0, ...) lets the column tracks size by their fr share alone,
+     ignoring intrinsic minimums of children. Without this, a viewport
+     that's physically wider than its track would push the grid out and
+     shove the right column's cards rightward. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(2rem, 5vw, 6rem);
   align-items: center;
   min-height: 0;
 }
 
-/* ---- Left: scrolling list of service titles ---- */
+/* === LEFT: scrolling category list + per-category tagline === */
 
-.services-list-viewport {
+.work-list-col {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vh, 3rem);
+  min-height: 0;
+  /* Forced above the right-column coverflow (z-index:50) so the long
+     titles read in full on top of the card stack instead of being clipped
+     by — or hiding behind — the cards-cyl stacking context. */
   position: relative;
-  height: clamp(360px, 62vh, 640px);
-  overflow: hidden;
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    #000 22%,
-    #000 78%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    #000 22%,
-    #000 78%,
-    transparent 100%
-  );
+  z-index: 50;
 }
 
-.services-list {
+.work-list-viewport {
+  position: relative;
+  z-index: 1;
+  height: clamp(320px, 52vh, 540px);
+  /* Physically wider than the grid cell — extends into the right column
+     so the longest titles ("Instagram Stories", "Reels & Short Video")
+     fit in full without needing overflow tricks. The parent
+     .work-list-col has z-index:50, so this overflowing viewport renders
+     on top of the right-column cards. */
+  width: clamp(420px, 52vw, 760px);
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+}
+
+.work-list {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -68,13 +83,12 @@
   top: 50%;
   left: 0;
   width: 100%;
-  transform: translateY(0);
   will-change: transform;
 }
 
-.services-list-item {
+.work-list-item {
   font-family: var(--font-display);
-  font-size: clamp(1.4rem, 2.6vw, 2.4rem);
+  font-size: clamp(1.6rem, 2.8vw, 2.6rem);
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.15;
@@ -83,134 +97,29 @@
   opacity: 0.28;
   transform: translateY(-50%);
   transition: color 0.5s ease, opacity 0.5s ease;
-  text-transform: none;
   white-space: nowrap;
 }
 
-.services-list-item.is-active {
+.work-list-item.is-active {
   color: var(--accent);
   opacity: 1;
 }
 
-/* ---- Middle: bordered box; images stay INSIDE, swap with scale flow ---- */
-
-.services-media {
+.work-tagline {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  max-width: 420px;
-  justify-self: center;
-  background: linear-gradient(
-    160deg,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(255, 255, 255, 0.015) 70%
-  );
-  border: 1px solid var(--border);
-  border-radius: 22px;
-  padding: 18px;
-  overflow: hidden;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 30px 60px -30px rgba(0, 0, 0, 0.5);
+  min-height: 4rem;
 }
 
-.services-media-stack {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 8px;
-}
-
-.services-media-frame {
-  position: absolute;
-  inset: 0;
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--bg-2);
-  visibility: hidden;
-  transform-origin: center;
-  /* Default (parked) — small, tucked into bottom-left, hidden. */
-  transform: translate(-22%, 30%) scale(0.18);
-  transition:
-    transform 0.7s cubic-bezier(0.22, 1.05, 0.36, 1),
-    visibility 0s linear 0.7s;
-  will-change: transform;
-  pointer-events: none;
-}
-
-/* Visible recency stack — every level uses the SAME instant transition so
-   nothing fades; only transforms are animated. Cards march from big (front)
-   to tiny (deep into the upper-right corner) like a receding deck. */
-.services-media-frame[class*="is-stack-"] {
-  visibility: visible;
-  transition:
-    transform 0.7s cubic-bezier(0.22, 1.05, 0.36, 1),
-    visibility 0s linear 0s;
-}
-
-.services-media-frame.is-stack-0 {
-  transform: translate(0, 0) scale(1);
-  z-index: 30;
-  pointer-events: auto;
-}
-
-.services-media-frame.is-stack-1 {
-  transform: translate(18%, -20%) scale(0.62);
-  z-index: 25;
-}
-
-.services-media-frame.is-stack-2 {
-  transform: translate(28%, -32%) scale(0.46);
-  z-index: 20;
-}
-
-.services-media-frame.is-stack-3 {
-  transform: translate(36%, -42%) scale(0.34);
-  z-index: 15;
-}
-
-.services-media-frame.is-stack-4 {
-  transform: translate(42%, -50%) scale(0.24);
-  z-index: 10;
-}
-
-.services-media-frame.is-stack-5 {
-  transform: translate(46%, -56%) scale(0.16);
-  z-index: 5;
-}
-
-.services-media-frame.is-stack-0:hover {
-  transform: translate(2%, -1%) scale(1.02);
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.services-media-frame img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: none;
-}
-
-/* ---- Right: tagline that crossfades per active service ---- */
-
-.services-tagline {
-  position: relative;
-  min-height: 5rem;
-}
-
-.services-tagline-line {
+.work-tagline-line {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  max-width: 22ch;
+  max-width: 32ch;
   font-family: var(--font-body);
   font-size: clamp(1rem, 1.35vw, 1.4rem);
   line-height: 1.4;
-  letter-spacing: 0.02em;
-  text-transform: none;
-  color: var(--text);
+  color: var(--text-dim);
   opacity: 0;
   visibility: hidden;
   transform: translateY(14px);
@@ -220,7 +129,7 @@
     visibility 0s linear 0.4s;
 }
 
-.services-tagline-line.is-active {
+.work-tagline-line.is-active {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -230,9 +139,241 @@
     visibility 0s linear 0s;
 }
 
-/* ---- Counter ---- */
+/* === RIGHT: scroll-driven coverflow with realistic iPhone === */
 
-.services-counter {
+.work-phone-col {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1800px;
+  min-height: 0;
+}
+
+.work-coverflow {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+/* Track holds every orbital card. Cards are absolutely centred — JS
+   rewrites transform per scroll frame to place them on a semi-cylinder
+   around the phone. The track is shifted left to match the phone's own
+   translateX(-50% of phone width), so the orbit is centred on the phone
+   rather than the column's geometric centre. */
+/* Fixed carousel window on the right. The window stays locked in place;
+   the inner .work-cards-track flex row slides on scroll so different
+   cards pass through the centre. Cards are real flex items (guaranteed
+   horizontal layout), with per-card translateZ + scale for depth. */
+.work-cards-cyl {
+  position: relative;
+  z-index: 2; /* above the .work-phone backdrop (z-index:0) */
+  width: 100%;
+  height: clamp(320px, 40vh, 460px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  perspective: 1600px;
+  /* Soft fade-to-black on the left + right edges so cards appear to come
+     out of / dissolve into the dark background at the carousel's ends —
+     reads as if they're emerging from the screen. */
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 14%,
+    #000 86%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 14%,
+    #000 86%,
+    transparent 100%
+  );
+  /* Nudged left so the carousel sits closer to the title list rather
+     than hugging the column's right edge. */
+  transform: translateX(-8%);
+}
+
+.work-cards-track {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.9rem, 1.6vw, 1.8rem);
+  transform-style: preserve-3d;
+  will-change: transform;
+  /* JS sets translateX per scroll frame to slide the track inside the
+     window so the active card sits at the centre. */
+  transition: transform 0.18s ease-out;
+}
+
+.work-card {
+  flex: 0 0 auto;
+  width: clamp(150px, 13vw, 210px);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #111;
+  box-shadow:
+    0 24px 44px rgba(0, 0, 0, 0.5),
+    0 8px 14px rgba(0, 0, 0, 0.32);
+  transform-origin: center;
+  will-change: transform, filter, opacity;
+  backface-visibility: hidden;
+  transition: transform 0.18s ease-out, filter 0.18s ease-out;
+}
+
+.work-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Native per-type aspect ratios — square posts, vertical stories & reels,
+   landscape analytics dashboards. */
+.work-card.is-post      { aspect-ratio: 1 / 1; }
+.work-card.is-story     { aspect-ratio: 9 / 16; }
+.work-card.is-reel      { aspect-ratio: 9 / 16; }
+.work-card.is-dashboard {
+  aspect-ratio: 16 / 10;
+  /* Dashboards are landscape, so on the carousel they need a bit more
+     horizontal room than the square / vertical cards. */
+  width: clamp(220px, 19vw, 320px);
+}
+.work-card.is-dashboard img { object-fit: contain; background: #0c0c0e; }
+
+/* Slot positions are now JS-driven (Services.jsx applyCarousel) so cards
+   can drift right → left as the user scrolls. The static pos-N rules
+   that used to live here have been removed. */
+
+.work-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* All carousel cards share a single 9:16 aspect (set on .work-card) so the
+   row reads consistently. The is-post/is-story/is-reel modifiers are kept
+   for any future per-type styling but no longer override the aspect. */
+
+/* === The phone itself === */
+
+.work-phone {
+  /* Backdrop phone — sits behind the carousel, anchored to the right
+     side of the column so the carousel scrolls across it from the left. */
+  position: absolute;
+  top: 50%;
+  right: 2%;
+  z-index: 0;
+  width: clamp(220px, 18vw, 300px);
+  aspect-ratio: 9 / 19.5;
+  transform: translateY(-50%) rotateY(-6deg) rotateX(1deg);
+  transform-style: preserve-3d;
+  filter:
+    drop-shadow(0 30px 50px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 12px 18px rgba(0, 0, 0, 0.35));
+}
+
+.work-phone-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 14% / 6.6%;
+  background: linear-gradient(155deg, #2c2d31 0%, #1a1a1c 45%, #0c0c0e 100%);
+  padding: 3.5%;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.08),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.18),
+    inset 0 -1.5px 1px rgba(0, 0, 0, 0.6);
+}
+
+/* Hardware buttons */
+.work-phone-btn {
+  position: absolute;
+  background: linear-gradient(to right, #1a1a1c, #2a2b2d);
+  border-radius: 1.5px;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+.work-phone-btn-mute   { left: -2px; top: 11%; width: 3px; height: 3.5%; }
+.work-phone-btn-vol-up { left: -3px; top: 19%; width: 4px; height: 7%;   }
+.work-phone-btn-vol-dn { left: -3px; top: 28%; width: 4px; height: 7%;   }
+.work-phone-btn-power  { right: -3px; top: 22%; width: 4px; height: 11%; }
+
+.work-phone-bezel {
+  width: 100%;
+  height: 100%;
+  border-radius: 11.5% / 5.4%;
+  background: #050505;
+  padding: 2px;
+}
+
+.work-phone-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 11% / 5.2%;
+  background: #000;
+  overflow: hidden;
+  position: relative;
+}
+
+.work-phone-island {
+  position: absolute;
+  top: 2.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32%;
+  height: 4%;
+  background: #000;
+  border-radius: 999px;
+  z-index: 5;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* The phone's content area. Stacks every image from every category; JS sets
+   opacity per scroll frame so two adjacent images crossfade smoothly,
+   including across category boundaries. Each image's CSS class controls its
+   format (square post centred vs. full-bleed vertical for story / reel). */
+.work-phone-content {
+  position: absolute;
+  inset: 0;
+  background: #0b0b0d;
+}
+
+.work-phone-content img {
+  position: absolute;
+  display: block;
+  opacity: 0;
+  will-change: opacity;
+  transition: opacity 0.05s linear;
+}
+
+/* Posts — square image, centred vertically with letterbox top/bottom. */
+.work-phone-content img.is-post {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+/* Stories & Reels — full-bleed vertical, fills the entire screen. */
+.work-phone-content img.is-story,
+.work-phone-content img.is-reel {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* === Counter === */
+
+.work-counter {
   margin-top: auto;
   align-self: flex-end;
   font-family: var(--font-display);
@@ -244,60 +385,120 @@
   letter-spacing: 0.08em;
 }
 
-.services-counter .current { color: var(--accent); }
-.services-counter .divider { opacity: 0.5; }
+.work-counter .current { color: var(--accent); }
+.work-counter .divider { opacity: 0.5; }
 
-/* ---- Mobile fallback: stacked list, no pinning ---- */
+/* === Tablet / mobile === */
 
-/* Mobile: keep the same scroll-driven progressive activation as desktop,
-   just re-stack the three columns vertically. List on top, media in the
-   middle, tagline below. The pin and JS are shared with desktop. */
+@media (max-width: 1100px) {
+  .work-card { width: clamp(150px, 14vw, 200px); }
+}
+
 @media (max-width: 819px) {
-  .services-stage {
-    padding: 5rem 1.25rem 4rem;
+  /* Mirror the desktop layout (pinned 100vh stage, scroll-driven list,
+     3D phone + coverflow), just sized down so the whole composition fits
+     on a phone screen. */
+  .work-stage {
+    padding: 3rem 1.25rem 2rem;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .work-label {
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
   }
 
-  .services-grid {
+  /* Two-row stack: scroll-driven title list on top, phone + carousel
+     below. Stretch keeps both rows from collapsing to zero. */
+  .work-grid {
     grid-template-columns: 1fr;
-    gap: 1.75rem;
-    align-items: start;
+    grid-template-rows: auto 1fr;
+    gap: 0.75rem;
+    align-items: stretch;
+    justify-items: stretch;
   }
 
-  .services-list-viewport {
-    height: clamp(180px, 28vh, 240px);
+  /* Title list — desktop has fixed `width: clamp(420px, 52vw, 760px)`
+     to span two columns; on mobile re-anchor to the column's full
+     width and shrink the viewport so it fits above the carousel. */
+  .work-list-col {
+    width: 100%;
+    gap: 0.5rem;
+    min-height: auto;
+    align-items: center;
   }
-
-  .services-list-item {
-    font-size: clamp(1.4rem, 6vw, 2.2rem);
+  .work-list-viewport {
+    width: 100%;
+    height: clamp(110px, 18vh, 150px);
+  }
+  .work-list-item {
+    font-size: clamp(1.15rem, 5vw, 1.7rem);
+    padding: 0.3em 0;
     text-align: center;
   }
-
-  .services-media {
-    aspect-ratio: 4 / 3;
-    max-width: 100%;
-    justify-self: stretch;
-  }
-
-  .services-tagline {
-    min-height: 4rem;
+  .work-tagline { min-height: 2.5rem; text-align: center; width: 100%; }
+  .work-tagline-line {
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, 14px);
+    max-width: min(34ch, calc(100vw - 2.5rem));
     text-align: center;
+    font-size: clamp(0.9rem, 3.2vw, 1.05rem);
+  }
+  .work-tagline-line.is-active { transform: translate(-50%, 0); }
+
+  /* Phone column fills the remaining vertical room. */
+  .work-phone-col {
+    width: 100%;
+    perspective: 1200px;
+    min-height: 0;
+    height: 100%;
+  }
+  .work-coverflow {
+    width: 100%;
+    height: 100%;
   }
 
-  .services-tagline-line {
-    margin: 0 auto;
-    text-align: center;
-    font-size: clamp(0.95rem, 3.4vw, 1.1rem);
+  /* Re-centre the carousel window. Desktop has translateX(-8%) +
+     height: clamp(320px, 40vh, 460px) because the phone sits to its
+     right; mobile centres the phone, so the window must be centred too
+     and fill the column. */
+  .work-cards-cyl {
+    width: 100%;
+    height: 100%;
+    transform: none;
+    perspective: 1200px;
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    mask-image:
+      linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
   }
 
-  .services-counter { display: flex; }
+  /* Phone re-centred (was right: 2% on desktop). */
+  .work-phone {
+    width: clamp(130px, 36vw, 200px);
+    right: auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Smaller card images on mobile. */
+  .work-card { width: clamp(95px, 26vw, 140px); }
+  .work-card.is-dashboard { width: clamp(130px, 34vw, 180px); }
 }
 
 @media (max-width: 480px) {
-  .services-stage { padding: 4rem 1rem 3rem; }
-  .services-label { flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
-  .services-grid { gap: 1.25rem; }
-  .services-list-viewport { height: clamp(150px, 24vh, 200px); }
-  .services-list-item { font-size: clamp(1.2rem, 6vw, 1.6rem); }
-  .services-tagline-line { font-size: 0.92rem; }
-  .services-media { aspect-ratio: 3 / 2; }
+  .work-stage { padding: 2.5rem 1rem 1.5rem; }
+  .work-label { gap: 0.3rem; margin-bottom: 0.85rem; }
+  .work-grid { gap: 0.5rem; }
+  .work-list-viewport { height: clamp(95px, 16vh, 130px); }
+  .work-list-item { font-size: clamp(1.05rem, 4.8vw, 1.45rem); padding: 0.25em 0; }
+  .work-tagline-line { font-size: 0.88rem; }
+
+  .work-phone { width: clamp(115px, 36vw, 170px); }
+  .work-card { width: clamp(80px, 24vw, 120px); }
+  .work-card.is-dashboard { width: clamp(110px, 32vw, 160px); }
 }

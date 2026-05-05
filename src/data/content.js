@@ -1,103 +1,106 @@
-// Service images sourced from Unsplash (free, professional). Each is picked
-// to be instantly recognisable for its discipline — Instagram-on-phone for
-// social, GA-style dashboards for performance, code editor for web dev,
-// search-bar SERP for SEO, brand-identity workspace for branding, online
-// shopping cart for e-commerce.
+// 8 services — mirrors the home page WhatWeDo puzzle and the Services.jsx
+// carousel category list, so /services reads with the same vocabulary as
+// the home page.
 export const services = [
   {
     id: "01",
-    title: "Social Media Marketing",
-    tagline: "Always-on ecosystems that turn passive scrollers into brand advocates.",
-    image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=900&q=80",
-    copy: "We build always-on social ecosystems that turn passive scrollers into brand advocates. Strategy, content calendars, community management and reporting — all under one roof."
+    title: "Brand Consultation",
+    tagline: "Strategy that uncovers your story and shapes a brand built to last.",
+    image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=900&q=80",
+    copy: "Strategy sessions that uncover your story, sharpen your positioning, and shape a brand built to outlast trends — not chase them."
   },
   {
     id: "02",
-    title: "Performance Marketing",
-    tagline: "Meta, Google, TikTok — media mix engineered for compounding ROAS.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80",
-    copy: "Meta, Google, TikTok, YouTube — media mix modeling, creative testing frameworks and daily optimization to drive ROAS that compounds month over month."
+    title: "Influencer Marketing",
+    tagline: "Creators matched to audience, briefed for impact, measured against real outcomes.",
+    image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=900&q=80",
+    copy: "Creators matched to the right audience, briefed for the right message, measured against real outcomes — not vanity metrics."
   },
   {
     id: "03",
-    title: "Website Development",
-    tagline: "Fast, expressive sites built to convert and built to last.",
-    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=900&q=80",
-    copy: "Design systems, headless stacks and performance budgets. We ship sites that load fast, read clean and move people from landing page to decision without friction."
+    title: "Branding & Content Planning",
+    tagline: "Identity systems and editorial calendars with one unmistakable voice.",
+    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=80",
+    copy: "Identity systems and editorial calendars that turn your voice into a steady publishing rhythm across every channel — even when no one is watching."
   },
   {
     id: "04",
-    title: "Search Engine Optimization",
-    tagline: "Technical depth and editorial craft that earns trust long after the campaign.",
-    image: "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?auto=format&fit=crop&w=900&q=80",
-    copy: "Technical audits, topical authority, digital PR and editorial content that earns impressions, clicks and trust long after the campaign ends."
+    title: "Social Media Marketing",
+    tagline: "A daily presence with a point of view — content, community, conversion.",
+    image: "https://images.unsplash.com/photo-1535303311164-664fc9ec6532?auto=format&fit=crop&w=900&q=80",
+    copy: "A daily presence with a point of view — content, community, and conversion, all moving in the same direction. Always-on, accountable, and engineered for compounding."
   },
   {
     id: "05",
-    title: "Branding & Content Planning",
-    tagline: "Identity systems and creative guardrails with an unmistakable voice.",
-    image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=900&q=80",
-    copy: "Identity systems, design principles and creative guardrails that give every touchpoint the same unmistakable voice — even when no one is watching."
+    title: "Website Development",
+    tagline: "Fast, accessible, considered websites that scale with the business.",
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=900&q=80",
+    copy: "Fast, accessible, considered websites — built to convert today and crafted to scale as your business grows. Design systems, headless stacks, performance budgets."
   },
   {
     id: "06",
-    title: "E-Commerce Listings",
-    tagline: "Listings engineered for discoverability, conversion and retention.",
+    title: "E-Commerce Listings & Optimisation",
+    tagline: "Catalogue, copy and storefront tuning that lifts discoverability and lifetime value.",
     image: "https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=900&q=80",
-    copy: "Amazon, Flipkart, Shopify — catalog architecture, A+ content, storefront design and review strategy that turn product pages into revenue engines."
+    copy: "Catalogue copy, imagery, and storefront tuning that lifts discoverability, add-to-cart, and lifetime value across Amazon, Flipkart, Shopify and beyond."
+  },
+  {
+    id: "07",
+    title: "Performance Marketing (Google & Meta Ads)",
+    tagline: "Paid media built around CAC, ROAS and the funnel — growth, not impressions.",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80",
+    copy: "Paid media built around CAC, ROAS, and the funnel — campaigns that earn you growth, not just impressions. Daily optimisation, weekly reporting, monthly compounding."
+  },
+  {
+    id: "08",
+    title: "SEO / SEM",
+    tagline: "Organic and paid search working as one engine — long game and short.",
+    image: "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?auto=format&fit=crop&w=900&q=80",
+    copy: "Organic visibility paired with paid search — the long game and the short game, working as one engine. Technical audits, topical authority and SERP-ready content."
   }
 ];
 
-export const processSteps = [
-  {
-    id: "01",
-    title: "Research & Planning",
-    copy: "We immerse ourselves in your category, audience and data. Hypotheses are written down. Assumptions are stress-tested."
-  },
-  {
-    id: "02",
-    title: "Digital Solutions",
-    copy: "Campaigns, content and creative are produced against a roadmap with named owners, measurable outputs and clear success criteria."
-  },
-  {
-    id: "03",
-    title: "Analysis",
-    copy: "Dashboards. Weekly syncs. Post-campaign retrospectives. We look at what worked, what did not, and why — honestly."
-  },
-  {
-    id: "04",
-    title: "Adapt & Evolve",
-    copy: "Insights flow back into the roadmap. The system gets sharper each sprint. Compounding, by design."
-  }
-];
-
+// Mirrors the categories shown in the home page Services.jsx coverflow.
 export const carouselItems = [
   {
     id: "01",
-    title: "Instagram Feed",
-    tagline: "Take a look at some of our clients' beautiful Instagram feeds.",
-    tags: ["grid design, visual identity, feed curation"],
-    url: "https://www.marketingbycircle.com/instagramfeed"
-  },
-  {
-    id: "02",
     title: "Instagram Posts",
-    tagline: "Single posts conveying big messages.",
+    tagline: "Single-frame creatives engineered to stop the scroll.",
     tags: ["single posts, typography, campaign design"],
     url: "https://www.marketingbycircle.com/instagramposts"
   },
   {
-    id: "03",
+    id: "02",
     title: "Instagram Stories",
-    tagline: "Take a look at some of the creative stories we curate.",
-    clients: ["@nmgroupindia", "@outrider.live", "@gramthecurry"],
+    tagline: "Vertical narratives that keep audiences swiping forward.",
     tags: ["stories, vertical format, creative curation"],
     url: "https://www.marketingbycircle.com/instgramstories"
   },
   {
+    id: "03",
+    title: "Curated Feeds",
+    tagline: "Cohesive grids that read like a magazine cover.",
+    tags: ["grid design, visual identity, feed curation"],
+    url: "https://www.marketingbycircle.com/instagramfeed"
+  },
+  {
     id: "04",
-    title: "Marketing Analytics",
-    tagline: "One-stop solution to all your marketing needs.",
+    title: "Reels & Short Video",
+    tagline: "Short-form video built for the algorithm.",
+    tags: ["reels, motion, edit"],
+    url: "https://www.marketingbycircle.com/reels"
+  },
+  {
+    id: "05",
+    title: "Brand Identity",
+    tagline: "Identity systems with a voice you'll recognise anywhere.",
+    tags: ["identity, logo, system"],
+    url: "https://www.marketingbycircle.com/branding"
+  },
+  {
+    id: "06",
+    title: "Analytics Dashboards",
+    tagline: "Reporting frames that make growth measurable at a glance.",
     stats: [
       { v: "20+", k: "Clients" },
       { v: "5+",  k: "Social Handles" }

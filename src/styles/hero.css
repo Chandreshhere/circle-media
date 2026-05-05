@@ -88,7 +88,21 @@
   text-wrap: balance;
 }
 
+/* Lead-in sits on its own row so the cycling accent below can grow to
+   one or two lines without nudging "specializing in" around. */
+.hero-split-title-lead {
+  display: block;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-transform: none;
+}
+
 .hero-split-accent {
+  display: block;
   color: var(--accent);
   font-style: italic;
   letter-spacing: -0.04em;
@@ -98,6 +112,46 @@
   font-family: inherit;
   line-height: inherit;
   text-transform: none;
+  text-wrap: balance;
+  /* Reserve enough vertical room for the longest phrase (which wraps to
+     two lines on desktop) so the layout below doesn't bounce when the
+     text swaps between short and long entries. */
+  min-height: calc(1.03em * 2);
+  margin-top: 0.15em;
+}
+
+.hero-split-accent-text {
+  display: inline-block;
+  /* Inherit so we don't fall back into the global `span` 0.9rem +
+     uppercase rule — without this the cycling phrase renders in caps. */
+  font-size: inherit;
+  font-family: inherit;
+  font-style: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-transform: none;
+  animation: heroAccentSwap 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  will-change: transform, opacity, filter;
+}
+
+@keyframes heroAccentSwap {
+  0% {
+    opacity: 0;
+    transform: translateY(0.32em);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-split-accent-text {
+    animation: none;
+  }
 }
 
 .hero-split-sub {

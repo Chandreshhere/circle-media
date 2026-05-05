@@ -1,101 +1,362 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { getLenis } from "../../App.jsx";
 
 gsap.registerPlugin(ScrollTrigger);
+
+/* Each card is drawn in a 160×100 "core" viewBox, then inflated to 186×126 so
+   tab bumps (extending 13 units past the core edge) stay inside the SVG. The
+   shape spec for each piece is [top, right, bottom, left] — each side is one
+   of "flat", "tab" (bulges out), or "slot" (cuts in). The 4×2 layout is laid
+   out so every shared edge has one tab + matching slot, so the pieces
+   interlock cleanly when spread. */
+const SHAPES = [
+  ["flat", "tab",  "tab",  "flat"], // 0 — TL corner
+  ["flat", "slot", "slot", "slot"], // 1
+  ["flat", "tab",  "tab",  "tab" ], // 2
+  ["flat", "flat", "slot", "slot"], // 3 — TR corner
+  ["slot", "slot", "flat", "flat"], // 4 — BL corner
+  ["tab",  "tab",  "flat", "tab" ], // 5
+  ["slot", "slot", "flat", "slot"], // 6
+  ["tab",  "flat", "flat", "tab" ], // 7 — BR corner
+];
+
+/* Mobile shapes — carved for the 2×4 layout (2 cols, 4 rows). Every shared
+   edge has a tab on one side and a matching slot on the other, so the
+   pieces interlock cleanly when the spread lands. Rows = pairs (0-1),
+   (2-3), (4-5), (6-7); columns = even indices left, odd indices right. */
+const SHAPES_MOBILE = [
+  ["flat", "tab",  "tab",  "flat"], // 0 — TL corner
+  ["flat", "flat", "tab",  "slot"], // 1 — TR corner
+  ["slot", "tab",  "slot", "flat"], // 2 — row 1 left
+  ["slot", "flat", "slot", "slot"], // 3 — row 1 right
+  ["tab",  "tab",  "tab",  "flat"], // 4 — row 2 left
+  ["tab",  "flat", "tab",  "slot"], // 5 — row 2 right
+  ["slot", "tab",  "flat", "flat"], // 6 — BL corner
+  ["slot", "flat", "flat", "slot"], // 7 — BR corner
+];
+
+/* Puzzle path with a parametric corner radius. Stack phase renders with R=5
+   so each card looks like a rounded post-it; as the spread phase advances,
+   ScrollTrigger drives R → 0 so the assembled grid reads as a single clean
+   geometric block. Tabs/slots stay curved either way — that's what makes
+   adjacent pieces interlock. */
+const buildPath = ([t, r, b, l], R = 5) => {
+  const v = {
+    top:    { flat: "60 0 100 0 100 0",        tab: "60 -13 100 -13 100 0",    slot: "60 13 100 13 100 0"   },
+    right:  { flat: "160 35 160 65 160 65",    tab: "173 35 173 65 160 65",    slot: "147 35 147 65 160 65" },
+    bottom: { flat: "100 100 60 100 60 100",   tab: "100 113 60 113 60 100",   slot: "100 87 60 87 60 100"  },
+    left:   { flat: "0 65 0 35 0 35",          tab: "-13 65 -13 35 0 35",      slot: "13 65 13 35 0 35"     },
+  };
+  return (
+    `M${R} 0 H60 C${v.top[t]} H${160 - R} Q160 0 160 ${R} ` +
+    `V35 C${v.right[r]} V${100 - R} Q160 100 ${160 - R} 100 ` +
+    `H100 C${v.bottom[b]} H${R} Q0 100 0 ${100 - R} ` +
+    `V65 C${v.left[l]} V${R} Q0 0 ${R} 0 Z`
+  );
+};
 
 const CARDS = [
   {
     id: "01",
-    title: ["BRAND &", "CREATIVE"],
-    copy: "We find your truth. Then define your brand identity and creative structure.",
-    items: ["Strategy", "Narrative", "Direction"],
+    title: "Brand Consultation",
+    color: "var(--c-red)",
+    desc: "Strategy sessions that uncover your story, sharpen your positioning, and shape a brand built to outlast trends.",
   },
   {
     id: "02",
-    title: ["CAMPAIGN", "& FILM"],
-    copy: "We tell stories that connect emotionally and perform commercially.",
-    items: ["Concept", "Production", "Storytelling"],
+    title: "Influencer Marketing",
+    color: "var(--c-blue)",
+    desc: "Creators matched to the right audience, briefed for the right message, measured against real outcomes — not vanity metrics.",
   },
   {
     id: "03",
-    title: ["VISUAL &", "EXPERIENTIAL"],
-    copy: "We turn spaces into experiences you can feel.",
-    items: ["Design", "Environments", "Merchandising"],
+    title: "Branding & Content Planning",
+    color: "var(--c-yellow)",
+    desc: "Identity systems and editorial calendars that turn your voice into a steady publishing rhythm across every channel.",
   },
   {
     id: "04",
-    title: ["GROWTH &", "PARTNERSHIP"],
-    copy: "We connect creativity with operations so ideas ship and don't die in a deck.",
-    items: ["PR", "Process", "Procurement"],
+    title: "Social Media Marketing",
+    color: "var(--c-mint)",
+    desc: "A daily presence with a point of view — content, community, and conversion, all moving in the same direction.",
   },
+  {
+    id: "05",
+    title: "Website Development",
+    color: "var(--c-pink)",
+    desc: "Fast, accessible, considered websites — built to convert today and crafted to scale as your business grows.",
+  },
+  {
+    id: "06",
+    title: "E-Commerce Listings & Optimisation",
+    color: "var(--c-yellow)",
+    desc: "Catalogue copy, imagery, and storefront tuning that lifts discoverability, add-to-cart, and lifetime value.",
+  },
+  {
+    id: "07",
+    title: "Performance Marketing (Google & Meta Ads)",
+    color: "var(--c-blue)",
+    desc: "Paid media built around CAC, ROAS, and the funnel — campaigns that earn you growth, not just impressions.",
+  },
+  {
+    id: "08",
+    title: "SEO / SEM",
+    color: "var(--c-mint)",
+    desc: "Organic visibility paired with paid search — the long game and the short game, working as one engine.",
+  },
+].map((c, i) => ({ ...c, shape: SHAPES[i], path: buildPath(SHAPES[i], 5) }));
+
+const START_RADIUS = 5;
+const END_RADIUS = 0;
+
+// Slight rotation/offset per card while stacked — keeps the post-it look.
+const RESTING = [
+  { rot: -4, x: -4, y:  2 },
+  { rot:  3, x:  3, y: -1 },
+  { rot: -2, x: -2, y:  3 },
+  { rot:  2, x:  2, y:  0 },
+  { rot: -3, x:  4, y: -2 },
+  { rot:  4, x: -3, y:  1 },
+  { rot: -1, x:  2, y: -3 },
+  { rot:  3, x: -1, y:  2 },
 ];
 
-// Resting rotation/offset per card once it's landed in the stack — keeps the
-// post-it-note feel with each card askew a little differently. x/y are in
-// card-percent units added on top of the -50/-50 centering base.
-const RESTING = [
-  { rot: -4, x: -4, y: 2 },
-  { rot: 3, x: 3, y: -1 },
-  { rot: -2, x: -2, y: 3 },
-  { rot: 2, x: 2, y: 0 },
+/* Final spread positions in xPercent / yPercent (of card's own size). The
+   4×2 grid is offset from stage centre. Column step = 86% of card width
+   (160/186 — neighbours' cores touch, with 13/186 of overlap on each side
+   so tabs and slots interpenetrate). Row step = 79.4% of card height. */
+const COL_STEP = 86;
+const ROW_STEP = 79.4;
+const SPREAD = [
+  { x: -50 - 1.5 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
+  { x: -50 - 0.5 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
+  { x: -50 + 0.5 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
+  { x: -50 + 1.5 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
+  { x: -50 - 1.5 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
+  { x: -50 - 0.5 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
+  { x: -50 + 0.5 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
+  { x: -50 + 1.5 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
 ];
+
+/* Mobile spread — re-flow the 4×2 layout into a 2×4 grid (2 wide, 4 tall)
+   so the assembled puzzle fits the narrower viewport. Card index ↔ slot
+   stays in reading order:
+     desktop row 0 (0,1,2,3) → mobile rows 0+1 left/right
+     desktop row 1 (4,5,6,7) → mobile rows 2+3 left/right
+   The interlocking tabs/slots no longer line up perfectly (the puzzle was
+   carved for a 4-wide layout) but the silhouettes still read as a clean
+   stacked grid on phones. */
+const SPREAD_MOBILE = [
+  { x: -50 - 0.5 * COL_STEP, y: -50 - 1.5 * ROW_STEP },
+  { x: -50 + 0.5 * COL_STEP, y: -50 - 1.5 * ROW_STEP },
+  { x: -50 - 0.5 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
+  { x: -50 + 0.5 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
+  { x: -50 - 0.5 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
+  { x: -50 + 0.5 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
+  { x: -50 - 0.5 * COL_STEP, y: -50 + 1.5 * ROW_STEP },
+  { x: -50 + 0.5 * COL_STEP, y: -50 + 1.5 * ROW_STEP },
+];
+
+/* The stage shrinks while the cards spread so the assembled puzzle stays
+   inside the viewport. Scaling the parent shrinks every card AND their
+   relative spacing in lockstep, so neighbours still interlock. The 2×4
+   mobile grid is taller and narrower, so it gets a different scale that
+   keeps the entire stack inside one viewport. */
+const STAGE_SCALE_SPREAD = 0.78;
+const STAGE_SCALE_SPREAD_MOBILE = 0.55;
+const isMobileWWD = () =>
+  typeof window !== "undefined" && window.innerWidth <= 900;
 
 export default function WhatWeDo() {
   const rootRef = useRef(null);
+  const stageRef = useRef(null);
   const cardRefs = useRef([]);
 
   useEffect(() => {
     const root = rootRef.current;
+    const stage = stageRef.current;
     const cards = cardRefs.current.filter(Boolean);
-    if (!root || cards.length === 0) return;
+    if (!root || !stage || cards.length === 0) return;
 
-    // Every card starts below the viewport. As the user scrolls, cards rise
-    // one at a time — 01, then 02, 03, 04 — each landing slightly offset/
-    // rotated behind the next. Base offset of -50/-50 percent keeps cards
-    // centred against their top:50%/left:50% anchor.
+    gsap.set(stage, { scale: 1, transformOrigin: "50% 50%" });
+
+    // Capture once at start; we don't try to recompute on resize because
+    // the timeline is already pinned + scrubbed. invalidateOnRefresh below
+    // gives us a clean restart on orientation change.
+    const mobile = isMobileWWD();
+    const spread = mobile ? SPREAD_MOBILE : SPREAD;
+    const stageScale = mobile ? STAGE_SCALE_SPREAD_MOBILE : STAGE_SCALE_SPREAD;
+    // Bigger initial offset on mobile so the bottom card is fully off-screen
+    // — at 4×2 desktop sizing 160% was enough; for the smaller 2×4 cards
+    // and shorter mobile viewports we push it further.
+    const initialY = mobile ? 220 : 160;
+
     cards.forEach((card, i) => {
       gsap.set(card, {
         xPercent: -50,
-        yPercent: 150,
+        yPercent: initialY,
         rotation: RESTING[i].rot * 0.3,
       });
     });
 
+    const stackPhases = cards.length;   // one rise per card
+    const spreadPhase = 1.5;            // pieces fan out
+    const holdPhase   = 0.6;            // hold final layout
+    const totalPhases = stackPhases + spreadPhase + holdPhase;
+
+    // Scroll-progress windows where the corner radius transitions from
+    // rounded → sharp (mapped onto the same range as the spread tween).
+    const radiusStart = stackPhases / totalPhases;
+    const radiusEnd   = (stackPhases + spreadPhase) / totalPhases;
+
+    const paths = cards.map((card) => card.querySelector(".wwd-card-shape path"));
+    // Pick the shape set that matches the active spread layout so vertical
+    // and horizontal neighbours interlock cleanly (CARDS[i].shape is the
+    // 4×2 desktop set; mobile needs a different carve for 2×4).
+    const activeShapes = mobile ? SHAPES_MOBILE : SHAPES;
+
+    const setRadius = (R) => {
+      paths.forEach((p, i) => {
+        if (p) p.setAttribute("d", buildPath(activeShapes[i], R));
+      });
+    };
+
+    // On mobile, the JSX path still encodes the desktop shape — rewrite
+    // each card's path immediately on mount so the stack already matches
+    // the mobile interlock pattern before any scroll happens.
+    if (mobile) setRadius(START_RADIUS);
+
+    let locked = false;
+    let lastRq = null;
+
+    // Dedicated pin trigger — owns the pinning + spacer for the section's
+    // entire scroll range. Stays alive forever so scrolling back through the
+    // section keeps it correctly pinned even after the animation locks.
+    const pinTrigger = ScrollTrigger.create({
+      trigger: root,
+      start: "top top",
+      end: `+=${totalPhases * 100}%`,
+      pin: true,
+      pinType: "transform",
+      pinSpacing: true,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+    });
+
+    // Separate scrub trigger — drives the timeline + radius. Disabled once
+    // the spread completes, but the pinTrigger above is left untouched so
+    // scrolling back up never reveals empty pinSpacer space.
     const tl = gsap.timeline({
       defaults: { ease: "none" },
       scrollTrigger: {
         trigger: root,
         start: "top top",
-        end: `+=${(cards.length + 1) * 100}%`,
+        end: `+=${totalPhases * 100}%`,
         scrub: true,
-        pin: true,
-        pinType: "transform",
-        pinSpacing: true,
-        anticipatePin: 1,
         invalidateOnRefresh: true,
+        // Drive the corner radius alongside the spread tween: rounded while
+        // stacking, easing to sharp by the time pieces lock together.
+        onUpdate: (self) => {
+          if (locked) return;
+          const p = self.progress;
+          let R;
+          if (p <= radiusStart) R = START_RADIUS;
+          else if (p >= radiusEnd) R = END_RADIUS;
+          else {
+            const t = (p - radiusStart) / (radiusEnd - radiusStart);
+            R = START_RADIUS + (END_RADIUS - START_RADIUS) * t;
+          }
+          // Quantize to half-units. Rebuilding 8 SVG <path d="…"> strings
+          // and firing 8 setAttribute() calls every micro-scroll frame is
+          // the hottest cost in this section; sub-half-unit changes are
+          // imperceptible visually so we skip the work.
+          const Rq = Math.round(R * 2) / 2;
+          if (Rq === lastRq) return;
+          lastRq = Rq;
+          setRadius(Rq);
+        },
+        // Once past the spread, freeze cards in the connected layout (sharp
+        // corners), detach scrub so scrolling up never re-stacks them, and
+        // tear down the pin so the section becomes a normal 1-viewport-tall
+        // block — scrolling up no longer drags through the long pinSpacer.
+        //
+        // Then snap the user to the TOP of the (now normal-flow) WWD section
+        // so the view doesn't change at the moment of unpin: WWD with the
+        // spread puzzle stays visible at viewport top. From there, scrolling
+        // DOWN naturally moves into the next section (Services), and
+        // scrolling UP reveals the sections above WWD. Nothing "jumps".
+        onLeave: (self) => {
+          if (locked) return;
+          locked = true;
+
+          gsap.set(stage, { scale: stageScale });
+          cards.forEach((card, i) => {
+            gsap.set(card, {
+              xPercent: spread[i].x,
+              yPercent: spread[i].y,
+              rotation: 0,
+            });
+          });
+          setRadius(END_RADIUS);
+          lastRq = END_RADIUS;
+
+          const sectionTop = pinTrigger.start;
+
+          self.disable(false, false);
+          pinTrigger.kill();
+
+          const lenis = getLenis();
+          if (lenis) {
+            lenis.scrollTo(sectionTop, { immediate: true, force: true });
+          } else {
+            window.scrollTo(0, sectionTop);
+          }
+          ScrollTrigger.refresh();
+        },
       },
     });
 
+    // Phase 1 — cards rise into the centre stack one by one.
     cards.forEach((card, i) => {
       const rest = RESTING[i];
-      tl.to(
-        card,
-        {
-          xPercent: -50 + rest.x,
-          yPercent: -50 + rest.y,
-          rotation: rest.rot,
-          duration: 1,
-        },
-        i
-      );
+      tl.to(card, {
+        xPercent: -50 + rest.x,
+        yPercent: -50 + rest.y,
+        rotation: rest.rot,
+        duration: 1,
+      }, i);
     });
 
-    // Hold the final frame for a beat so the full stack is visible before the
-    // pin releases.
-    tl.to({}, { duration: 0.5 });
+    // Phase 2 — once the last card has landed, the stack segregates and the
+    // pieces glide out to their puzzle slots, snapping to zero rotation so
+    // they interlock cleanly.
+    cards.forEach((card, i) => {
+      const target = spread[i];
+      tl.to(card, {
+        xPercent: target.x,
+        yPercent: target.y,
+        rotation: 0,
+        duration: spreadPhase,
+        ease: "power2.inOut",
+      }, stackPhases);
+    });
+
+    // Shrink the whole stage in lockstep with the spread so the assembled
+    // grid stays comfortably inside the viewport.
+    tl.to(stage, {
+      scale: stageScale,
+      duration: spreadPhase,
+      ease: "power2.inOut",
+    }, stackPhases);
+
+    // Hold the connected puzzle on screen before the pin releases.
+    tl.to({}, { duration: holdPhase });
 
     return () => {
+      // pinTrigger may already be killed by onLeave; guard with a flag.
+      try { pinTrigger.kill(); } catch { /* already killed */ }
       tl.scrollTrigger?.kill();
       tl.kill();
     };
@@ -104,34 +365,41 @@ export default function WhatWeDo() {
   return (
     <section className="wwd" ref={rootRef}>
       <div className="wwd-bg" aria-hidden="true">
-        <span>WHAT</span>
-        <span>WE</span>
-        <span>DO</span>
+        <span>OUR</span>
+        <span>SERVICES</span>
       </div>
 
-      <div className="wwd-stage">
+      <img
+        className="wwd-arrow"
+        src="/arrow-logo.png"
+        alt=""
+        aria-hidden="true"
+      />
+
+      <div className="wwd-stage" ref={stageRef}>
         {CARDS.map((card, i) => (
           <article
             key={card.id}
-            className="wwd-card"
+            className={`wwd-card wwd-card-${i}`}
             ref={(el) => (cardRefs.current[i] = el)}
             style={{ zIndex: 10 + i }}
           >
-            <header className="wwd-card-title">
-              {card.title.map((line) => (
-                <span key={line}>{line}</span>
-              ))}
-            </header>
+            <svg
+              className="wwd-card-shape"
+              viewBox="-13 -13 186 126"
+              preserveAspectRatio="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path d={card.path} fill={card.color} />
+            </svg>
 
-            <p className="wwd-card-copy">{card.copy}</p>
-
-            <div className="wwd-card-footer">
-              <ul className="wwd-card-items">
-                {card.items.map((it) => (
-                  <li key={it}>{it}</li>
-                ))}
-              </ul>
+            <div className="wwd-card-content">
               <span className="wwd-card-id">{card.id}</span>
+              <div className="wwd-card-text">
+                <h3 className="wwd-card-title">{card.title}</h3>
+                <p className="wwd-card-desc">{card.desc}</p>
+              </div>
             </div>
           </article>
         ))}

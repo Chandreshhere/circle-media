@@ -146,23 +146,35 @@ export default function Reveal() {
     // each animation paces well for its panel size.
     const computeFromLeft = (left, vwLocal, mode) => {
       const isMobile = vwLocal <= 900;
-      let start, end, boost;
+      let start, end, boost, easePower;
       if (isMobile && mode === "title") {
         start = vwLocal * 1.20;
         end   = vwLocal * -0.60;
         boost = 1.0;
+        easePower = 1.0;
       } else if (isMobile && mode === "quote") {
         start = vwLocal * 1.05;
         end   = vwLocal * -0.20;
         boost = 1.10;
+        easePower = 1.0;
       } else {
-        start = vwLocal * 0.92;
-        end   = vwLocal * 0.25;
-        boost = 1.15;
+        // Desktop fill — ease-in curve so the wave-front lingers slowly
+        // at the start (readable) then accelerates so it definitely
+        // reaches 100% before the panel stops sliding. End is anchored
+        // INSIDE the viewport (not at the left edge) because the about-
+        // strip stops translating when its rightmost panel meets the
+        // viewport right edge; the quote panel's left never actually
+        // reaches 0. Anchoring end at vw × 0.30 puts the completion
+        // point comfortably inside the panel's real travel range.
+        start = vwLocal * 1.05;
+        end   = vwLocal * 0.30;
+        boost = 1.0;
+        easePower = 1.9;
       }
       const span = start - end;
-      const p = Math.max(0, Math.min(1, (start - left) / span));
-      return Math.min(p * boost, 1);
+      const linear = Math.max(0, Math.min(1, (start - left) / span));
+      const eased = Math.pow(linear, easePower);
+      return Math.min(eased * boost, 1);
     };
 
     let lastSplash = -1;
@@ -233,15 +245,15 @@ export default function Reveal() {
           <span className="reveal-stats-kicker">Growing with You</span>
 
           <div className="reveal-stat reveal-stat-1" data-exit-x="-700">
-            <span className="reveal-stat-v" data-target="25">
+            <span className="reveal-stat-v" data-target="15">
               <span className="reveal-stat-num">0</span>
               <sup>+</sup>
             </span>
-            <span className="reveal-stat-k">Top Clients Served</span>
+            <span className="reveal-stat-k">Number of Clients</span>
           </div>
 
           <div className="reveal-stat reveal-stat-2" data-exit-x="-900">
-            <span className="reveal-stat-v" data-target="5">
+            <span className="reveal-stat-v" data-target="6">
               <span className="reveal-stat-num">0</span>
               <sup>+</sup>
             </span>
@@ -249,19 +261,19 @@ export default function Reveal() {
           </div>
 
           <div className="reveal-stat reveal-stat-3" data-exit-x="-650">
-            <span className="reveal-stat-v" data-target="100">
+            <span className="reveal-stat-v" data-target="8">
               <span className="reveal-stat-num">0</span>
               <sup>+</sup>
             </span>
-            <span className="reveal-stat-k">Social Media Campaigns</span>
+            <span className="reveal-stat-k">Ecommerce Sites</span>
           </div>
 
           <div className="reveal-stat reveal-stat-4" data-exit-x="-850">
-            <span className="reveal-stat-v" data-target="800">
+            <span className="reveal-stat-v" data-target="5">
               <span className="reveal-stat-num">0</span>
               <sup>+</sup>
             </span>
-            <span className="reveal-stat-k">Performance Ads Created</span>
+            <span className="reveal-stat-k">Social Media Handles</span>
           </div>
         </div>
 
@@ -358,10 +370,10 @@ export default function Reveal() {
               className="about-panel about-panel-quote"
               ref={quoteRef}
             >
-              <h2 className="about-quote-stack" aria-label="Circle the world with us.">
-                <span className="quote-line-wrap"><span className="quote-line">Circle the</span></span>
-                <span className="quote-line-wrap"><span className="quote-line">World</span></span>
-                <span className="quote-line-wrap"><span className="quote-line">with Us.</span></span>
+              <h2 className="about-quote-stack" aria-label="Expand your radius with Circle.">
+                <span className="quote-line-wrap"><span className="quote-line">Expand Your</span></span>
+                <span className="quote-line-wrap"><span className="quote-line">Radius</span></span>
+                <span className="quote-line-wrap"><span className="quote-line">with Circle.</span></span>
               </h2>
               <div className="quote-sub-wrap" aria-live="polite">
                 <p className="about-quote-sub" key={cycleIdx}>

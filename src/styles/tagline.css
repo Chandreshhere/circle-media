@@ -10,31 +10,13 @@
   justify-content: center;
 }
 
+/* Plain black backdrop — no radial gradients. The section reads on a
+   solid panel; the centred copy and corner logos do all the visual work. */
 .tagline-bg {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background:
-    radial-gradient(
-      60vw 60vw at 18% 18%,
-      rgba(var(--c-pink-rgb), 0.07),
-      transparent 60%
-    ),
-    radial-gradient(
-      55vw 55vw at 82% 30%,
-      rgba(var(--c-yellow-rgb), 0.06),
-      transparent 60%
-    ),
-    radial-gradient(
-      50vw 50vw at 78% 82%,
-      rgba(var(--c-blue-rgb), 0.07),
-      transparent 60%
-    ),
-    radial-gradient(
-      45vw 45vw at 22% 75%,
-      rgba(var(--c-mint-rgb), 0.05),
-      transparent 60%
-    );
+  background: var(--bg);
   z-index: 0;
 }
 
@@ -42,8 +24,11 @@
   position: relative;
   z-index: 3;
   width: 100%;
-  max-width: 1600px;
+  /* Wider copy column so the paragraph spreads more comfortably across
+     the section without crashing into the corner logos. */
+  max-width: 1660px;
   margin: 0 auto;
+  padding: 0 clamp(1rem, 5vw, 4.5rem);
 }
 
 .tagline-heading {
@@ -74,49 +59,73 @@
   color: inherit;
 }
 
-/* Parallax images scattered around the heading */
+/* Keeps "account management" on a single line so the phrase never
+   breaks mid-pair. */
+.tagline-nowrap {
+  white-space: nowrap;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: none;
+}
+
+/* Parallax images scattered around the heading. Each tile is a rounded
+   card with a soft black overlay layered on top, so the assorted brand
+   marks read as a coherent set of accents on the dark section. */
 .tagline-img {
   position: absolute;
   z-index: 2;
   will-change: transform;
+  overflow: hidden;
+  border-radius: 22%;
+  background: #000;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.5);
 }
 
 .tagline-img img {
   width: 100%;
-  height: auto;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
   display: block;
-  filter: saturate(0.95) contrast(1.05) brightness(0.65);
-  clip-path: inset(10% 0 10% 0 round 15%);
+  filter: none;
+  clip-path: none;
 }
 
-.tagline-img-1 {
+/* Black overlay — sits above the image so every tile picks up the same
+   dimmed treatment regardless of original colour or transparency. */
+.tagline-img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* All tiles share a square aspect — the rounded mask makes them read
+   as soft squircles regardless of source dimensions. */
+.tagline-img { aspect-ratio: 1 / 1; }
+
+/* Balanced 3-on-top / 2-on-bottom grid. Top row uses left-corner +
+   horizontal-centre + right-corner; bottom row uses just the two
+   corners. All five tiles share the same vertical band on each row so
+   the section reads as an aligned frame around the heading instead of
+   five scattered accents. */
+
+/* Top row */
+.tagline-img-1 { top: 5%; left: 4%;  width: 12vw; max-width: 170px; } /* Amazon   — top-left */
+.tagline-img-5 {
   top: 5%;
-  left: 3%;
-  width: 18vw;
-  max-width: 280px;
-}
+  left: 50%;
+  margin-left: clamp(-85px, -6vw, -60px);
+  width: 12vw;
+  max-width: 170px;
+}                                                                    /* WhatsApp — top-centre */
+.tagline-img-2 { top: 5%; right: 4%; width: 12vw; max-width: 170px; } /* IG       — top-right */
 
-.tagline-img-2 {
-  top: 9%;
-  right: 4%;
-  width: 16vw;
-  max-width: 240px;
-}
-
-.tagline-img-3 {
-  top: 62%;
-  left: 5%;
-  width: 17vw;
-  max-width: 260px;
-}
-
-.tagline-img-4 {
-  bottom: 6%;
-  right: 7%;
-  width: 19vw;
-  max-width: 290px;
-}
+/* Bottom row */
+.tagline-img-3 { bottom: 5%; left: 4%;  width: 13vw; max-width: 190px; } /* Blinkit  — bottom-left */
+.tagline-img-8 { bottom: 5%; right: 4%; width: 13vw; max-width: 190px; } /* Facebook — bottom-right */
 
 @media (max-width: 900px) {
   .tagline {
@@ -125,51 +134,33 @@
   }
 
   .tagline-heading {
-    font-size: clamp(2.6rem, 11vw, 5rem);
-    line-height: 1.08;
+    font-size: clamp(2.4rem, 9vw, 4.4rem);
+    line-height: 1.1;
   }
 
-  .tagline-img-1 {
-    width: 24vw;
-    top: 3%;
-    left: 3%;
-  }
-
-  .tagline-img-2 {
-    width: 22vw;
-    top: 5%;
-    right: 3%;
-  }
-
-  .tagline-img-3 {
-    width: 22vw;
-    top: 60%;
-    left: 4%;
-  }
-
-  .tagline-img-4 {
-    width: 26vw;
-    bottom: 5%;
-    right: 4%;
-  }
+  .tagline-img-1 { width: 16vw; top: 8%; left: 3%; }
+  .tagline-img-2 { width: 16vw; top: 3%; right: 3%; }
+  .tagline-img-5 { width: 16vw; top: 3%; left: 50%; margin-left: -8vw; }
+  .tagline-img-3 { width: 18vw; bottom: 0%; left: 3%; }
+  .tagline-img-8 { width: 18vw; bottom: 10%; right: 3%; }
 }
 
 @media (max-width: 600px) {
   .tagline { min-height: 100vh; padding: 10vh 5vw; }
-  .tagline-heading { font-size: clamp(2rem, 10.5vw, 3.6rem); line-height: 1.1; }
-  .tagline-img-1 { width: 26vw; top: 2%; }
-  .tagline-img-2 { width: 24vw; top: 3%; }
-  .tagline-img-3 { width: 24vw; top: 62%; }
-  .tagline-img-4 { width: 28vw; bottom: 4%; }
+  .tagline-heading { font-size: clamp(2rem, 9.5vw, 3.4rem); line-height: 1.15; }
+  .tagline-img-1 { width: 20vw; top: 7%; left: 3%; }
+  .tagline-img-2 { width: 20vw; top: 2%; right: 3%; }
+  .tagline-img-3 { width: 22vw; bottom: -1%; left: 3%; }
+  .tagline-img-8 { width: 22vw; bottom: 9%; right: 3%; }
+  /* Drop the centre tile on narrow viewports — not enough horizontal
+     room between the two corner tiles. */
+  .tagline-img-5 { display: none; }
 }
 
 @media (max-width: 420px) {
   .tagline { min-height: 90vh; padding: 9vh 5vw; }
-  .tagline-heading { font-size: clamp(1.85rem, 10.5vw, 3rem); }
-  /* All four images visible — sized down so they read like accents around
-     the heading without crowding. */
-  .tagline-img-1 { width: 28vw; top: 1%; }
-  .tagline-img-2 { width: 26vw; top: 2%; }
-  .tagline-img-3 { width: 26vw; top: 64%; }
-  .tagline-img-4 { width: 30vw; bottom: 3%; }
+  .tagline-heading { font-size: clamp(1.7rem, 9vw, 2.6rem); }
+  .tagline-img-1 { width: 24vw; top: 6%; }
+  .tagline-img-2 { width: 24vw; top: 2%; }
+  .tagline-img-3 { width: 26vw; bottom: -2%; }
 }

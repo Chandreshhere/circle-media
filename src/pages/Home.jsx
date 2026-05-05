@@ -4,8 +4,10 @@ import Reveal from "../components/sections/Reveal.jsx";
 import Tagline from "../components/sections/Tagline.jsx";
 import WhatWeDo from "../components/sections/WhatWeDo.jsx";
 import Services from "../components/sections/Services.jsx";
+import AdsPartners from "../components/sections/AdsPartners.jsx";
 import Testimonials from "../components/sections/Testimonials.jsx";
-import CircleRing from "../components/sections/CircleRing.jsx";
+import Clients from "../components/sections/Clients.jsx";
+import Reach from "../components/sections/Reach.jsx";
 import Footer from "../components/sections/Footer.jsx";
 
 export default function Home() {
@@ -16,9 +18,11 @@ export default function Home() {
       <Reveal />
       <Tagline />
       <WhatWeDo />
-      <Services />
+      {/* <Services /> */}
+      <AdsPartners />
       <Testimonials />
-      <CircleRing />
+      <Clients />
+      <Reach />
       <Footer />
     </>
   );
