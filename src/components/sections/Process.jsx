@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import BlurInText from "../fx/BlurInText.jsx";
 
 /* Each piece is drawn in a 100x100 viewBox. All four silhouettes share the
@@ -53,8 +54,29 @@ const PUZZLE_PIECES = [
 ];
 
 export default function Process() {
+  const sectionRef = useRef(null);
+  const [inView, setInView] = useState(true);
+
+  // Pause the puzzle's SVG SMIL `<animate>` elements + the CSS keyframe
+  // sliding when the section isn't on screen. Continuously running them
+  // in the background is what was eating mobile CPU and causing scroll
+  // jitter on the sections below.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: "100px 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <section className="process">
+    <section
+      className={`process ${inView ? "" : "is-offscreen"}`}
+      ref={sectionRef}
+    >
       <div className="process-head">
         <BlurInText
           as="h2"

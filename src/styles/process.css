@@ -152,6 +152,20 @@
   .process .process-puzzle .pp { animation: none; }
 }
 
+/* When the section is off-screen, pause the CSS keyframe sliding on the
+   puzzle pieces (the SMIL <animate> on each path is paused via
+   visibility:hidden, which the browser respects for SVG). Big perf win:
+   no continuous scroll-driven repaint when the user is far away. */
+.process.is-offscreen .process-puzzle .pp {
+  animation-play-state: paused;
+}
+.process.is-offscreen .process-puzzle svg {
+  visibility: hidden;
+}
+.process.is-offscreen .process-arrow {
+  animation-play-state: paused;
+}
+
 .process-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
