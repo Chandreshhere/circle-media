@@ -2,6 +2,7 @@
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100svh;
   overflow: hidden;
   background: var(--bg);
 }
@@ -212,7 +213,7 @@
 @media (max-width: 900px) {
   /* Pinned slide animation still runs — every slide is 100vh tall and
      content scales down to fit so nothing is clipped during the reveal. */
-  .carousel { height: 100vh; }
+  .carousel { height: 100vh; height: 100svh; }
   .project-inner {
     padding: 5vh 1.25rem 4vh;
     display: flex;

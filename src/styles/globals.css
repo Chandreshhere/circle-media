@@ -62,6 +62,11 @@ body {
   overflow-x: clip;
 }
 
+#root {
+  min-height: 100%;
+  overflow-x: clip;
+}
+
 /* Belt-and-suspenders: explicitly allow vertical pan on phones so no
    in-page touch handler can accidentally swallow the scroll gesture. */
 @media (max-width: 900px) {
@@ -193,6 +198,7 @@ p.secondary, span.secondary {
   position: relative;
   width: 100%;
   background: var(--bg);
+  overflow-x: clip;
 }
 
 section {

@@ -42,7 +42,7 @@
   z-index: 2;
   -webkit-mask: url("/arrow-logo.png") no-repeat center / contain;
           mask: url("/arrow-logo.png") no-repeat center / contain;
-  transform: scaleX(-1);
+  transform: scaleX(-1) translateY(clamp(0.45rem, 0.9vw, 0.9rem));
   background-color: var(--c-mint);
   animation: process-arrow-hue 9s linear infinite;
 }
@@ -239,6 +239,7 @@
     left: auto;
     right: clamp(11rem, 43vw, 18rem);
     bottom: clamp(13.75rem, 35.5vw, 18.5rem);
+    transform: scaleX(-1) translateY(clamp(0.65rem, 2vw, 1.15rem));
   }
   /* Match the desktop look — a small square 2x2 puzzle, NOT stretched to
      fill the row. Each piece is `width: 50%` of this container, so capping
@@ -292,5 +293,6 @@
     width: clamp(60px, 20vw, 90px);
     right: clamp(8rem, 39vw, 13.5rem);
     bottom: clamp(10.75rem, 31.5vw, 15.5rem);
+    transform: scaleX(-1) translateY(0.85rem);
   }
 }
