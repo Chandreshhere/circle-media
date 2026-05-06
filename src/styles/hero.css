@@ -81,15 +81,26 @@
 .hero-split-title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2.6rem, 5.2vw, 5.25rem);
-  line-height: 1.03;
+  /* Tighter font-size curve than before. The previous `5.2vw` middle
+     value produced ~71px on a 1366-px Windows laptop, which forced the
+     lead text "A digital marketing agency specializing in" to wrap to
+     3 lines and shifted the entire page layout up/down on different
+     screens. The 3.4vw middle keeps the lead at exactly 2 lines from
+     ~1000px up, and the 4.6rem cap stops it growing too large on big
+     monitors. */
+  font-size: clamp(2.4rem, 3.4vw, 4.6rem);
+  line-height: 1.05;
   letter-spacing: -0.035em;
   color: var(--text);
   text-wrap: balance;
 }
 
-/* Lead-in sits on its own row so the cycling accent below can grow to
-   one or two lines without nudging "specializing in" around. */
+/* Lead-in sits on its own row. We forced a manual <br> in the JSX so the
+   text always reads as exactly two locked lines:
+       "A digital marketing agency"
+       "specializing in"
+   regardless of viewport width. The reserved min-height keeps the rest
+   of the section anchored even before web fonts load. */
 .hero-split-title-lead {
   display: block;
   font-size: inherit;
@@ -99,6 +110,7 @@
   letter-spacing: inherit;
   color: inherit;
   text-transform: none;
+  min-height: calc(1.05em * 2);
 }
 
 .hero-split-accent {
@@ -116,7 +128,7 @@
   /* Reserve enough vertical room for the longest phrase (which wraps to
      two lines on desktop) so the layout below doesn't bounce when the
      text swaps between short and long entries. */
-  min-height: calc(1.03em * 2);
+  min-height: calc(1.05em * 2);
   margin-top: 0.15em;
 }
 

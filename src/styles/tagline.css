@@ -24,9 +24,9 @@
   position: relative;
   z-index: 3;
   width: 100%;
-  /* Wider copy column so the paragraph spreads more comfortably across
-     the section without crashing into the corner logos. */
-  max-width: 1660px;
+  /* Narrower copy column — paragraph wraps to more lines and reads as a
+     tall, dense block. */
+  max-width: 880px;
   margin: 0 auto;
   padding: 0 clamp(1rem, 5vw, 4.5rem);
 }
@@ -36,8 +36,8 @@
   font-family: var(--font-display);
   font-weight: 500;
   text-transform: none;
-  font-size: clamp(2rem, 5vw, 5rem);
-  line-height: 1.1;
+  font-size: clamp(1.8rem, 3.8vw, 3.8rem);
+  line-height: 1.2;
   letter-spacing: -0.015em;
   text-align: left;
 
@@ -102,9 +102,9 @@
   border-radius: inherit;
 }
 
-/* All tiles share a square aspect — the rounded mask makes them read
-   as soft squircles regardless of source dimensions. */
-.tagline-img { aspect-ratio: 1 / 1; }
+/* All tiles share a portrait aspect — the rounded mask makes them read
+   as soft tall pills regardless of source dimensions. */
+.tagline-img { aspect-ratio: 3 / 4; }
 
 /* Balanced 3-on-top / 2-on-bottom grid. Top row uses left-corner +
    horizontal-centre + right-corner; bottom row uses just the two
@@ -113,19 +113,19 @@
    five scattered accents. */
 
 /* Top row */
-.tagline-img-1 { top: 5%; left: 4%;  width: 12vw; max-width: 170px; } /* Amazon   — top-left */
+.tagline-img-1 { top: 5%; left: 4%;  width: 16vw; max-width: 230px; } /* Amazon   — top-left */
 .tagline-img-5 {
   top: 5%;
   left: 50%;
-  margin-left: clamp(-85px, -6vw, -60px);
-  width: 12vw;
-  max-width: 170px;
+  margin-left: clamp(-115px, -8vw, -80px);
+  width: 16vw;
+  max-width: 230px;
 }                                                                    /* WhatsApp — top-centre */
-.tagline-img-2 { top: 5%; right: 4%; width: 12vw; max-width: 170px; } /* IG       — top-right */
+.tagline-img-2 { top: 5%; right: 4%; width: 16vw; max-width: 230px; } /* IG       — top-right */
 
 /* Bottom row */
-.tagline-img-3 { bottom: 5%; left: 4%;  width: 13vw; max-width: 190px; } /* Blinkit  — bottom-left */
-.tagline-img-8 { bottom: 5%; right: 4%; width: 13vw; max-width: 190px; } /* Facebook — bottom-right */
+.tagline-img-3 { bottom: 5%; left: 4%;  width: 17vw; max-width: 250px; } /* Blinkit  — bottom-left */
+.tagline-img-8 { bottom: 5%; right: 4%; width: 17vw; max-width: 250px; } /* Facebook — bottom-right */
 
 @media (max-width: 900px) {
   .tagline {

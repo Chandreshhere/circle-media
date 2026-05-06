@@ -12,7 +12,6 @@ const PARALLAX_IMAGES = [
   { src: "/assets/socials/amazon.png",    cls: "tagline-img tagline-img-1", speed: -90 },
   { src: "/assets/socials/ig.png",        cls: "tagline-img tagline-img-2", speed: 70 },
   { src: "/assets/socials/blinkit.png",   cls: "tagline-img tagline-img-3", speed: -130 },
-  { src: "/assets/socials/whatsapp.jpeg", cls: "tagline-img tagline-img-5", speed: -60 },
   { src: "/assets/socials/facebook.jpeg", cls: "tagline-img tagline-img-8", speed: 60 },
 ];
 

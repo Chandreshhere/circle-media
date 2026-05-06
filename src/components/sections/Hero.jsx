@@ -109,7 +109,9 @@ export default function Hero() {
 
         <h1 className="hero-split-title" data-hero-reveal>
           <span className="hero-split-title-lead">
-            A digital marketing agency specializing in
+            A digital marketing agency
+            <br />
+            specializing in
           </span>
           <span className="hero-split-accent">
             <span

@@ -1,14 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
-/* "Brands we've worked with" — categorised industry containers, each with a
-   white static rounded border that visually "fills" with a per-container
-   colour as the user scrolls. The colour starts at the top-centre (label)
-   and races outward + down both sides simultaneously, hugging the rounded
-   rectangle's path. Logos themselves are static (no animation). */
+/* "Brands we've worked with" — categorised industry containers shown as a
+   carousel: one industry visible at a time, sliding horizontally. Each
+   container has a static coloured border (no scroll-driven trace anymore)
+   and the strip auto-advances on a timer. Prev / next buttons + dot
+   indicators give manual navigation. */
 
 const indexedLogos = (slug, names, count) =>
   names.map((name, i) => ({
@@ -109,106 +105,12 @@ const TRACE_PALETTE = [
   "var(--c-red)",
 ];
 
-/* Sub-component for each industry container. Owns its own size observer +
-   scroll-trigger so the SVG trace paths can hug the actual pixel dimensions
-   of the container (including the rounded corners). The corner radius is
-   read live from getComputedStyle so the SVG path matches whatever the CSS
-   border-radius is at the current breakpoint. */
 function BrandGroup({ group, color }) {
-  const wrapRef = useRef(null);
-  const rightPathRef = useRef(null);
-  const leftPathRef = useRef(null);
-  const [size, setSize] = useState({ w: 0, h: 0, r: 28 });
-
-  // Track container dimensions + actual border-radius so the path always
-  // matches the current rounded-rectangle outline at any breakpoint.
-  useEffect(() => {
-    const el = wrapRef.current;
-    if (!el) return;
-    const update = () => {
-      const rect = el.getBoundingClientRect();
-      const cs = window.getComputedStyle(el);
-      const radius = parseFloat(cs.borderTopLeftRadius) || 28;
-      setSize({ w: rect.width, h: rect.height, r: radius });
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  // Scroll-driven fill: stroke-dashoffset animates 100 → 0 (path "draws"
-  // outward from top-centre along the rounded rectangle border) as the
-  // container passes through the viewport.
-  useEffect(() => {
-    if (size.w === 0) return;
-    const paths = [rightPathRef.current, leftPathRef.current].filter(Boolean);
-    paths.forEach((p) => {
-      p.style.strokeDasharray = "100";
-      p.style.strokeDashoffset = "100";
-    });
-
-    const trig = ScrollTrigger.create({
-      trigger: wrapRef.current,
-      start: "top 90%",
-      end: "bottom 35%",
-      scrub: 0.6,
-      onUpdate: (self) => {
-        const offset = (1 - self.progress) * 100;
-        paths.forEach((p) => {
-          if (p) p.style.strokeDashoffset = String(offset);
-        });
-      },
-    });
-    return () => trig.kill();
-  }, [size.w, size.h]);
-
-  const { w, h, r } = size;
-  const valid = w > 0 && h > 2 * r;
-
-  // Both paths begin at top-centre (where the label sits) and race outward.
-  // Right path: top-center → top-right corner → right side → bottom-right
-  // corner → bottom-center.
-  // Left path:  top-center → top-left  corner → left  side → bottom-left
-  // corner → bottom-center.
-  const rightD = valid
-    ? `M ${w / 2} 0 H ${w - r} A ${r} ${r} 0 0 1 ${w} ${r} ` +
-      `V ${h - r} A ${r} ${r} 0 0 1 ${w - r} ${h} H ${w / 2}`
-    : "";
-  const leftD = valid
-    ? `M ${w / 2} 0 H ${r} A ${r} ${r} 0 0 0 0 ${r} ` +
-      `V ${h - r} A ${r} ${r} 0 0 0 ${r} ${h} H ${w / 2}`
-    : "";
-
   return (
     <div
       className="brand-group"
-      ref={wrapRef}
-      style={{ "--trace-color": color }}
+      style={{ "--trace-color": color, borderColor: color }}
     >
-      {valid && (
-        <svg
-          className="brand-group-trace"
-          width={w}
-          height={h}
-          viewBox={`0 0 ${w} ${h}`}
-          aria-hidden="true"
-        >
-          <path
-            ref={rightPathRef}
-            d={rightD}
-            pathLength="100"
-            style={{ stroke: color }}
-          />
-          <path
-            ref={leftPathRef}
-            d={leftD}
-            pathLength="100"
-            style={{ stroke: color }}
-          />
-        </svg>
-      )}
-
       <span className="brand-group-label">{group.category.toUpperCase()}</span>
 
       <div className="brand-group-grid">
@@ -227,6 +129,25 @@ function BrandGroup({ group, color }) {
 }
 
 export default function Clients() {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const total = BRAND_GROUPS.length;
+  const intervalRef = useRef(null);
+
+  const next = () => setActive((i) => (i + 1) % total);
+  const prev = () => setActive((i) => (i - 1 + total) % total);
+
+  // Auto-advance every 4.5s. Pauses while the user is hovering or has
+  // touch-pressed the carousel; resets the interval on any manual nav so
+  // the next auto-step doesn't fire too soon after a click.
+  useEffect(() => {
+    if (paused) return;
+    intervalRef.current = setInterval(() => {
+      setActive((i) => (i + 1) % total);
+    }, 4500);
+    return () => clearInterval(intervalRef.current);
+  }, [paused, active, total]);
+
   return (
     <section className="brands">
       <div className="brands-head">
@@ -234,14 +155,61 @@ export default function Clients() {
         <p>Circle ↻ 2018–2026</p>
       </div>
 
-      <div className="brands-stack">
-        {BRAND_GROUPS.map((group, gi) => (
-          <BrandGroup
-            key={group.category}
-            group={group}
-            color={TRACE_PALETTE[gi % TRACE_PALETTE.length]}
-          />
-        ))}
+      <div
+        className="brands-carousel"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onTouchStart={() => setPaused(true)}
+        onTouchEnd={() => setPaused(false)}
+      >
+        <button
+          type="button"
+          className="brands-nav brands-prev"
+          aria-label="Previous industry"
+          onClick={prev}
+        >
+          ‹
+        </button>
+
+        <div className="brands-viewport">
+          <div
+            className="brands-track"
+            style={{ transform: `translateX(-${active * 100}%)` }}
+          >
+            {BRAND_GROUPS.map((group, gi) => (
+              <div className="brands-slide" key={group.category}>
+                <BrandGroup
+                  group={group}
+                  color={TRACE_PALETTE[gi % TRACE_PALETTE.length]}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className="brands-nav brands-next"
+          aria-label="Next industry"
+          onClick={next}
+        >
+          ›
+        </button>
+
+        <div className="brands-dots" role="tablist" aria-label="Industries">
+          {BRAND_GROUPS.map((g, i) => (
+            <button
+              key={g.category}
+              type="button"
+              role="tab"
+              aria-selected={i === active}
+              aria-label={g.category}
+              className={`brands-dot ${i === active ? "is-active" : ""}`}
+              style={{ "--dot-color": TRACE_PALETTE[i % TRACE_PALETTE.length] }}
+              onClick={() => setActive(i)}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
