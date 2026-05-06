@@ -124,24 +124,12 @@ body {
   }
 }
 
-/* === OFF-SCREEN SECTION SKIPPING ========================================
-   ONLY apply to sections AFTER the last pinning section in the layout.
-   Sections between pins (e.g. .tagline between Reveal and WhatWeDo)
-   were causing the WhatWeDo / Services pins to mis-align on mobile —
-   when the browser used contain-intrinsic-size as the placeholder
-   height, the pinSpacers above were positioned for a different total
-   page length than what was actually rendered, so the pin would either
-   trigger early or not at all. */
-.ads-partners,
-.testimonials,
-.brands,
-.reach {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 600px;
-}
-
-.brands { contain-intrinsic-size: auto 520px; }
-.reach  { contain-intrinsic-size: auto 540px; }
+/* `content-visibility: auto` was disabled because the placeholder vs.
+   actual rendered heights of below-the-fold sections were causing the
+   page total height to fluctuate as the user scrolled. ScrollTrigger
+   pinSpacers above (Reveal/WhatWeDo/Services) snapped to the new total,
+   which on mobile manifested as the WhatWeDo unpin throwing the user
+   straight to the footer. Stable layout > the perf win. */
 
 ::selection {
   background: var(--accent);

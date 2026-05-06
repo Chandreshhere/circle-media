@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { services } from "../data/content.js";
 import BlurInText from "../components/fx/BlurInText.jsx";
 import Dissolve from "../components/fx/Dissolve.jsx";
@@ -26,10 +25,10 @@ export default function ServicesPage() {
 
           <div className="services-hero-right">
             <nav className="services-hero-nav">
-              <Link to="/work">Work,</Link>
-              <Link className="is-active" to="/services">Services,</Link>
-              <Link to="/about">Studio,</Link>
-              <Link to="/contact">Create with us</Link>
+              <a href="/work">Work,</a>
+              <a className="is-active" href="/services">Services,</a>
+              <a href="/about">Studio,</a>
+              <a href="/contact">Create with us</a>
             </nav>
 
             <BlurInText

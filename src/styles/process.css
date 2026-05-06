@@ -36,13 +36,13 @@
   position: relative;
   flex: 0 0 auto;
   align-self: flex-end;
-  width: clamp(60px, 5.5vw, 110px);
+  width: clamp(48px, 4.2vw, 84px);
   aspect-ratio: 1 / 1;
   pointer-events: none;
   z-index: 2;
   -webkit-mask: url("/arrow-logo.png") no-repeat center / contain;
           mask: url("/arrow-logo.png") no-repeat center / contain;
-  transform: scaleX(-1) translateY(clamp(0.45rem, 0.9vw, 0.9rem));
+  transform: scaleX(-1) translateY(clamp(0.85rem, 1.6vw, 1.4rem));
   background-color: var(--c-mint);
   animation: process-arrow-hue 9s linear infinite;
 }

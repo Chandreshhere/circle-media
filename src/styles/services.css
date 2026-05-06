@@ -15,7 +15,6 @@
   position: relative;
   width: 100%;
   height: 100vh;
-  height: 100svh;
   overflow: hidden;
   padding: 6rem clamp(1.5rem, 4vw, 5rem) 4rem;
   display: flex;
@@ -34,7 +33,7 @@
   letter-spacing: 0.08em;
 }
 
-.work-scroll .work-grid {
+.work-grid {
   flex: 1;
   display: grid;
   /* minmax(0, ...) lets the column tracks size by their fr share alone,
@@ -212,7 +211,7 @@
   transition: transform 0.18s ease-out;
 }
 
-.work-scroll .work-card {
+.work-card {
   flex: 0 0 auto;
   width: clamp(150px, 13vw, 210px);
   border-radius: 14px;
@@ -228,7 +227,7 @@
   transition: transform 0.18s ease-out, filter 0.18s ease-out;
 }
 
-.work-scroll .work-card img {
+.work-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -237,22 +236,22 @@
 
 /* Native per-type aspect ratios — square posts, vertical stories & reels,
    landscape analytics dashboards. */
-.work-scroll .work-card.is-post      { aspect-ratio: 1 / 1; }
-.work-scroll .work-card.is-story     { aspect-ratio: 9 / 16; }
-.work-scroll .work-card.is-reel      { aspect-ratio: 9 / 16; }
-.work-scroll .work-card.is-dashboard {
+.work-card.is-post      { aspect-ratio: 1 / 1; }
+.work-card.is-story     { aspect-ratio: 9 / 16; }
+.work-card.is-reel      { aspect-ratio: 9 / 16; }
+.work-card.is-dashboard {
   aspect-ratio: 16 / 10;
   /* Dashboards are landscape, so on the carousel they need a bit more
      horizontal room than the square / vertical cards. */
   width: clamp(220px, 19vw, 320px);
 }
-.work-scroll .work-card.is-dashboard img { object-fit: contain; background: #0c0c0e; }
+.work-card.is-dashboard img { object-fit: contain; background: #0c0c0e; }
 
 /* Slot positions are now JS-driven (Services.jsx applyCarousel) so cards
    can drift right → left as the user scrolls. The static pos-N rules
    that used to live here have been removed. */
 
-.work-scroll .work-card img {
+.work-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -393,7 +392,7 @@
 /* === Tablet / mobile === */
 
 @media (max-width: 1100px) {
-  .work-scroll .work-card { width: clamp(150px, 14vw, 200px); }
+  .work-card { width: clamp(150px, 14vw, 200px); }
 }
 
 @media (max-width: 819px) {
@@ -403,7 +402,6 @@
   .work-stage {
     padding: 3rem 1rem 1.5rem;
     height: 100vh;
-    height: 100svh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -418,7 +416,7 @@
   /* Stack vertically using flex (not grid) — flex with explicit fixed
      heights on each child is the most reliable layout pattern across
      mobile browsers; grid + 1fr was repeatedly collapsing rows. */
-  .work-scroll .work-grid {
+  .work-grid {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -538,8 +536,8 @@
   }
 
   /* Smaller card sizes — same horizontal carousel layout, just scaled. */
-  .work-scroll .work-card { width: 110px; }
-  .work-scroll .work-card.is-dashboard { width: 150px; }
+  .work-card { width: 110px; }
+  .work-card.is-dashboard { width: 150px; }
 }
 
 @media (max-width: 480px) {
@@ -555,6 +553,6 @@
   .work-phone-col { min-height: 240px; }
   .work-coverflow { min-height: 240px; }
   .work-phone { width: 140px; }
-  .work-scroll .work-card { width: 92px; }
-  .work-scroll .work-card.is-dashboard { width: 130px; }
+  .work-card { width: 92px; }
+  .work-card.is-dashboard { width: 130px; }
 }

@@ -42,6 +42,7 @@ if (typeof window !== "undefined") {
 
 import TopNav from "./components/TopNav.jsx";
 import Transition from "./components/Transition.jsx";
+import PageLoader from "./components/PageLoader.jsx";
 import CursorFX from "./components/fx/CursorFX.jsx";
 
 import Home from "./pages/Home.jsx";
@@ -180,6 +181,7 @@ export default function App() {
 
   return (
     <>
+      <PageLoader />
       <Transition pathname={location.pathname} />
       <CursorFX />
       <div className="app">

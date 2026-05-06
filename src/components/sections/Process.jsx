@@ -87,9 +87,6 @@ export default function Process() {
         >
           A measured system that turns ideas into outcomes — then tunes itself.
         </BlurInText>
-        <div className="process-arrow" aria-hidden="true">
-          <img src="/arrow-logo.png" alt="" />
-        </div>
         <div className="process-puzzle" aria-hidden="true">
           {PUZZLE_PIECES.map((p) => (
             <span key={p.className} className={p.className}>

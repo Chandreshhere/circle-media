@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import gsap from "gsap";
 import { navLinks } from "../data/content.js";
 
@@ -151,20 +151,20 @@ export default function TopNav() {
     <>
     <header className="topnav" ref={headerRef}>
       <div className="topnav-inner" ref={innerRef}>
-        <Link to="/" className="tn-item topnav-logo">
+        <a href="/" className="tn-item topnav-logo">
           <img src="/newlogo.png" alt="Circle" className="tn-logo-img" />
           <span className="tn-logo-word">Circle</span>
-        </Link>
+        </a>
         <nav className="tn-item topnav-links">
           {navLinks.map((n) => (
-            <Link
+            <a
               key={n.to}
-              to={n.to}
+              href={n.to}
               className={`topnav-link ${isActive(n.to) ? "is-active" : ""}`}
             >
               <span className="n">{n.num}</span>
               <span className="l">{n.label}</span>
-            </Link>
+            </a>
           ))}
         </nav>
         <div className="tn-item topnav-cta">
@@ -205,15 +205,15 @@ export default function TopNav() {
         <span />
       </button>
       {navLinks.map((n) => (
-        <Link
+        <a
           key={n.to}
-          to={n.to}
+          href={n.to}
           className={`tn-mobile-link ${isActive(n.to) ? "is-active" : ""}`}
           onClick={() => setMenuOpen(false)}
         >
           <span className="tn-mobile-num">{n.num}</span>
           <span className="tn-mobile-label">{n.label}</span>
-        </Link>
+        </a>
       ))}
       <div className="tn-mobile-foot">
         <span className="tn-pulse" />

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { getLenis } from "../../App.jsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -233,10 +234,12 @@ export default function WhatWeDo() {
     // Dedicated pin trigger — owns the pinning + spacer for the section's
     // entire scroll range. Stays alive forever so scrolling back through the
     // section keeps it correctly pinned even after the animation locks.
+    const pinDistance = `+=${totalPhases * 100}%`;
+
     const pinTrigger = ScrollTrigger.create({
       trigger: root,
       start: "top top",
-      end: `+=${totalPhases * 100}%`,
+      end: pinDistance,
       pin: true,
       pinType: "transform",
       pinSpacing: true,
@@ -252,7 +255,7 @@ export default function WhatWeDo() {
       scrollTrigger: {
         trigger: root,
         start: "top top",
-        end: `+=${totalPhases * 100}%`,
+        end: pinDistance,
         scrub: true,
         invalidateOnRefresh: true,
         // Drive the corner radius alongside the spread tween: rounded while
@@ -276,20 +279,14 @@ export default function WhatWeDo() {
           lastRq = Rq;
           setRadius(Rq);
         },
-        // Once past the spread, freeze cards in the connected layout (sharp
-        // corners), detach scrub so scrolling up never re-stacks them, and
-        // tear down the pin so the section becomes a normal 1-viewport-tall
-        // block — scrolling up no longer drags through the long pinSpacer.
-        //
-        // Then snap the user to the TOP of the (now normal-flow) WWD section
-        // so the view doesn't change at the moment of unpin: WWD with the
-        // spread puzzle stays visible at viewport top. From there, scrolling
-        // DOWN naturally moves into the next section (Services), and
-        // scrolling UP reveals the sections above WWD. Nothing "jumps".
+        // Once past the spread, freeze the cards in the connected
+        // layout, stop the scrub, and release the pin so the section
+        // becomes a regular block in flow. After this point scroll-up
+        // and scroll-down are both normal — no long pinned re-traversal
+        // when the user goes back to Reveal.
         onLeave: (self) => {
           if (locked) return;
           locked = true;
-
           gsap.set(stage, { scale: stageScale });
           cards.forEach((card, i) => {
             gsap.set(card, {
@@ -300,19 +297,28 @@ export default function WhatWeDo() {
           });
           setRadius(END_RADIUS);
           lastRq = END_RADIUS;
-          // Drop GPU layer hints once everything's static — frees memory
-          // on low-end devices and stops the post-spread scroll jitter.
           stage.classList.add("is-locked");
-
-          // Disable the scrub timeline so the cards stay frozen in the
-          // spread state, but DO NOT kill the pinTrigger or force a
-          // window.scrollTo. The previous version manually re-positioned
-          // the scroll + called ScrollTrigger.refresh, which on mobile
-          // (with normalizeScroll) collided with the touch scroll
-          // sampler and bounced the user all the way to the footer.
-          // Keeping the pinSpacer alive lets the user simply scroll
-          // past the (frozen) spread puzzle into the next section.
           self.disable(false, false);
+
+          // Release the pin: section becomes a regular 100vh block in
+          // flow. Pin only existed during the cards-rising/spread phase;
+          // afterwards scroll-up and scroll-down are both normal.
+          //
+          // Snap scrollY to the section's natural top so the visible
+          // content stays the same (cards still at viewport top, in the
+          // spread layout) — the pinSpacer is collapsing under us, and
+          // without this snap the page would either jump forward into
+          // post-Services content or get clamped to the new doc end.
+          const sectionStart = pinTrigger.start;
+          pinTrigger.kill();
+
+          const lenis = getLenis();
+          if (lenis) {
+            lenis.scrollTo(sectionStart, { immediate: true, force: true });
+          } else {
+            window.scrollTo(0, sectionStart);
+          }
+          ScrollTrigger.refresh();
         },
       },
     });

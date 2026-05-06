@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import BlurInText from "../components/fx/BlurInText.jsx";
@@ -93,10 +92,10 @@ export default function AboutPage() {
 
           <div className="about-hero-right">
             <nav className="about-hero-nav">
-              <Link to="/work">Work,</Link>
-              <Link to="/services">Services,</Link>
-              <Link className="is-active" to="/about">Studio,</Link>
-              <Link to="/contact">Create with us</Link>
+              <a href="/work">Work,</a>
+              <a href="/services">Services,</a>
+              <a className="is-active" href="/about">Studio,</a>
+              <a href="/contact">Create with us</a>
             </nav>
 
             <BlurInText

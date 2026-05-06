@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import BlurInText from "../components/fx/BlurInText.jsx";
@@ -363,10 +362,10 @@ export default function WorkPage() {
 
             <div className="work-hero-right">
               <nav className="work-hero-nav">
-                <Link className="is-active" to="/work">Work,</Link>
-                <Link to="/services">Services,</Link>
-                <Link to="/about">About,</Link>
-                <Link to="/contact">Create with us</Link>
+                <a className="is-active" href="/work">Work,</a>
+                <a href="/services">Services,</a>
+                <a href="/about">About,</a>
+                <a href="/contact">Create with us</a>
               </nav>
 
               <BlurInText as="p" split="words" stagger={0.02} blur={10} className="work-hero-copy">

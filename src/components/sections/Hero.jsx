@@ -69,27 +69,56 @@ export default function Hero() {
       lenis?.start();
     };
 
-    // Start the entrance slightly before the Transition fully clears so
-    // the two animations cross-fade instead of running back-to-back (which
-    // is what made the load read as "two distinct stages, then a pop").
-    // Longer duration + softer ease + slightly larger stagger gives a calm
-    // settling-in feel instead of snapping.
-    const tl = gsap.timeline({ delay: 0.7, onComplete: unlock });
-    tl.to(items, {
-      opacity: 1,
-      y: 0,
-      filter: "blur(0px)",
-      duration: 1.4,
-      ease: "power2.out",
-      stagger: 0.14,
-    });
-    // Belt-and-suspenders: even if onComplete misses (e.g. tab backgrounded
-    // through the entrance), force-unlock after 4.5s so we never leave the
-    // page un-scrollable.
-    const failsafe = setTimeout(unlock, 4500);
+    // The entrance animation now waits for the PageLoader to finish
+    // before starting — `pageloader:done` event is dispatched as the
+    // loader fades out. If the loader is already gone (e.g. fast nav
+    // back to the home route), we start immediately. A 3.5s safety
+    // timer also fires the start so we never sit invisible if the
+    // event somehow doesn't arrive.
+    let tl;
+    let failsafe;
+
+    const startEntrance = () => {
+      if (tl) return;
+      tl = gsap.timeline({ onComplete: unlock });
+      tl.to(items, {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 1.4,
+        ease: "power2.out",
+        stagger: 0.14,
+      });
+    };
+
+    const onLoaderDone = () => {
+      // Tiny delay so the Hero animation kicks in just as the loader
+      // overlay finishes its fade-out, no perceptible gap.
+      setTimeout(startEntrance, 80);
+    };
+
+    // If the loader isn't in the DOM (subsequent SPA navigation back to
+    // home), or has already done its job, start right away.
+    const loaderEl = document.querySelector(".page-loader");
+    if (!loaderEl || loaderEl.classList.contains("is-done")) {
+      startEntrance();
+    } else {
+      window.addEventListener("pageloader:done", onLoaderDone, { once: true });
+      // Belt-and-suspenders: in case the loader event somehow never
+      // fires (slow asset, errored fetch), force the entrance after
+      // 3.5s so the hero never stays hidden indefinitely.
+      failsafe = setTimeout(startEntrance, 3500);
+    }
+
+    // Always-on belt-and-suspenders for the unlock — even if onComplete
+    // is missed, scroll is restored within 6s.
+    const unlockSafety = setTimeout(unlock, 6000);
+
     return () => {
-      clearTimeout(failsafe);
-      tl.kill();
+      window.removeEventListener("pageloader:done", onLoaderDone);
+      if (failsafe) clearTimeout(failsafe);
+      clearTimeout(unlockSafety);
+      tl?.kill();
       unlock();
     };
   }, []);
