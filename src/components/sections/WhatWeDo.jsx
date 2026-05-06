@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { getLenis } from "../../App.jsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -305,18 +304,15 @@ export default function WhatWeDo() {
           // on low-end devices and stops the post-spread scroll jitter.
           stage.classList.add("is-locked");
 
-          const sectionTop = pinTrigger.start;
-
+          // Disable the scrub timeline so the cards stay frozen in the
+          // spread state, but DO NOT kill the pinTrigger or force a
+          // window.scrollTo. The previous version manually re-positioned
+          // the scroll + called ScrollTrigger.refresh, which on mobile
+          // (with normalizeScroll) collided with the touch scroll
+          // sampler and bounced the user all the way to the footer.
+          // Keeping the pinSpacer alive lets the user simply scroll
+          // past the (frozen) spread puzzle into the next section.
           self.disable(false, false);
-          pinTrigger.kill();
-
-          const lenis = getLenis();
-          if (lenis) {
-            lenis.scrollTo(sectionTop, { immediate: true, force: true });
-          } else {
-            window.scrollTo(0, sectionTop);
-          }
-          ScrollTrigger.refresh();
         },
       },
     });
