@@ -6,27 +6,16 @@
   overflow: hidden;
 }
 
-.ads-partners::before,
-.ads-partners::after {
-  content: "";
-  position: absolute;
-  width: 520px;
-  height: 520px;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.18;
-  pointer-events: none;
-  z-index: 0;
-}
-.ads-partners::before {
-  top: 12%;
-  left: -180px;
-  background: radial-gradient(circle, var(--c-pink) 0%, transparent 60%);
-}
-.ads-partners::after {
-  bottom: 8%;
-  right: -180px;
-  background: radial-gradient(circle, var(--c-blue) 0%, transparent 60%);
+/* Ambient colour wash — was implemented with `filter: blur(120px)` on a
+   520x520 element which is one of the most expensive paint operations
+   on every scroll frame. Replaced with a CSS `radial-gradient` painted
+   directly on the section background — visually nearly identical, no
+   per-frame blur cost. */
+.ads-partners {
+  background:
+    radial-gradient(420px 420px at 14% 22%, rgba(var(--c-pink-rgb, 238, 87, 137), 0.12), transparent 65%),
+    radial-gradient(420px 420px at 86% 80%, rgba(var(--c-blue-rgb, 77, 108, 179), 0.12), transparent 65%),
+    var(--bg);
 }
 
 .ap-head {
@@ -66,15 +55,18 @@
 .ap-card {
   position: relative;
   padding: 1.75rem 1.85rem 1.5rem;
+  /* Solid background instead of glass + backdrop-filter. backdrop-filter
+     was the dominant per-frame paint cost on this section and made
+     scroll jitter on every device. The card now uses an opaque base —
+     visually almost the same once the section's ambient gradients
+     paint behind it. */
   background:
     linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.015) 100%),
-    rgba(12, 11, 14, 0.6);
+    rgba(16, 14, 18, 0.95);
   border: 1px solid var(--border);
   border-radius: 20px;
   overflow: hidden;
   transition: border-color 0.35s ease, transform 0.45s ease;
-  backdrop-filter: blur(18px) saturate(1.2);
-  -webkit-backdrop-filter: blur(18px) saturate(1.2);
 }
 
 .ap-card:hover {
@@ -236,17 +228,14 @@
 @media (max-width: 900px) {
   .ads-partners { padding: 4rem 1rem; }
 
-  /* Lighter ambient blobs — the 520px x 2 desktop blobs cost too much
-     on mobile GPUs and bleed past the smaller card area anyway. */
-  .ads-partners::before,
-  .ads-partners::after {
-    width: 280px;
-    height: 280px;
-    filter: blur(80px);
-    opacity: 0.14;
+  /* The desktop ambient gradient is reduced on mobile via the
+     section's background-image so we don't need the heavy pseudos. */
+  .ads-partners {
+    background:
+      radial-gradient(280px 280px at 5% 12%, rgba(var(--c-pink-rgb, 238, 87, 137), 0.10), transparent 60%),
+      radial-gradient(280px 280px at 95% 85%, rgba(var(--c-blue-rgb, 77, 108, 179), 0.10), transparent 60%),
+      var(--bg);
   }
-  .ads-partners::before { top: 6%;  left: -120px; }
-  .ads-partners::after  { bottom: 4%; right: -120px; }
 
   .ap-head {
     flex-direction: column;

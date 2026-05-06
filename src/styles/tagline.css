@@ -132,10 +132,14 @@
     min-height: 110vh;
     padding: 12vh 5vw;
   }
-
+  .tagline-inner {
+    /* Pull the heading inward so it never lives under the corner tiles. */
+    max-width: 600px;
+    padding: 0 clamp(0.5rem, 4vw, 2rem);
+  }
   .tagline-heading {
-    font-size: clamp(2.4rem, 9vw, 4.4rem);
-    line-height: 1.1;
+    font-size: clamp(1.6rem, 6vw, 2.6rem);
+    line-height: 1.2;
   }
 
   .tagline-img-1 { width: 16vw; top: 8%; left: 3%; }
@@ -147,7 +151,11 @@
 
 @media (max-width: 600px) {
   .tagline { min-height: 100vh; padding: 10vh 5vw; }
-  .tagline-heading { font-size: clamp(2rem, 9.5vw, 3.4rem); line-height: 1.15; }
+  .tagline-inner { max-width: 480px; padding: 0 0.5rem; }
+  .tagline-heading {
+    font-size: clamp(1.35rem, 5.4vw, 2rem);
+    line-height: 1.25;
+  }
   .tagline-img-1 { width: 20vw; top: 7%; left: 3%; }
   .tagline-img-2 { width: 20vw; top: 2%; right: 3%; }
   .tagline-img-3 { width: 22vw; bottom: -1%; left: 3%; }
@@ -159,7 +167,8 @@
 
 @media (max-width: 420px) {
   .tagline { min-height: 90vh; padding: 9vh 5vw; }
-  .tagline-heading { font-size: clamp(1.7rem, 9vw, 2.6rem); }
+  .tagline-inner { padding: 0 0.25rem; }
+  .tagline-heading { font-size: clamp(1.15rem, 5.2vw, 1.6rem); line-height: 1.3; }
   .tagline-img-1 { width: 24vw; top: 6%; }
   .tagline-img-2 { width: 24vw; top: 2%; }
   .tagline-img-3 { width: 26vw; bottom: -2%; }

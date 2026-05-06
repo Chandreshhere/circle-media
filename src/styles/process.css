@@ -30,7 +30,7 @@
   position: absolute;
   left: clamp(10.75rem, 27.5vw, 27.5rem);
   bottom: -0.2em;
-  width: clamp(75px, 9vw, 135px);
+  width: clamp(75px, 7vw, 130px);
   aspect-ratio: 1 / 1;
   pointer-events: none;
   z-index: 2;
@@ -150,6 +150,20 @@
 
 @media (prefers-reduced-motion: reduce) {
   .process .process-puzzle .pp { animation: none; }
+}
+
+/* Tablet / smaller-laptop range — push the arrow off the heading. The
+   desktop `left: clamp(10.75rem, 27.5vw, 27.5rem)` lands the arrow on
+   top of the wrapping "A measured system that turns ideas into outcomes
+   — then tunes itself." text on widths roughly 1100-1500px. Pinning it
+   to the right edge of the head fixes the overlap. */
+@media (min-width: 901px) and (max-width: 1500px) {
+  .process .process-arrow {
+    left: auto;
+    right: clamp(1.5rem, 4vw, 4rem);
+    bottom: 0;
+    width: clamp(70px, 6.5vw, 110px);
+  }
 }
 
 /* When the section is off-screen, pause the CSS keyframe sliding on the
