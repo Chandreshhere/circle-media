@@ -27,6 +27,19 @@ if (
   ScrollTrigger.normalizeScroll(true);
 }
 
+// Detect low-end devices once at module load and tag <html> with classes
+// that the rest of the app (CSS + JS) can use to disable expensive
+// effects. The thresholds are intentionally conservative — we'd rather
+// downgrade visuals on a borderline device than ship jittery scroll on it.
+if (typeof window !== "undefined") {
+  const dm = navigator.deviceMemory ?? 8;       // RAM in GB (fallback: assume OK)
+  const hc = navigator.hardwareConcurrency ?? 8; // logical cores
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isLowPerf = reduceMotion || dm < 4 || hc < 4;
+  document.documentElement.classList.toggle("is-low-perf", isLowPerf);
+  document.documentElement.classList.toggle("prefers-reduced-motion", reduceMotion);
+}
+
 import TopNav from "./components/TopNav.jsx";
 import Transition from "./components/Transition.jsx";
 import CursorFX from "./components/fx/CursorFX.jsx";
@@ -123,7 +136,11 @@ export default function App() {
     lenis.on("scroll", ({ scroll }) => handleY(scroll));
     const tick = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
+    // Re-enable lag smoothing (was 0 = disabled). GSAP detects when frames
+    // are dropped (e.g. tab backgrounded, slow GPU stalls) and re-syncs the
+    // animation timeline so dropped frames don't accumulate into jumpy,
+    // jittery scrub. Default thresholds.
+    gsap.ticker.lagSmoothing(500, 33);
     return () => {
       gsap.ticker.remove(tick);
       lenis.destroy();

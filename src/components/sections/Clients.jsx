@@ -106,6 +106,14 @@ const TRACE_PALETTE = [
 ];
 
 function BrandGroup({ group, color }) {
+  // Split brands into exactly 2 rows so every category reads as a tidy
+  // 2-line grid regardless of count (9, 5, 3, 2 …). Top row is the
+  // ceiling-half so it's never shorter than the bottom row.
+  const total = group.brands.length;
+  const topCount = Math.ceil(total / 2);
+  const topRow = group.brands.slice(0, topCount);
+  const bottomRow = group.brands.slice(topCount);
+
   return (
     <div
       className="brand-group"
@@ -114,15 +122,30 @@ function BrandGroup({ group, color }) {
       <span className="brand-group-label">{group.category.toUpperCase()}</span>
 
       <div className="brand-group-grid">
-        {group.brands.map((b) => (
-          <div className="brand-circle" key={b.name} title={b.name}>
-            {b.logo ? (
-              <img src={b.logo} alt={b.name} loading="lazy" />
-            ) : (
-              <span className="brand-fallback">{b.name}</span>
-            )}
+        <div className="brand-group-row">
+          {topRow.map((b) => (
+            <div className="brand-circle" key={b.name} title={b.name}>
+              {b.logo ? (
+                <img src={b.logo} alt={b.name} loading="lazy" />
+              ) : (
+                <span className="brand-fallback">{b.name}</span>
+              )}
+            </div>
+          ))}
+        </div>
+        {bottomRow.length > 0 && (
+          <div className="brand-group-row">
+            {bottomRow.map((b) => (
+              <div className="brand-circle" key={b.name} title={b.name}>
+                {b.logo ? (
+                  <img src={b.logo} alt={b.name} loading="lazy" />
+                ) : (
+                  <span className="brand-fallback">{b.name}</span>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
@@ -148,6 +171,33 @@ export default function Clients() {
     return () => clearInterval(intervalRef.current);
   }, [paused, active, total]);
 
+  // Touch / pointer swipe support — drag horizontally to step through.
+  // Threshold is 40px so accidental vertical scroll attempts don't fire.
+  const dragRef = useRef({ startX: 0, startY: 0, active: false });
+  const onPointerDown = (e) => {
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      active: true,
+    };
+  };
+  const onPointerUp = (e) => {
+    const d = dragRef.current;
+    if (!d.active) return;
+    d.active = false;
+    const dx = e.clientX - d.startX;
+    const dy = e.clientY - d.startY;
+    // Only react to dominantly-horizontal swipes; vertical wins → leave it
+    // to the native page scroll.
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      if (dx < 0) next();
+      else prev();
+    }
+  };
+  const onPointerCancel = () => {
+    dragRef.current.active = false;
+  };
+
   return (
     <section className="brands">
       <div className="brands-head">
@@ -161,6 +211,10 @@ export default function Clients() {
         onMouseLeave={() => setPaused(false)}
         onTouchStart={() => setPaused(true)}
         onTouchEnd={() => setPaused(false)}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerCancel}
+        style={{ touchAction: "pan-y" }}
       >
         <button
           type="button"
@@ -168,7 +222,16 @@ export default function Clients() {
           aria-label="Previous industry"
           onClick={prev}
         >
-          ‹
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M15 6 L9 12 L15 18"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </button>
 
         <div className="brands-viewport">
@@ -177,7 +240,11 @@ export default function Clients() {
             style={{ transform: `translateX(-${active * 100}%)` }}
           >
             {BRAND_GROUPS.map((group, gi) => (
-              <div className="brands-slide" key={group.category}>
+              <div
+                className={`brands-slide ${gi === active ? "is-active" : ""}`}
+                key={group.category}
+                aria-hidden={gi !== active}
+              >
                 <BrandGroup
                   group={group}
                   color={TRACE_PALETTE[gi % TRACE_PALETTE.length]}
@@ -193,7 +260,16 @@ export default function Clients() {
           aria-label="Next industry"
           onClick={next}
         >
-          ›
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M9 6 L15 12 L9 18"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </button>
 
         <div className="brands-dots" role="tablist" aria-label="Industries">

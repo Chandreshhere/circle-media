@@ -2,10 +2,29 @@
    before the GSAP useEffect fires its initial gsap.set(opacity:0). Without
    this rule, the page renders the items at full opacity for one frame,
    then JS hides them, then animates them in — that single-frame flash is
-   what reads as a "glitchy" load. */
+   what reads as a "glitchy" load.
+
+   IMPORTANT failsafe: if GSAP fails to fire the entrance timeline (slow
+   mobile reload, hydration race, paused tab) the content was previously
+   stuck at opacity 0 forever and the user had to reload. The CSS keyframe
+   below guarantees the items become visible after 1.2s regardless of the
+   JS state — GSAP overrides this animation when it runs (gsap.set is more
+   specific) so the normal entrance still wins on healthy loads. */
 [data-hero-reveal] {
   opacity: 0;
   will-change: transform, opacity, filter;
+  animation: hero-failsafe-show 0.6s ease 1.2s forwards;
+}
+
+@keyframes hero-failsafe-show {
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-hero-reveal] {
+    opacity: 1;
+    animation: none;
+  }
 }
 
 /* Split hero: particle-forming logo on the left, tagline on the right.

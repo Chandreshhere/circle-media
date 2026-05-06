@@ -77,6 +77,48 @@ body {
   body { cursor: auto; }
 }
 
+/* === LOW-PERF + REDUCED-MOTION GATES =====================================
+   <html> gets `is-low-perf` if navigator.deviceMemory < 4GB or hardware
+   concurrency < 4 cores, and `prefers-reduced-motion` if the OS-level
+   accessibility setting is on. These rules strip the heaviest paint
+   operations (drop-shadow filters, backdrop blurs) on those devices and
+   neutralise scroll-pinned scrub animations for reduced-motion users. */
+
+.is-low-perf .wwd-card-shape,
+.is-low-perf .work-card,
+.is-low-perf .ap-card,
+.is-low-perf .reach-pill,
+.is-low-perf .topnav,
+.is-low-perf [class*="drop-shadow"] {
+  filter: none !important;
+}
+
+.is-low-perf .topnav,
+.is-low-perf .ap-card {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.is-low-perf [style*="will-change"],
+.is-low-perf .wwd-card,
+.is-low-perf .work-card,
+.is-low-perf .reveal-img,
+.is-low-perf .work-cards-track,
+.is-low-perf .wwd-stage {
+  will-change: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 ::selection {
   background: var(--accent);
   color: #000;

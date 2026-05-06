@@ -112,7 +112,7 @@ svg.wwd-card-shape {
   padding: 1.6rem 1.9rem 1.7rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 1.1rem;
   color: #0a0a0a;
 }
@@ -128,8 +128,14 @@ svg.wwd-card-shape {
 .wwd-card-text {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 0.7rem;
   min-height: 0;
+  /* Take the remaining vertical space below the "01" id and centre the
+     title + description inside it. Without flex:1 + center, the title
+     was pinned to the bottom of the card by the parent's previous
+     `justify-content: space-between`. */
+  flex: 1;
 }
 
 .wwd-card-title {

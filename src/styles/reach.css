@@ -5,8 +5,8 @@
 .reach {
   position: relative;
   width: 100%;
-  padding: 4rem 1.5rem 4rem;
-  margin-top: 2rem;
+  padding: 0 1.5rem 4rem;
+  margin-top: -2rem;
   background: var(--bg);
   color: var(--text);
   overflow: hidden;
@@ -201,7 +201,7 @@
    variant. === */
 
 @media (max-width: 900px) {
-  .reach { padding: 3rem 1.25rem 3rem; margin-top: 1.5rem; }
+  .reach { padding: 0 1.25rem 3rem; margin-top: -1.5rem; }
   .reach-inner { padding-left: clamp(0.5rem, 2vw, 1.25rem); }
 
   .reach-head { margin-bottom: 1.5rem; max-width: 100%; }
@@ -238,7 +238,7 @@
 }
 
 @media (max-width: 480px) {
-  .reach { padding: 2.5rem 1rem 2.5rem; margin-top: 1rem; }
+  .reach { padding: 0 1rem 2.5rem; margin-top: -1.25rem; }
   .reach-inner { padding-left: clamp(0.25rem, 1.5vw, 0.75rem); }
 
   .reach-title { font-size: clamp(1.15rem, 5.5vw, 1.5rem); }

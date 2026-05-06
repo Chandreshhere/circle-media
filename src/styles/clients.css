@@ -38,18 +38,15 @@
   position: relative;
   overflow: hidden;
   width: 100%;
-  /* The pill label on each industry container sits half ABOVE the
-     container's top border (`top: 0; translateY(-50%)`) — without this
-     padding the viewport's `overflow: hidden` clips the top of the
-     label ("FMCG", "Healthcare", etc.). */
-  padding-top: 1.5rem;
-  padding-bottom: 0.5rem;
+  padding: 0.25rem 0;
 }
 
 .brands-track {
   display: flex;
+  align-items: flex-start; /* don't stretch slides to match the tallest */
   width: 100%;
-  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  /* Smoother decel: cards-glide-into-place feel, no overshoot bounce. */
+  transition: transform 0.85s cubic-bezier(0.83, 0, 0.17, 1);
   will-change: transform;
 }
 
@@ -60,16 +57,59 @@
   box-sizing: border-box;
 }
 
-/* Prev / next buttons */
+/* The CARD itself just glides in with the track — no extra animation
+   on the box. Only the LOGOS inside spin. The animation is scoped to
+   `.brand-circle img` (a single element per circle, no scale/opacity)
+   so it stays cheap even on low-end devices. Delayed slightly so the
+   logos are visibly inside the viewport before they spin. */
+.brands-slide.is-active .brand-circle img {
+  animation: brand-logo-spin 0.7s cubic-bezier(0.83, 0, 0.17, 1) 0.2s both;
+  transform-origin: center center;
+}
+
+.brands-slide.is-active .brand-circle:nth-child(1) img,
+.brands-slide.is-active .brand-group-row:nth-child(2) .brand-circle:nth-child(1) img { animation-delay: 0.20s; }
+.brands-slide.is-active .brand-circle:nth-child(2) img,
+.brands-slide.is-active .brand-group-row:nth-child(2) .brand-circle:nth-child(2) img { animation-delay: 0.27s; }
+.brands-slide.is-active .brand-circle:nth-child(3) img,
+.brands-slide.is-active .brand-group-row:nth-child(2) .brand-circle:nth-child(3) img { animation-delay: 0.34s; }
+.brands-slide.is-active .brand-circle:nth-child(4) img,
+.brands-slide.is-active .brand-group-row:nth-child(2) .brand-circle:nth-child(4) img { animation-delay: 0.41s; }
+.brands-slide.is-active .brand-circle:nth-child(5) img,
+.brands-slide.is-active .brand-group-row:nth-child(2) .brand-circle:nth-child(5) img { animation-delay: 0.48s; }
+
+@keyframes brand-logo-spin {
+  from { transform: rotate(-360deg); }
+  to   { transform: rotate(0deg); }
+}
+
+/* Inactive slides are clipped by the viewport's overflow: hidden when
+   off-screen, but stay paintable during the transition — that's how
+   the user sees the OUTGOING slide leave to the left and the NEW slide
+   arrive from the right. We do NOT hide them with visibility: hidden
+   because that would make the slide-in animation invisible. Just
+   disable interaction on slides that aren't currently active. */
+.brands-slide:not(.is-active) {
+  pointer-events: none;
+}
+
+/* Prev / next buttons. The chevron is rendered as text content inside
+   each button (see Clients.jsx). Font-size is bigger than before so it
+   reads clearly, and the per-direction translateX nudge compensates for
+   the asymmetric sidebearings on the ‹ › glyphs (the font draws them
+   with a leading whitespace gap, so without the nudge they look offset
+   from the button's geometric centre). */
 .brands-nav {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
+  padding: 0;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.32);
   background: rgba(255, 255, 255, 0.04);
   color: #fff;
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-family: var(--font-display);
+  font-weight: 400;
   line-height: 1;
   display: inline-flex;
   align-items: center;
@@ -83,6 +123,13 @@
   z-index: 2;
 }
 
+/* SVG chevron — perfectly centred inside the button, scales with size. */
+.brands-nav svg {
+  width: 50%;
+  height: 50%;
+  display: block;
+}
+
 .brands-nav:hover {
   border-color: rgba(255, 255, 255, 0.7);
   background: rgba(255, 255, 255, 0.1);
@@ -90,101 +137,112 @@
 
 .brands-nav:active { transform: scale(0.95); }
 
-.brands-prev { padding-right: 4px; }
-.brands-next { padding-left: 4px; }
-
-/* Dots */
+/* Dots — slim progress-bar style sitting just below the cards. Active
+   dot extends to a longer pill in its category colour. */
 .brands-dots {
   grid-column: 1 / -1;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.55rem;
-  margin-top: 2rem;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
 }
 
 .brands-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  background: transparent;
+  width: 18px;
+  height: 3px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.16);
   padding: 0;
   cursor: pointer;
   transition:
-    background 0.3s ease,
-    border-color 0.3s ease,
-    transform 0.3s ease,
-    width 0.35s ease;
+    background 0.4s cubic-bezier(0.83, 0, 0.17, 1),
+    width 0.5s cubic-bezier(0.83, 0, 0.17, 1);
 }
 
-.brands-dot:hover { border-color: rgba(255, 255, 255, 0.85); }
+.brands-dot:hover { background: rgba(255, 255, 255, 0.32); }
 
 .brands-dot.is-active {
   background: var(--dot-color, var(--accent));
-  border-color: var(--dot-color, var(--accent));
-  width: 28px;
-  border-radius: 999px;
+  width: 44px;
 }
 
 /* === Industry container === */
 
 .brand-group {
   position: relative;
-  border: 2px solid var(--trace-color, rgba(255, 255, 255, 0.4));
-  border-radius: 28px;
-  padding: 3.25rem clamp(1rem, 3vw, 2.5rem) 2.25rem;
-  background: rgba(255, 255, 255, 0.012);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
-    0 0 24px rgba(var(--c-blue-rgb), 0.05);
+  border: 1.5px solid color-mix(in srgb, var(--trace-color, #fff) 65%, transparent);
+  border-radius: 22px;
+  padding: 1.4rem clamp(1rem, 3vw, 2rem);
+  background:
+    radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--trace-color, #fff) 8%, transparent), transparent 60%),
+    rgba(255, 255, 255, 0.012);
+  overflow: hidden;
+  isolation: isolate;
 }
 
-/* Pill label sitting on the top border. */
+/* Category name as a big, faded watermark dead-centred behind the brand
+   circles. Standard centering pattern (top/left 50% + translate(-50%,-50%))
+   works because we removed the conflicting `inset: 0 0 0 0` shorthand. */
 .brand-group-label {
   position: absolute;
-  top: 0;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #1a1a1c;
-  color: #fff;
+  margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(0.95rem, 1.15vw, 1.15rem);
+  font-size: clamp(3rem, 9vw, 7rem);
   font-weight: 700;
-  letter-spacing: 0.06em;
-  padding: 0.55rem 1.35rem;
-  border-radius: 12px;
-  border: 1px solid var(--trace-color, rgba(255, 255, 255, 0.22));
+  line-height: 1;
+  letter-spacing: -0.03em;
   white-space: nowrap;
-  z-index: 1;
+  text-align: center;
+  color: color-mix(in srgb, var(--trace-color, #fff) 18%, transparent);
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+  text-transform: uppercase;
 }
 
+/* Brand grid is now an explicit 2-row stack — top row (ceil(n/2)) +
+   bottom row (floor(n/2)). Every category renders as 2 lines, even
+   single-brand or huge categories, so the carousel reads consistently
+   slide to slide. */
 .brand-group-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem 1.75rem;
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.brand-group-row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }
 
 .brand-circle {
   flex: 0 0 auto;
-  width: clamp(120px, 12vw, 170px);
+  width: clamp(86px, 9vw, 120px);
   aspect-ratio: 1 / 1;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.32);
-  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 1.1rem;
+  padding: 0.75rem;
+  backdrop-filter: blur(2px);
   transition:
-    border-color 0.35s ease,
-    background 0.35s ease,
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    border-color 0.4s cubic-bezier(0.83, 0, 0.17, 1),
+    background 0.4s cubic-bezier(0.83, 0, 0.17, 1),
+    transform 0.45s cubic-bezier(0.83, 0, 0.17, 1);
 }
 
 .brand-circle:hover {
@@ -225,34 +283,51 @@
   .brands { padding: 3rem 1rem 2.5rem; }
   .brands-head { margin-bottom: 1.75rem; flex-direction: column; gap: 0.5rem; }
   .brands-carousel { gap: 0.5rem; }
-  .brands-nav { width: 38px; height: 38px; font-size: 1.35rem; }
-  .brand-group { padding: 2.75rem 1rem 1.75rem; border-radius: 22px; }
-  .brand-group-label { font-size: 0.92rem; padding: 0.45rem 1.1rem; }
-  .brand-group-grid { gap: 1.25rem 1rem; }
-  .brand-circle { padding: 0.85rem; }
+  .brands-nav { width: 42px; height: 42px; font-size: 1.7rem; }
+  .brand-group { padding: 1.25rem 0.75rem; border-radius: 18px; }
+  .brand-group-label {
+    font-size: clamp(1.4rem, 5.5vw, 2.4rem);
+    white-space: normal;
+    max-width: 90%;
+    line-height: 1.05;
+  }
+  .brand-group-grid { gap: 0.55rem; }
+  .brand-group-row { gap: 0.45rem; }
+  /* Smaller circles + tighter gap so the FMCG slide (5 logos in the top
+     row) fits on a 360-px phone viewport without overflow. */
+  .brand-circle { width: clamp(50px, 13vw, 76px); padding: 0.45rem; }
   .brands-dots { margin-top: 1.5rem; }
 }
 
 @media (max-width: 480px) {
-  .brands-carousel {
-    grid-template-columns: 1fr;
-  }
+  .brands-carousel { grid-template-columns: 1fr; }
   .brands-nav {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    /* Nudge the centred button further up so it sits on the active card's
+       logos, not below the card. The 2rem offset compensates for the
+       dots row + its margin that sit underneath the viewport in the
+       carousel's overall height. */
+    transform: translateY(calc(-50% - 0.5rem));
     z-index: 3;
     background: rgba(0, 0, 0, 0.55);
+    -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
   }
   .brands-prev { left: 0.25rem; }
   .brands-next { right: 0.25rem; }
 
-  .brand-group { padding: 2.25rem 0.75rem 1.25rem; border-radius: 18px; }
-  .brand-group-label { font-size: 0.82rem; padding: 0.35rem 0.9rem; }
-  .brand-group-grid { gap: 0.85rem; }
-  .brand-circle { padding: 0.6rem; width: clamp(85px, 22vw, 120px); }
-  .brands-dots { margin-top: 1.25rem; gap: 0.4rem; }
-  .brands-dot { width: 7px; height: 7px; }
-  .brands-dot.is-active { width: 22px; }
+  .brand-group { padding: 1rem 0.5rem; border-radius: 16px; }
+  .brand-group-label {
+    font-size: clamp(1.2rem, 5.4vw, 1.9rem);
+    white-space: normal;
+    max-width: 92%;
+    line-height: 1.05;
+  }
+  .brand-group-grid { gap: 0.45rem; }
+  .brand-group-row { gap: 0.35rem; }
+  .brand-circle { width: clamp(44px, 13vw, 64px); padding: 0.35rem; }
+  .brands-dots { margin-top: 0.65rem; gap: 0.35rem; }
+  .brands-dot { width: 14px; height: 2.5px; }
+  .brands-dot.is-active { width: 32px; }
 }
