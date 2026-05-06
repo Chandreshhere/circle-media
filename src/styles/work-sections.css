@@ -406,6 +406,10 @@
 
 @media (max-width: 700px) {
   .w-carousel-card { width: 22vw; }
+  /* Push the carousel cards further down on mobile so they sit over the
+     phone's grid area instead of crossing the profile / buttons in the
+     middle of the screen (desktop's 60% lands too high on narrow phones). */
+  .w-carousel-row { transform: translateY(90%); }
 }
 
 /* ---------- 2. STATICS ---------- */

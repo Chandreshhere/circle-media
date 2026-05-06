@@ -395,11 +395,11 @@
 }
 
 @media (max-width: 819px) {
-  /* Mirror the desktop layout (pinned 100vh stage, scroll-driven list,
-     3D phone + coverflow), just sized down so the whole composition fits
-     on a phone screen. */
+  /* Mirror desktop: 100vh-pinned stage with the scroll-driven title list
+     on top and the 3D phone + horizontal coverflow on the bottom. Just
+     sized down so the whole thing fits on a phone screen. */
   .work-stage {
-    padding: 3rem 1.25rem 2rem;
+    padding: 3rem 1rem 1.5rem;
     height: 100vh;
     overflow: hidden;
     display: flex;
@@ -407,98 +407,132 @@
   }
   .work-label {
     flex-direction: column;
-    gap: 0.35rem;
-    margin-bottom: 1rem;
+    gap: 0.3rem;
+    margin-bottom: 0.75rem;
   }
+  .work-label p { font-size: 0.7rem; letter-spacing: 0.16em; }
 
-  /* Two-row stack: scroll-driven title list on top, phone + carousel
-     below. Stretch keeps both rows from collapsing to zero. */
+  /* Stack vertically using flex (not grid) — flex with explicit fixed
+     heights on each child is the most reliable layout pattern across
+     mobile browsers; grid + 1fr was repeatedly collapsing rows. */
   .work-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-    gap: 0.75rem;
-    align-items: stretch;
-    justify-items: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    min-height: 0;
   }
 
-  /* Title list — desktop has fixed `width: clamp(420px, 52vw, 760px)`
-     to span two columns; on mobile re-anchor to the column's full
-     width and shrink the viewport so it fits above the carousel. */
+  /* === TOP: scroll-driven title list (pinned with the stage) === */
+
   .work-list-col {
-    width: 100%;
-    gap: 0.5rem;
-    min-height: auto;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    width: 100%;
+    flex: 0 0 auto;       /* fixed natural height — top of section */
+    gap: 0.4rem;
+    margin-top: 3rem;
   }
   .work-list-viewport {
     width: 100%;
-    height: clamp(110px, 18vh, 150px);
+    height: 110px;        /* fixed instead of clamp/vh — never collapses */
+    overflow: hidden;
+    -webkit-mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 28%, #000 72%, transparent 100%);
+    mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 28%, #000 72%, transparent 100%);
   }
+  .work-list { text-align: center; }
   .work-list-item {
-    font-size: clamp(1.15rem, 5vw, 1.7rem);
+    font-size: 1.85rem;
     padding: 0.3em 0;
     text-align: center;
+    white-space: normal;
   }
-  .work-tagline { min-height: 2.5rem; text-align: center; width: 100%; }
+  .work-tagline {
+    position: relative;
+    min-height: 2.4rem;
+    text-align: center;
+    width: 100%;
+  }
   .work-tagline-line {
     left: 50%;
     right: auto;
     transform: translate(-50%, 14px);
-    max-width: min(34ch, calc(100vw - 2.5rem));
+    max-width: min(34ch, calc(100vw - 2rem));
     text-align: center;
-    font-size: clamp(0.9rem, 3.2vw, 1.05rem);
+    font-size: 0.92rem;
   }
   .work-tagline-line.is-active { transform: translate(-50%, 0); }
 
-  /* Phone column fills the remaining vertical room. */
+  /* === BOTTOM: phone + horizontal coverflow (also pinned with stage) === */
+
   .work-phone-col {
     width: 100%;
     perspective: 1200px;
-    min-height: 0;
-    height: 100%;
+    flex: 1 1 auto;
+    min-height: 280px;
+    display: block;       /* not flex — coverflow does its own layout */
+    position: relative;
+    margin-top: 4.5rem;  /* nudges the carousel + phone down on mobile */
   }
   .work-coverflow {
+    position: relative;
     width: 100%;
     height: 100%;
+    min-height: 280px;
+    display: block;
   }
 
-  /* Re-centre the carousel window. Desktop has translateX(-8%) +
-     height: clamp(320px, 40vh, 460px) because the phone sits to its
-     right; mobile centres the phone, so the window must be centred too
-     and fill the column. */
+  /* Carousel "window" — desktop uses translateX(-8%) and a height clamp
+     because the phone sits to its right; on mobile the phone is dead-
+     centre so the window is full-width centred too. */
   .work-cards-cyl {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
-    transform: none;
+    transform: translateX(-6%);
     perspective: 1200px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
     -webkit-mask-image:
-      linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+      linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
     mask-image:
-      linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+      linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    z-index: 2;
   }
 
-  /* Phone re-centred (was right: 2% on desktop). */
+  /* Phone pinned to the right edge of the column (mirrors desktop). */
   .work-phone {
-    width: clamp(130px, 36vw, 200px);
-    right: auto;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    width: 170px;
+    left: auto;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
-  /* Smaller card images on mobile. */
-  .work-card { width: clamp(95px, 26vw, 140px); }
-  .work-card.is-dashboard { width: clamp(130px, 34vw, 180px); }
+  /* Smaller card sizes — same horizontal carousel layout, just scaled. */
+  .work-card { width: 110px; }
+  .work-card.is-dashboard { width: 150px; }
 }
 
 @media (max-width: 480px) {
-  .work-stage { padding: 2.5rem 1rem 1.5rem; }
-  .work-label { gap: 0.3rem; margin-bottom: 0.85rem; }
-  .work-grid { gap: 0.5rem; }
-  .work-list-viewport { height: clamp(95px, 16vh, 130px); }
-  .work-list-item { font-size: clamp(1.05rem, 4.8vw, 1.45rem); padding: 0.25em 0; }
-  .work-tagline-line { font-size: 0.88rem; }
+  .work-stage { padding: 2.5rem 0.75rem 1rem; }
+  .work-label { gap: 0.25rem; margin-bottom: 0.6rem; }
+  .work-label p { font-size: 0.65rem; }
 
-  .work-phone { width: clamp(115px, 36vw, 170px); }
-  .work-card { width: clamp(80px, 24vw, 120px); }
-  .work-card.is-dashboard { width: clamp(110px, 32vw, 160px); }
+  .work-list-viewport { height: 90px; }
+  .work-list-item { font-size: 1.5rem; padding: 0.25em 0; }
+  .work-tagline { min-height: 2rem; }
+  .work-tagline-line { font-size: 0.85rem; }
+
+  .work-phone-col { min-height: 240px; }
+  .work-coverflow { min-height: 240px; }
+  .work-phone { width: 140px; }
+  .work-card { width: 92px; }
+  .work-card.is-dashboard { width: 130px; }
 }

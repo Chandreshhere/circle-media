@@ -18,7 +18,7 @@ export default function Home() {
       <Reveal />
       <Tagline />
       <WhatWeDo />
-      {/* <Services /> */}
+      <Services />
       <AdsPartners />
       <Testimonials />
       <Clients />
