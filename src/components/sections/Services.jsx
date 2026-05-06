@@ -234,18 +234,38 @@ export default function Services() {
     const tx = Math.max(endLockTx, naturalTx);
     track.style.transform = `translateX(${tx}px)`;
 
+    // Disable filter:blur on mobile — it's the dominant paint cost on
+    // mobile GPUs and makes the carousel scroll jitter on low-end phones.
+    const isMobile =
+      typeof window !== "undefined" &&
+      (window.innerWidth <= 819 ||
+        window.matchMedia("(hover: none) and (pointer: coarse)").matches);
+
     cardRefs.current.forEach((el, i) => {
       if (!el) return;
       const pos = i - catPos;
       const ap = Math.abs(pos);
       const scale = Math.max(0.7, 1 - ap * 0.08);
       const op = ap < 2.6 ? (ap < 1.6 ? 1 : Math.max(0, 1 - (ap - 1.6) / 1.0)) : 0;
-      const blur = ap > 1 ? (ap - 1) * 1.5 : 0;
       const zi = Math.round(20 - ap * 4);
-      el.style.opacity = String(op);
-      el.style.zIndex = String(zi);
-      el.style.transform = `translateZ(${-ap * 80}px) scale(${scale})`;
-      el.style.filter = blur > 0.05 ? `blur(${blur}px)` : "";
+      // Cache last-written values per card — skip the inline-style write
+      // when nothing changed. Avoids hundreds of redundant DOM writes per
+      // scroll frame.
+      const cache = el._workCardCache || (el._workCardCache = {});
+      const opStr = String(op);
+      if (cache.op !== opStr) { el.style.opacity = opStr; cache.op = opStr; }
+      const ziStr = String(zi);
+      if (cache.zi !== ziStr) { el.style.zIndex = ziStr; cache.zi = ziStr; }
+      const tfStr = `translateZ(${-ap * 80}px) scale(${scale})`;
+      if (cache.tf !== tfStr) { el.style.transform = tfStr; cache.tf = tfStr; }
+      if (!isMobile) {
+        const blur = ap > 1 ? (ap - 1) * 1.5 : 0;
+        const flStr = blur > 0.05 ? `blur(${blur}px)` : "";
+        if (cache.fl !== flStr) { el.style.filter = flStr; cache.fl = flStr; }
+      } else if (cache.fl !== "") {
+        el.style.filter = "";
+        cache.fl = "";
+      }
     });
   };
 

@@ -63,8 +63,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  will-change: transform;
 }
+
+/* Promote to its own layer only during the active scrub phase. Once
+   `.is-locked` is set (post-spread), the layer is dropped so the card
+   layers and stage layer aren't all simultaneously kept on the GPU. */
+.wwd-stage:not(.is-locked) { will-change: transform; }
 
 /* Each card's box uses the inflated puzzle aspect (186 × 126) so the SVG
    tabs/slots live entirely within its bounds. The card itself has no
@@ -76,8 +80,13 @@
   width: min(500px, 33vw);
   aspect-ratio: 186 / 126;
   transform-origin: 50% 50%;
-  will-change: transform;
+  /* will-change moved to a class applied only during the active scroll
+     phase (.wwd-stage:not(.is-locked)). Once the puzzle locks into the
+     spread state, layers are dropped to free GPU memory — was the main
+     source of post-spread scroll jitter on low-end devices. */
 }
+
+.wwd-stage:not(.is-locked) .wwd-card { will-change: transform; }
 
 /* Coloured puzzle silhouette. Drop-shadow follows the actual path edges
    (including tabs), not a rectangular bounding box. Single drop-shadow

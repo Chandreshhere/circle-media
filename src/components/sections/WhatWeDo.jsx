@@ -301,6 +301,9 @@ export default function WhatWeDo() {
           });
           setRadius(END_RADIUS);
           lastRq = END_RADIUS;
+          // Drop GPU layer hints once everything's static — frees memory
+          // on low-end devices and stops the post-spread scroll jitter.
+          stage.classList.add("is-locked");
 
           const sectionTop = pinTrigger.start;
 
