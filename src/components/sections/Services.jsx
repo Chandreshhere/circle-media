@@ -169,7 +169,11 @@ export default function Services() {
       pin: stage,
       pinType: "transform",
       pinSpacing: true,
-      scrub: 0.5,
+      // Higher scrub = smoother lerp between the user's actual scroll
+      // and the carousel position. 0.5 felt "too tight" — scroll deltas
+      // mapped almost 1:1 to card positions which read as jittery on
+      // mobile. 1.2 gives a softer glide without lagging the input.
+      scrub: 1.2,
       invalidateOnRefresh: true,
       onUpdate: (self) => {
         const p = self.progress;

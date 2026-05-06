@@ -120,27 +120,23 @@ body {
 }
 
 /* === OFF-SCREEN SECTION SKIPPING ========================================
-   Non-pinning sections that sit below the fold get `content-visibility:
-   auto` so the browser skips painting + animating them while they're
-   not in the viewport. The `contain-intrinsic-size` placeholders are
-   sized close to each section's typical rendered height so total page
-   length stays correct (no scroll-jumping when a section comes into
-   view). Pinning sections (.work-scroll, .wwd, .reveal, .cring) are
-   intentionally NOT in this list because ScrollTrigger needs them
-   measured continuously to keep their pin offsets accurate. */
+   ONLY apply to sections AFTER the last pinning section in the layout.
+   Sections between pins (e.g. .tagline between Reveal and WhatWeDo)
+   were causing the WhatWeDo / Services pins to mis-align on mobile —
+   when the browser used contain-intrinsic-size as the placeholder
+   height, the pinSpacers above were positioned for a different total
+   page length than what was actually rendered, so the pin would either
+   trigger early or not at all. */
 .ads-partners,
 .testimonials,
 .brands,
-.reach,
-.tagline {
+.reach {
   content-visibility: auto;
   contain-intrinsic-size: auto 600px;
 }
 
-/* Smaller-height hint for compact sections so the scroll bar position
-   matches reality more closely before they paint. */
 .brands { contain-intrinsic-size: auto 520px; }
-.reach { contain-intrinsic-size: auto 540px; }
+.reach  { contain-intrinsic-size: auto 540px; }
 
 ::selection {
   background: var(--accent);
