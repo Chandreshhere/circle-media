@@ -122,6 +122,19 @@ export default function Clients() {
     let raf = 0;
     let inView = false;
 
+    /* Smoothed (lerp'd) values so per-frame writes don't snap to the
+       new target. On mobile the runway is short, which means each px
+       of scroll translates the honeycomb a lot — writing the raw
+       target every frame produces a jumpy/sensitive feel. Lerping
+       toward the target adds a touch of motion lag (~5 frames to
+       converge) which the eye reads as smooth scroll.
+       Desktop uses no lerp (factor 1) so the existing scrub feel
+       stays unchanged there. */
+    const SMOOTH = isMobile ? 0.18 : 1;
+    let smoothOffset = null;
+    const orbScale = new WeakMap();
+    const orbOp = new WeakMap();
+
     const update = () => {
       const vh = window.innerHeight;
       const stageRect = stage.getBoundingClientRect();
@@ -132,42 +145,53 @@ export default function Clients() {
 
       // Progress through the sticky runway: 0 when the section's top
       // first hits the viewport top, 1 when its bottom has reached the
-      // bottom of the sticky stage. Outside the runway we clamp.
+      // bottom of the sticky stage.
       const runway = Math.max(1, rootRect.height - stageH);
       const scrolled = -rootRect.top;
       const p = Math.max(0, Math.min(1, scrolled / runway));
 
-      // Translate the honeycomb across the stage. At p=0 the honeycomb
-      // top sits ~30% down the stage (first rows already visible). At
-      // p=1 its bottom reaches ~70% from the stage top, so the LAST
-      // row lands close to the stage centre — that keeps it within the
-      // fish-eye scale curve and arrives at near-full size. The empty
-      // ~30% strip below the last row at p=1 is intentionally covered
-      // by the (taller, on mobile) bottom edge mask, so it reads as a
-      // smooth fade to black rather than a black gap.
-      // Mobile shifts both anchors ~10% lower so the orbs and heading
-      // sit visually further down the stage.
       const honeyH = honey.scrollHeight;
       const startY = stageH * (isMobile ? 0.4 : 0.3);
       const endY = -honeyH + stageH * (isMobile ? 0.8 : 0.7);
-      const offset = startY + p * (endY - startY);
-      honey.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+      const targetOffset = startY + p * (endY - startY);
+      if (smoothOffset === null) smoothOffset = targetOffset;
+      smoothOffset += (targetOffset - smoothOffset) * SMOOTH;
+      honey.style.transform = `translate3d(0, ${smoothOffset.toFixed(1)}px, 0)`;
+
+      // Mobile narrows the fish-eye scale curve so per-frame visual
+      // change is less dramatic — feels less "snappy" during scroll.
+      const minScale = isMobile ? 0.7  : 0.55;
+      const maxScale = isMobile ? 1.0  : 1.1;
+      const minOp    = isMobile ? 0.55 : 0.35;
+      const maxOp    = isMobile ? 1.0  : 1.0;
 
       for (const orb of orbs) {
         const rect = orb.getBoundingClientRect();
         if (rect.bottom < stageRect.top - 200 || rect.top > stageRect.bottom + 200) {
-          orb.style.setProperty("--orb-scale", "0.55");
+          orb.style.setProperty("--orb-scale", String(minScale));
           orb.style.setProperty("--orb-op", "0.25");
+          orbScale.delete(orb);
+          orbOp.delete(orb);
           continue;
         }
         const iconCentre = rect.top + rect.height / 2;
         const dist = Math.abs(iconCentre - centre);
         const t = Math.max(0, 1 - dist / range);
         const eased = t * t * (3 - 2 * t);
-        const scale = 0.55 + 0.55 * eased;
-        const op = 0.35 + 0.65 * eased;
-        orb.style.setProperty("--orb-scale", scale.toFixed(3));
-        orb.style.setProperty("--orb-op", op.toFixed(3));
+        const targetScale = minScale + (maxScale - minScale) * eased;
+        const targetOp    = minOp    + (maxOp    - minOp)    * eased;
+
+        let s = orbScale.get(orb);
+        let o = orbOp.get(orb);
+        if (s === undefined) s = targetScale;
+        if (o === undefined) o = targetOp;
+        s += (targetScale - s) * SMOOTH;
+        o += (targetOp    - o) * SMOOTH;
+        orbScale.set(orb, s);
+        orbOp.set(orb, o);
+
+        orb.style.setProperty("--orb-scale", s.toFixed(3));
+        orb.style.setProperty("--orb-op", o.toFixed(3));
       }
 
       if (inView) raf = requestAnimationFrame(update);
