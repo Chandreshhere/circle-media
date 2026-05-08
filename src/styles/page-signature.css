@@ -9,39 +9,51 @@
   top: 12vh;
   width: clamp(22rem, 50vw, 58rem);
   height: clamp(7rem, 18vw, 20rem);
+  /* Color is set per-page via the per-hero overrides below — matches the
+     nav's per-link color so Services / Work / Studio each pick up the
+     same accent on their hero as in the top bar. */
   color: var(--accent);
   pointer-events: none;
   z-index: 1;
-  /* No tilt — the word renders straight in the page's display font. */
-  filter: drop-shadow(0 6px 24px rgba(255, 122, 61, 0.18));
+  /* No tilt — the word renders straight in the page's display font.
+     Drop-shadow uses currentColor (via -webkit) so it tints with whatever
+     the per-page color is, instead of being hard-coded orange. */
+  filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.35));
   overflow: visible;
 }
 
+/* Per-page colors — match the top-nav per-link palette:
+   Services → yellow (nav nth-child 2)
+   Work     → pink   (nav nth-child 3)
+   Studio   → mint   (nav nth-child 4) */
+.services-hero .page-signature { color: var(--c-yellow); }
+.work-hero     .page-signature { color: var(--c-pink); }
+.about-hero    .page-signature { color: var(--c-mint); }
+
 @media (max-width: 900px) {
   .page-signature {
-    width: clamp(16rem, 70vw, 40rem);
-    height: clamp(7rem, 32vw, 14rem);
-    left: 36vw;
-    top: 7vh;
+    width: clamp(11rem, 45vw, 26rem);
+    height: clamp(4.5rem, 20vw, 9rem);
+    left: 50vw;
+    top: 9vh;
   }
 }
 
 @media (max-width: 480px) {
   .page-signature {
-    width: clamp(13rem, 80vw, 28rem);
-    height: clamp(5.5rem, 36vw, 11rem);
-    left: 30vw;
-    top: 5vh;
+    width: clamp(9rem, 52vw, 18rem);
+    height: clamp(3.6rem, 22vw, 7rem);
+    left: 44vw;
+    top: 6vh;
   }
 }
 
-/* Per-page nudges — Work stays at the global right position above; Service
-   sits a touch further left so the script reads centred under its title. */
+/* Per-page horizontal nudges so the signature sits below its title. */
 @media (max-width: 900px) {
-  .services-hero .page-signature { left: 24vw; }
+  .services-hero .page-signature { left: 38vw; }
 }
 @media (max-width: 480px) {
-  .services-hero .page-signature { left: 18vw; }
+  .services-hero .page-signature { left: 32vw; }
 }
 
 /* Inline-flow handwrite (used inside paragraphs/headings, e.g. Hero "marketing"). */
