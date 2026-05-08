@@ -203,7 +203,10 @@
      up. Tuned to balance two concerns: too short a runway makes the
      honeycomb move too fast per pixel scrolled (jumpy feel); too long
      leaves visible empty stage AFTER the orbs have animated through. */
-  .brands { min-height: 122svh; }
+  /* Long runway = each pixel of scroll moves the honeycomb LESS.
+     The taller bottom edge mask hides any visible empty stage at the
+     end of scroll, so a longer section doesn't show as black space. */
+  .brands { min-height: 145svh; }
   .brands-stage { height: 100svh; }
   .brands-head {
     flex-direction: column;
@@ -233,7 +236,7 @@
 }
 
 @media (max-width: 480px) {
-  .brands { min-height: 114svh; }
+  .brands { min-height: 138svh; }
   .brands-honeycomb { gap: 0.65rem; padding: 0.5rem; }
   .brands-honeycomb-row { gap: 0.7rem; }
   .brands-edge { height: clamp(100px, 30svh, 220px); }
