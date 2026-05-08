@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { getLenis } from "../../App.jsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -75,12 +76,23 @@ function PlatformModal({ platform, onClose }) {
     };
     window.addEventListener("keydown", onKey);
 
+    /* THE ACTUAL ROOT CAUSE of "modal won't scroll" was app-level scroll
+       hijacking: this app installs Lenis (smooth-wheel scroller) on
+       desktop and ScrollTrigger.normalizeScroll(true) on touch devices.
+       Both intercept wheel/touch events at the document level and
+       prevent native overflow:auto on children from receiving them.
+       Pause both while the modal is open, and resume on close. */
+    const lenis = getLenis?.();
+    const lenisWasRunning = lenis && !lenis.isStopped;
+    if (lenisWasRunning) lenis.stop();
+
+    const normalizer = ScrollTrigger.normalizeScroll();
+    if (normalizer) normalizer.disable();
+
     /* iOS Safari body scroll-lock: just `overflow: hidden` on body
        breaks momentum scrolling INSIDE fixed-position descendants
        (the overlay/modal here). The fix is to make the body itself
-       position:fixed at the saved scroll position. The overlay can
-       then scroll natively because the body isn't a scroll competitor.
-       Restore the original scroll position when the modal closes. */
+       position:fixed at the saved scroll position. */
     const scrollY = window.scrollY || window.pageYOffset || 0;
     const prev = {
       position: document.body.style.position,
@@ -106,6 +118,8 @@ function PlatformModal({ platform, onClose }) {
       document.body.style.width = prev.width;
       document.body.style.overflow = prev.overflow;
       window.scrollTo(0, scrollY);
+      if (normalizer) normalizer.enable();
+      if (lenisWasRunning) lenis.start();
     };
   }, [onClose]);
 
@@ -146,11 +160,13 @@ function PlatformModal({ platform, onClose }) {
       role="dialog"
       aria-modal="true"
       aria-label={`${platform.name} growth details`}
+      data-lenis-prevent
     >
       <div
         className="pww-modal"
         ref={panelRef}
         onClick={(e) => e.stopPropagation()}
+        data-lenis-prevent
         style={{
           "--pww-accent": platform.accent,
           "--pww-accent-rgb": platform.accentRgb,
