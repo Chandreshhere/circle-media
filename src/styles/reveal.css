@@ -119,19 +119,31 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.25rem;
   pointer-events: none;
   font-family: var(--font-body);
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
+  font-size: 8px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-mute);
+  opacity: 0.55;
   animation: reveal-hint-bob 1.6s ease-in-out infinite;
+}
+
+/* The label is a child <span>; globals.css sets `span { font-size: 0.9rem }`
+   which overrides the parent's font-size. Force the label to use its
+   parent's size with explicit pixel values + !important. */
+.reveal-scroll-hint-label {
+  font-size: 8px !important;
+  letter-spacing: inherit !important;
+  line-height: 1.2 !important;
+  color: inherit !important;
+  text-transform: inherit !important;
 }
 
 .reveal-scroll-hint-arrow {
   width: 1px;
-  height: 24px;
+  height: 12px;
   background: linear-gradient(to bottom, transparent, var(--text-dim) 70%);
   position: relative;
 }
@@ -141,11 +153,11 @@
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-right: 1px solid var(--text-dim);
   border-bottom: 1px solid var(--text-dim);
-  transform: translate(-50%, 3px) rotate(45deg);
+  transform: translate(-50%, 2px) rotate(45deg);
 }
 
 @keyframes reveal-hint-bob {
@@ -159,10 +171,13 @@
 
 @media (max-width: 480px) {
   .reveal-scroll-hint {
-    font-size: 0.52rem;
-    letter-spacing: 0.14em;
-    gap: 0.3rem;
+    font-size: 7px;
+    letter-spacing: 0.06em;
+    gap: 0.15rem;
   }
-  .reveal-scroll-hint-arrow { height: 18px; }
+  .reveal-scroll-hint-label {
+    font-size: 7px !important;
+  }
+  .reveal-scroll-hint-arrow { height: 10px; }
 }
 

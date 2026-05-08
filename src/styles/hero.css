@@ -174,7 +174,7 @@
   letter-spacing: inherit;
   color: inherit;
   text-transform: none;
-  animation: heroAccentSwap 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation: heroAccentSwap 0.38s cubic-bezier(0.22, 0.61, 0.36, 1) both;
   will-change: transform, opacity, filter;
 }
 

@@ -44,25 +44,6 @@ export default function Reach() {
                 </li>
               ))}
             </ul>
-
-            <div className="reach-stats">
-              <div className="reach-stat">
-                <span className="reach-stat-num">12<sup>+</sup></span>
-                <span className="reach-stat-label">industries served</span>
-              </div>
-              <div className="reach-stat">
-                <span className="reach-stat-num">40<sup>+</sup></span>
-                <span className="reach-stat-label">clients onboard</span>
-              </div>
-              <div className="reach-stat">
-                <span className="reach-stat-num">800<sup>+</sup></span>
-                <span className="reach-stat-label">performance campaigns</span>
-              </div>
-              <div className="reach-stat">
-                <span className="reach-stat-num">4<sup>+</sup></span>
-                <span className="reach-stat-label">countries served</span>
-              </div>
-            </div>
           </div>
 
           <div className="reach-right">

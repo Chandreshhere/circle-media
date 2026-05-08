@@ -10,7 +10,7 @@ const PLATFORMS = [
   {
     id: "amazon",
     name: "Amazon Ads",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+    logo: "/assets/socials/amazon-ads-verified.png",
     role: "Verified Advertising Partner",
     blurb:
       "Sponsored Products, Sponsored Brands, Sponsored Display and DSP campaigns built around ROAS, ACOS and new-to-brand growth.",
@@ -39,7 +39,7 @@ const PLATFORMS = [
   {
     id: "meta",
     name: "Meta Business Partner",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg",
+    logo: "https://images.seeklogo.com/logo-png/46/1/meta-business-partner-logo-png_seeklogo-466474.png",
     role: "Verified Creative Agency",
     blurb:
       "Facebook, Instagram, Reels and Audience Network. Full-funnel creative and media buying with weekly performance read-outs.",

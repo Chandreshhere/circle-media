@@ -3,18 +3,18 @@ import gsap from "gsap";
 import DynamicBackground from "../fx/DynamicBackground.jsx";
 import { getLenis as getTrueLenis } from "../../App.jsx";
 
-// Rotating service phrases — deliberately reworded so they don't match the
-// names on /services. The services page lists deliverables ("Brand
-// Consultation", "Influencer Marketing", etc.); the hero reframes them as
-// growth-outcome verbs / categories so the page reads as "what we move
-// the needle on" rather than a service catalogue.
+// Rotating service categories shown after "We're your growth partner for".
+// Cycles fast (~1.1s per item) so the list reads as a quick catalogue of
+// what Circle covers, not a slow rotating slogan.
 const HERO_SERVICES = [
-  "Scaling brands",
-  "Performance ads",
-  "Search visibility",
-  "Social storytelling",
-  "Marketplace growth",
-  "Content systems",
+  "Social Media",
+  "Ecommerce",
+  "Performance Marketing",
+  "Production Shoot",
+  "Quick Commerce",
+  "D2C Websites",
+  "International Sales",
+  "SEO and SEM",
 ];
 
 export default function Hero() {
@@ -24,7 +24,7 @@ export default function Hero() {
   useEffect(() => {
     const id = setInterval(() => {
       setServiceIdx((i) => (i + 1) % HERO_SERVICES.length);
-    }, 2200);
+    }, 1100);
     return () => clearInterval(id);
   }, []);
 
@@ -145,7 +145,7 @@ export default function Hero() {
 
         <h1 className="hero-split-title" data-hero-reveal>
           <span className="hero-split-prelude">
-            We&rsquo;re your growth partner for
+            Circle Media, Your Growth Partners for
           </span>
           <span className="hero-split-accent">
             <span
@@ -158,8 +158,8 @@ export default function Hero() {
         </h1>
 
         <p className="hero-split-sub" data-hero-reveal>
-          SEO, SEM, brand strategy and performance content built to grow your
-          business.
+          A full-stack digital marketing and ecommerce agency, built to grow
+          your business 10X.
         </p>
 
         <p className="hero-split-scroll" data-hero-reveal>

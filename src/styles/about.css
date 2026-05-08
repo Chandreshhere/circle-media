@@ -267,9 +267,25 @@
   .reveal-stat-v { font-size: clamp(3.2rem, 14vw, 5.5rem); }
   .reveal-stat-k { font-size: 0.85rem; }
   .reveal-stat-1 { top: 22vh; left: 5vw; }
-  .reveal-stat-2 { top: 19vh; right: 2vw; }
+  .reveal-stat-2 {
+    top: 22.5vh;
+    right: 4vw;
+    align-items: flex-end;
+    text-align: right;
+  }
   .reveal-stat-3 { bottom: 12vh; left: 5vw; }
-  .reveal-stat-4 { bottom: 8vh; right: 2vw; }
+  .reveal-stat-4 {
+    bottom: 12vh;
+    right: 4vw;
+    align-items: flex-end;
+    text-align: right;
+  }
+  /* Number block also right-aligned so the digits line up with the
+     end of the label text on the same vertical axis. */
+  .reveal-stat-2 .reveal-stat-v,
+  .reveal-stat-4 .reveal-stat-v {
+    justify-content: flex-end;
+  }
 }
 
 /* ——— Panel 2: Process (cinematic floating cards) ——— */
