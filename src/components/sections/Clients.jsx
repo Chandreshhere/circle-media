@@ -1,290 +1,245 @@
 import { useEffect, useRef, useState } from "react";
 
-/* "Brands we've worked with" — categorised industry containers shown as a
-   carousel: one industry visible at a time, sliding horizontally. Each
-   container has a static coloured border (no scroll-driven trace anymore)
-   and the strip auto-advances on a timer. Prev / next buttons + dot
-   indicators give manual navigation. */
+/* "Brands we've worked with" — Apple-Watch-style honeycomb of circular logos.
+   Section scrolls naturally (no pin, no scroll-jack). Each icon's scale +
+   opacity is driven by its distance from the viewport centre, so icons grow
+   as they pass through the middle of the screen — the fish-eye effect from
+   the watchOS home screen. Hover smoothly enlarges any single icon. */
 
-const indexedLogos = (slug, names, count) =>
-  names.map((name, i) => ({
-    name,
-    logo: i < count ? `/logos/${slug}/${i + 1}.png` : null,
-  }));
-
-const BRAND_GROUPS = [
-  {
-    category: "FMCG",
-    brands: indexedLogos(
-      "fmcg",
-      [
-        "Madmix",
-        "Conscious Food",
-        "Zawaa",
-        "The Indian Krunch",
-        "Currygram",
-        "Bamboosa",
-        "The Coffee Clique",
-        "Evora Greens",
-        "Brew Saga",
-      ],
-      9
-    ),
-  },
-  {
-    category: "Home & Kitchen",
-    brands: indexedLogos("home-kitchen", ["CamPure", "Whites of London"], 2),
-  },
-  {
-    category: "Management",
-    brands: indexedLogos(
-      "management",
-      [
-        "Round Table India",
-        "Indore Management Association",
-        "Tushar Enterprises",
-        "Evara Weddings",
-        "FICCI Flo",
-      ],
-      5
-    ),
-  },
-  {
-    category: "Education",
-    brands: indexedLogos("education", ["EC", "Investitute", "Exprto"], 3),
-  },
-  {
-    category: "Fashion & Clothing",
-    brands: indexedLogos(
-      "fashion",
-      ["Coloron Yarns", "Mr. Elite", "Shreeji Cotfab"],
-      3
-    ),
-  },
-  {
-    category: "Personal Care",
-    brands: indexedLogos(
-      "personal-care",
-      ["Terra Actives", "Park Avenue Beer Shampoo"],
-      2
-    ),
-  },
-  {
-    category: "Hospitality",
-    brands: indexedLogos(
-      "hospitality",
-      ["Adam's Ale", "Urban Theka", "Pro Brew Republic", "Granny's Omlette"],
-      4
-    ),
-  },
-  {
-    category: "Real Estate",
-    brands: indexedLogos(
-      "real-estate",
-      ["NM Group", "Swastik Habitates", "HFL"],
-      3
-    ),
-  },
-  {
-    category: "Healthcare",
-    brands: indexedLogos(
-      "healthcare",
-      ["Om Biomedic", "DNS Hospitals", "Regain"],
-      3
-    ),
-  },
+// User-specified order at the top (most well-known brands first), then the
+// rest in a deliberately mixed order so no single category clusters.
+const BRANDS = [
+  // Adam's Ale moved up to lead line 1; DNS Hospitals slides one slot
+  // down behind it. Line 2's first orb (was Conscious Food) is now
+  // Pro Brew Republic — Conscious Food drops into the mid-list.
+  { name: "Adam's Ale",                   logo: "/logos/hospitality/1.png" },
+  { name: "DNS Hospitals",                logo: "/logos/healthcare/2.png" },
+  { name: "Park Avenue",                  logo: "/logos/park-avenue.jpg" },
+  { name: "Madmix",                       logo: "/logos/fmcg/1.png" },
+  { name: "Urban Theka",                  logo: "/logos/hospitality/2.png" },
+  // Line 2 starts here:
+  { name: "Pro Brew Republic",            logo: "/logos/hospitality/3.png" },
+  { name: "Round Table India",            logo: "/logos/management/1.png" },
+  { name: "Indore Management Association",logo: "/logos/management/2.png" },
+  { name: "Zawaa",                        logo: "/logos/fmcg/3.png" },
+  { name: "CamPure",                      logo: "/logos/home-kitchen/1.png" },
+  { name: "FICCI Flo",                    logo: "/logos/management/5.png" },
+  { name: "Swastik Habitates",            logo: "/logos/real-estate/2.png" },
+  // Mixed-order tail (no category clustering)
+  { name: "The Indian Krunch",            logo: "/logos/fmcg/4.png" },
+  { name: "Investitute",                  logo: "/logos/education/2.png" },
+  { name: "Coloron Yarns",                logo: "/logos/fashion/1.png" },
+  { name: "Conscious Food",               logo: "/logos/fmcg/2.png" },
+  { name: "NM Group",                     logo: "/logos/real-estate/1.png" },
+  { name: "Currygram",                    logo: "/logos/fmcg/5.png" },
+  { name: "Whites of London",             logo: "/logos/home-kitchen/2.png" },
+  { name: "Park Avenue Beer Shampoo",     logo: "/logos/personal-care/2.png" },
+  { name: "Tushar Enterprises",           logo: "/logos/management/3.png" },
+  { name: "Bamboosa",                     logo: "/logos/fmcg/6.png" },
+  { name: "Eduvest Connect",              logo: "/logos/education/1.png" },
+  { name: "Mr. Elite",                    logo: "/logos/fashion/2.png" },
+  { name: "Granny's Omlette",             logo: "/logos/hospitality/4.png" },
+  { name: "Om Biomedic",                  logo: "/logos/healthcare/1.png" },
+  { name: "The Coffee Clique",            logo: "/logos/fmcg/7.png" },
+  { name: "Evara Weddings",               logo: "/logos/management/4.png" },
+  { name: "Terra Actives",                logo: "/logos/personal-care/1.png" },
+  { name: "Exprto",                       logo: "/logos/education/3.png" },
+  { name: "HFL",                          logo: "/logos/real-estate/3.png" },
+  { name: "Evora Greens",                 logo: "/logos/fmcg/8.png" },
+  { name: "Shreeji Cotfab",               logo: "/logos/fashion/3.png" },
+  { name: "Regain",                       logo: "/logos/healthcare/3.png" },
+  { name: "Brew Saga",                    logo: "/logos/fmcg/9.png" },
 ];
 
-const totalBrands = BRAND_GROUPS.reduce((n, g) => n + g.brands.length, 0);
+// Honeycomb row pattern: strictly alternating, centred by flexbox.
+// Desktop fits 5/4 across 8 rows = 36 slots. Mobile narrows to 4/3 across
+// 10 rows = 35 slots so the larger mobile orbs don't get clipped at the
+// section edges. The user-facing count says "40+" — that's the brand
+// count we've actually worked with, not the orbs visible at once.
+const ROW_PATTERN_DESKTOP = [5, 4, 5, 4, 5, 4, 5, 4];
+const ROW_PATTERN_MOBILE = [4, 3, 4, 3, 4, 3, 4, 3, 4, 3];
 
-const TRACE_PALETTE = [
+// Per-orb tint cycles through the brand palette so the honeycomb picks up
+// the same colour language as the rest of the site.
+const ORB_COLORS = [
   "var(--c-blue)",
-  "var(--c-pink)",
   "var(--c-yellow)",
+  "var(--c-pink)",
   "var(--c-mint)",
   "var(--c-red)",
 ];
 
-function BrandGroup({ group, color }) {
-  // Split brands into exactly 2 rows so every category reads as a tidy
-  // 2-line grid regardless of count (9, 5, 3, 2 …). Top row is the
-  // ceiling-half so it's never shorter than the bottom row.
-  const total = group.brands.length;
-  const topCount = Math.ceil(total / 2);
-  const topRow = group.brands.slice(0, topCount);
-  const bottomRow = group.brands.slice(topCount);
-
-  return (
-    <div
-      className="brand-group"
-      style={{ "--trace-color": color, borderColor: color }}
-    >
-      <span className="brand-group-label">{group.category.toUpperCase()}</span>
-
-      <div className="brand-group-grid">
-        <div className="brand-group-row">
-          {topRow.map((b) => (
-            <div className="brand-circle" key={b.name} title={b.name}>
-              {b.logo ? (
-                <img src={b.logo} alt={b.name} loading="lazy" />
-              ) : (
-                <span className="brand-fallback">{b.name}</span>
-              )}
-            </div>
-          ))}
-        </div>
-        {bottomRow.length > 0 && (
-          <div className="brand-group-row">
-            {bottomRow.map((b) => (
-              <div className="brand-circle" key={b.name} title={b.name}>
-                {b.logo ? (
-                  <img src={b.logo} alt={b.name} loading="lazy" />
-                ) : (
-                  <span className="brand-fallback">{b.name}</span>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+function buildRows(brands, pattern) {
+  const rows = [];
+  let cursor = 0;
+  for (const count of pattern) {
+    if (cursor >= brands.length) break;
+    rows.push(brands.slice(cursor, cursor + count));
+    cursor += count;
+  }
+  return rows;
 }
 
 export default function Clients() {
-  const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const total = BRAND_GROUPS.length;
-  const intervalRef = useRef(null);
+  const rootRef = useRef(null);
 
-  const next = () => setActive((i) => (i + 1) % total);
-  const prev = () => setActive((i) => (i - 1 + total) % total);
-
-  // Auto-advance every 4.5s. Pauses while the user is hovering or has
-  // touch-pressed the carousel; resets the interval on any manual nav so
-  // the next auto-step doesn't fire too soon after a click.
+  // Mobile uses a narrower 4/3 row pattern so the larger mobile orbs
+  // don't overflow the viewport. Track viewport width via matchMedia so
+  // a rotation/resize re-renders into the right pattern.
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 900px)").matches
+  );
   useEffect(() => {
-    if (paused) return;
-    intervalRef.current = setInterval(() => {
-      setActive((i) => (i + 1) % total);
-    }, 4500);
-    return () => clearInterval(intervalRef.current);
-  }, [paused, active, total]);
+    const mq = window.matchMedia("(max-width: 900px)");
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
-  // Touch / pointer swipe support — drag horizontally to step through.
-  // Threshold is 40px so accidental vertical scroll attempts don't fire.
-  const dragRef = useRef({ startX: 0, startY: 0, active: false });
-  const onPointerDown = (e) => {
-    dragRef.current = {
-      startX: e.clientX,
-      startY: e.clientY,
-      active: true,
+  const rows = buildRows(
+    BRANDS,
+    isMobile ? ROW_PATTERN_MOBILE : ROW_PATTERN_DESKTOP
+  );
+
+  // Internal scroll + Apple-Watch fish-eye.
+  // The section is taller than the viewport. Inside it sits a sticky
+  // "stage" that locks to the viewport while the user scrolls through
+  // the section's runway. During that runway the honeycomb translates
+  // from below the stage to above it, so logos visibly drift up through
+  // the gradient-masked screen — the watchOS launcher feel without any
+  // GSAP scroll-jacking. Per-orb scale is driven by each orb's distance
+  // from the viewport centre. The rAF loop only runs while in view.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const stage = root.querySelector(".brands-stage");
+    const honey = root.querySelector(".brands-honeycomb");
+    const orbs = Array.from(root.querySelectorAll(".brand-orb"));
+    if (orbs.length === 0 || !honey || !stage) return;
+
+    let raf = 0;
+    let inView = false;
+
+    const update = () => {
+      const vh = window.innerHeight;
+      const stageRect = stage.getBoundingClientRect();
+      const stageH = stageRect.height || vh;
+      const centre = stageRect.top + stageH / 2;
+      const range = stageH * 0.55;
+      const rootRect = root.getBoundingClientRect();
+
+      // Progress through the sticky runway: 0 when the section's top
+      // first hits the viewport top, 1 when its bottom has reached the
+      // bottom of the sticky stage. Outside the runway we clamp.
+      const runway = Math.max(1, rootRect.height - stageH);
+      const scrolled = -rootRect.top;
+      const p = Math.max(0, Math.min(1, scrolled / runway));
+
+      // Translate the honeycomb across the stage. At p=0 the honeycomb
+      // top sits ~30% down the stage (first rows already visible). At
+      // p=1 its bottom reaches ~70% from the stage top, so the LAST
+      // row lands close to the stage centre — that keeps it within the
+      // fish-eye scale curve and arrives at near-full size. The empty
+      // ~30% strip below the last row at p=1 is intentionally covered
+      // by the (taller, on mobile) bottom edge mask, so it reads as a
+      // smooth fade to black rather than a black gap.
+      // Mobile shifts both anchors ~10% lower so the orbs and heading
+      // sit visually further down the stage.
+      const honeyH = honey.scrollHeight;
+      const startY = stageH * (isMobile ? 0.4 : 0.3);
+      const endY = -honeyH + stageH * (isMobile ? 0.8 : 0.7);
+      const offset = startY + p * (endY - startY);
+      honey.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+
+      for (const orb of orbs) {
+        const rect = orb.getBoundingClientRect();
+        if (rect.bottom < stageRect.top - 200 || rect.top > stageRect.bottom + 200) {
+          orb.style.setProperty("--orb-scale", "0.55");
+          orb.style.setProperty("--orb-op", "0.25");
+          continue;
+        }
+        const iconCentre = rect.top + rect.height / 2;
+        const dist = Math.abs(iconCentre - centre);
+        const t = Math.max(0, 1 - dist / range);
+        const eased = t * t * (3 - 2 * t);
+        const scale = 0.55 + 0.55 * eased;
+        const op = 0.35 + 0.65 * eased;
+        orb.style.setProperty("--orb-scale", scale.toFixed(3));
+        orb.style.setProperty("--orb-op", op.toFixed(3));
+      }
+
+      if (inView) raf = requestAnimationFrame(update);
     };
-  };
-  const onPointerUp = (e) => {
-    const d = dragRef.current;
-    if (!d.active) return;
-    d.active = false;
-    const dx = e.clientX - d.startX;
-    const dy = e.clientY - d.startY;
-    // Only react to dominantly-horizontal swipes; vertical wins → leave it
-    // to the native page scroll.
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-      if (dx < 0) next();
-      else prev();
-    }
-  };
-  const onPointerCancel = () => {
-    dragRef.current.active = false;
-  };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const wasInView = inView;
+        inView = entries[0].isIntersecting;
+        if (inView && !wasInView) {
+          raf = requestAnimationFrame(update);
+        } else if (!inView && wasInView) {
+          cancelAnimationFrame(raf);
+        }
+      },
+      { rootMargin: "200px 0px" }
+    );
+    io.observe(root);
+
+    update();
+
+    return () => {
+      inView = false;
+      cancelAnimationFrame(raf);
+      io.disconnect();
+    };
+  }, [isMobile]);
 
   return (
-    <section className="brands">
-      <div className="brands-head">
-        <p>[Brands we've worked with — {totalBrands}+]</p>
-        <p>Circle ↻ 2018–2026</p>
-      </div>
-
-      <div
-        className="brands-carousel"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        onTouchStart={() => setPaused(true)}
-        onTouchEnd={() => setPaused(false)}
-        onPointerDown={onPointerDown}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerCancel}
-        style={{ touchAction: "pan-y" }}
-      >
-        <button
-          type="button"
-          className="brands-nav brands-prev"
-          aria-label="Previous industry"
-          onClick={prev}
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              d="M15 6 L9 12 L15 18"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-
-        <div className="brands-viewport">
-          <div
-            className="brands-track"
-            style={{ transform: `translateX(-${active * 100}%)` }}
-          >
-            {BRAND_GROUPS.map((group, gi) => (
-              <div
-                className={`brands-slide ${gi === active ? "is-active" : ""}`}
-                key={group.category}
-                aria-hidden={gi !== active}
-              >
-                <BrandGroup
-                  group={group}
-                  color={TRACE_PALETTE[gi % TRACE_PALETTE.length]}
-                />
-              </div>
-            ))}
-          </div>
+    <section className="brands" ref={rootRef}>
+      <div className="brands-stage">
+        <div className="brands-head">
+          <p>[Brands we've worked with, 40+]</p>
+          <p>Circle ↻ 2018–2026</p>
         </div>
 
-        <button
-          type="button"
-          className="brands-nav brands-next"
-          aria-label="Next industry"
-          onClick={next}
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              d="M9 6 L15 12 L9 18"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
+        <div className="brands-edge brands-edge-top" aria-hidden="true" />
+        <div className="brands-edge brands-edge-bottom" aria-hidden="true" />
 
-        <div className="brands-dots" role="tablist" aria-label="Industries">
-          {BRAND_GROUPS.map((g, i) => (
-            <button
-              key={g.category}
-              type="button"
-              role="tab"
-              aria-selected={i === active}
-              aria-label={g.category}
-              className={`brands-dot ${i === active ? "is-active" : ""}`}
-              style={{ "--dot-color": TRACE_PALETTE[i % TRACE_PALETTE.length] }}
-              onClick={() => setActive(i)}
-            />
-          ))}
+        <div className="brands-honeycomb" aria-label="Brands we've worked with">
+          {rows.map((row, ri) => {
+            let cursor = 0;
+            for (let i = 0; i < ri; i++) cursor += rows[i].length;
+            return (
+              <div
+                className={`brands-honeycomb-row ${ri % 2 === 1 ? "is-offset" : ""}`}
+                key={ri}
+              >
+                {row.map((b, ci) => {
+                  const flatIdx = cursor + ci;
+                  const color = ORB_COLORS[flatIdx % ORB_COLORS.length];
+                  return (
+                    <div
+                      className="brand-orb"
+                      key={b.name}
+                      title={b.name}
+                      style={{ "--orb-color": color }}
+                    >
+                      <div className="brand-orb-inner">
+                        <img
+                          src={b.logo}
+                          alt={b.name}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

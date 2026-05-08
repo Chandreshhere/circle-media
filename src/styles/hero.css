@@ -115,28 +115,39 @@
   text-wrap: balance;
 }
 
-/* Lead-in sits on its own row. We forced a manual <br> in the JSX so the
-   text always reads as exactly two locked lines:
-       "A digital marketing agency"
-       "specializing in"
-   regardless of viewport width. The reserved min-height keeps the rest
-   of the section anchored even before web fonts load. */
-.hero-split-title-lead {
+/* Prelude — the intro line above the rotating accent. Renders at the same
+   display size as the accent itself ("We're your growth partner for") in
+   white, so the headline reads as a single big sentence with the rotator
+   completing it underneath. */
+.hero-split-prelude {
   display: block;
   font-size: inherit;
   font-family: inherit;
-  font-weight: inherit;
-  line-height: inherit;
-  letter-spacing: inherit;
-  color: inherit;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  color: var(--text);
   text-transform: none;
-  min-height: calc(1.05em * 2);
+  text-wrap: balance;
+  margin-bottom: 0.1em;
+}
+
+.hero-split-title-lead {
+  display: block;
+  font-size: 0.55em;
+  font-family: inherit;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text-dim);
+  text-transform: none;
+  margin-top: 0.6em;
 }
 
 .hero-split-accent {
   display: block;
   color: var(--accent);
-  font-style: italic;
+  font-style: normal;
   letter-spacing: -0.04em;
   /* Override globals.css `span { font-size: 0.9rem; ... }` so the accent
      word inherits the parent <h1>'s display sizing instead of shrinking. */

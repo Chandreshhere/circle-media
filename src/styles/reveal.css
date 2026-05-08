@@ -71,13 +71,21 @@
   z-index: 2;
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transform: translateY(-110%) scale(1) rotate(-15deg);
   will-change: transform;
 }
 
+/* The mark sits at ~70% of the holder so it doesn't dominate the
+   "Circle is a digital marketing agency." copy that slides in next
+   to it during the pinned animation. */
 .reveal-img img {
-  width: 100%;
-  height: 100%;
+  width: 70%;
+  height: 70%;
+  max-width: 70%;
+  max-height: 70%;
   object-fit: contain;
 }
 

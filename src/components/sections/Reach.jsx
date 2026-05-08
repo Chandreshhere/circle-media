@@ -6,10 +6,10 @@ import GlobeWebGL from "../fx/GlobeWebGL.jsx";
    on the left. */
 
 const REGIONS = [
-  { flag: "🇮🇳", name: "India",          tag: "Domestic" },
-  { flag: "🇦🇪", name: "Amazon Dubai",   tag: "Quick commerce" },
-  { flag: "🇺🇸", name: "Amazon USA",     tag: "Quick commerce" },
-  { flag: "🇸🇦", name: "Saudi Arabia",   tag: "Cross-border" },
+  { flag: "🇮🇳", name: "India",  tag: "Domestic" },
+  { flag: "🇦🇪", name: "Dubai",  tag: "Quick commerce" },
+  { flag: "🇺🇸", name: "USA",    tag: "Quick commerce" },
+  { flag: "🇨🇦", name: "Canada", tag: "Cross-border" },
 ];
 
 export default function Reach() {
@@ -19,13 +19,13 @@ export default function Reach() {
         <header className="reach-head">
           <p className="reach-eyebrow">[Global reach]</p>
           <h2 className="reach-title">
-            Domestic and international clients —{" "}
+            Domestic and international clients,{" "}
             <span className="reach-accent">working in 4+ countries.</span>
           </h2>
           <p className="reach-sub">
-            We help brands grow on quick commerce — Amazon Dubai, Amazon USA,
-            and domestic Q-commerce — with strategy, listings and performance
-            built for each marketplace.
+            We help brands grow across quick commerce and cross-border
+            marketplaces, with strategy, listings and performance built
+            for every region we ship into.
           </p>
         </header>
 
@@ -45,13 +45,23 @@ export default function Reach() {
               ))}
             </ul>
 
-            <div className="reach-stat">
-              <span className="reach-stat-num">4<sup>+</sup></span>
-              <span className="reach-stat-label">
-                countries served
-                <br />
-                across quick&#8209;commerce
-              </span>
+            <div className="reach-stats">
+              <div className="reach-stat">
+                <span className="reach-stat-num">12<sup>+</sup></span>
+                <span className="reach-stat-label">industries served</span>
+              </div>
+              <div className="reach-stat">
+                <span className="reach-stat-num">40<sup>+</sup></span>
+                <span className="reach-stat-label">clients onboard</span>
+              </div>
+              <div className="reach-stat">
+                <span className="reach-stat-num">800<sup>+</sup></span>
+                <span className="reach-stat-label">performance campaigns</span>
+              </div>
+              <div className="reach-stat">
+                <span className="reach-stat-num">4<sup>+</sup></span>
+                <span className="reach-stat-label">countries served</span>
+              </div>
             </div>
           </div>
 

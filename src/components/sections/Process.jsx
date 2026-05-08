@@ -85,7 +85,7 @@ export default function Process() {
           duration={0.55}
           blur={12}
         >
-          A measured system that turns ideas into outcomes — then tunes itself.
+          A measured system that turns ideas into outcomes, then tunes itself.
         </BlurInText>
         <div className="process-puzzle" aria-hidden="true">
           {PUZZLE_PIECES.map((p) => (

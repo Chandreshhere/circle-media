@@ -147,43 +147,55 @@ body.chrome-hidden .topnav {
 
 .topnav-link.is-active .n { color: rgba(0, 0, 0, 0.5); }
 
-/* Per-link active colors — each nav item gets a distinct brand color */
+/* Per-link active colors, each nav item gets a distinct brand color.
+   Hover state mirrors the active color so users get an immediate visual
+   cue on every nav item, not only the currently selected one. */
+.topnav-links .topnav-link:nth-child(1):hover:not(.is-active),
 .topnav-links .topnav-link:nth-child(1).is-active {
   background: var(--c-blue);
   color: #fff;
 }
+.topnav-links .topnav-link:nth-child(1):hover:not(.is-active) .n,
 .topnav-links .topnav-link:nth-child(1).is-active .n {
   color: rgba(255, 255, 255, 0.6);
 }
 
+.topnav-links .topnav-link:nth-child(2):hover:not(.is-active),
 .topnav-links .topnav-link:nth-child(2).is-active {
   background: var(--c-yellow);
   color: var(--bg);
 }
+.topnav-links .topnav-link:nth-child(2):hover:not(.is-active) .n,
 .topnav-links .topnav-link:nth-child(2).is-active .n {
   color: rgba(0, 0, 0, 0.55);
 }
 
+.topnav-links .topnav-link:nth-child(3):hover:not(.is-active),
 .topnav-links .topnav-link:nth-child(3).is-active {
   background: var(--c-pink);
   color: #fff;
 }
+.topnav-links .topnav-link:nth-child(3):hover:not(.is-active) .n,
 .topnav-links .topnav-link:nth-child(3).is-active .n {
   color: rgba(255, 255, 255, 0.65);
 }
 
+.topnav-links .topnav-link:nth-child(4):hover:not(.is-active),
 .topnav-links .topnav-link:nth-child(4).is-active {
   background: var(--c-mint);
   color: var(--bg);
 }
+.topnav-links .topnav-link:nth-child(4):hover:not(.is-active) .n,
 .topnav-links .topnav-link:nth-child(4).is-active .n {
   color: rgba(0, 0, 0, 0.55);
 }
 
+.topnav-links .topnav-link:nth-child(5):hover:not(.is-active),
 .topnav-links .topnav-link:nth-child(5).is-active {
   background: var(--c-red);
   color: #fff;
 }
+.topnav-links .topnav-link:nth-child(5):hover:not(.is-active) .n,
 .topnav-links .topnav-link:nth-child(5).is-active .n {
   color: rgba(255, 255, 255, 0.65);
 }
@@ -384,11 +396,16 @@ body.chrome-hidden .topnav {
 
 .tn-mobile-link.is-active { color: var(--accent); }
 
-/* Per-link active colors for the mobile menu — match the desktop palette */
+/* Per-link colors for the mobile menu, applied on both hover and active. */
+.tn-mobile-menu .tn-mobile-link:nth-of-type(1):hover,
 .tn-mobile-menu .tn-mobile-link:nth-of-type(1).is-active { color: var(--c-blue); }
+.tn-mobile-menu .tn-mobile-link:nth-of-type(2):hover,
 .tn-mobile-menu .tn-mobile-link:nth-of-type(2).is-active { color: var(--c-yellow); }
+.tn-mobile-menu .tn-mobile-link:nth-of-type(3):hover,
 .tn-mobile-menu .tn-mobile-link:nth-of-type(3).is-active { color: var(--c-pink); }
+.tn-mobile-menu .tn-mobile-link:nth-of-type(4):hover,
 .tn-mobile-menu .tn-mobile-link:nth-of-type(4).is-active { color: var(--c-mint); }
+.tn-mobile-menu .tn-mobile-link:nth-of-type(5):hover,
 .tn-mobile-menu .tn-mobile-link:nth-of-type(5).is-active { color: var(--c-red); }
 
 .tn-mobile-num {

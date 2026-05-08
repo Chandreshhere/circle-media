@@ -1,333 +1,251 @@
-/* "Brands we've worked with" — carousel of industry containers. Each
-   container has a static coloured border (no scroll-driven trace);
-   the carousel auto-advances and supports prev/next + dots. */
+/* "Brands we've worked with" — Apple-Watch-style honeycomb of circular
+   logos. The section scrolls naturally (no pin), and each orb's scale is
+   driven from JS based on its distance from the viewport centre, giving
+   the watchOS fish-eye lens effect. Hover smoothly enlarges any single orb. */
 
+/* The outer section is just tall enough to give the sticky stage a
+   modest scroll runway. The first viewport's worth IS the stage; the
+   extra 0.5vh of height is the runway during which the honeycomb
+   translates internally. Keeping the section tight (1.5vh total)
+   means there's no excess black gap before or after the brands
+   while scrolling past — the section starts where the stage starts
+   and ends roughly where the stage ends. */
 .brands {
   position: relative;
   width: 100%;
-  padding: 4rem clamp(1rem, 3vw, 3rem) 3.5rem;
+  min-height: 150vh;
   background: #000;
   color: #eaeae6;
   border-top: 1px solid var(--border);
+}
+
+.brands-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
   overflow: hidden;
+  background: #000;
+}
+
+.brands-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(50% 50% at 50% 0%, rgba(96, 165, 250, 0.06), transparent 60%),
+    radial-gradient(40% 40% at 50% 100%, rgba(255, 197, 92, 0.05), transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Top + bottom edge masks — black gradient strips at the stage's edges
+   that fade to transparent toward the centre. As the honeycomb translates
+   upward under the rAF loop, logos appear to emerge from the bottom mask,
+   pass through the clear middle of the stage, and dissolve into the top
+   mask — like icons rising up through a watch face. */
+.brands-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: clamp(120px, 18vh, 220px);
+  pointer-events: none;
+  z-index: 4;
+}
+
+.brands-edge-top {
+  top: 0;
+  background: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.92) 30%,
+    rgba(0, 0, 0, 0.6) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.brands-edge-bottom {
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    #000 0%,
+    rgba(0, 0, 0, 0.92) 30%,
+    rgba(0, 0, 0, 0.6) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 
 .brands-head {
-  max-width: 1400px;
-  margin: 0 auto 2.5rem;
+  position: absolute;
+  top: clamp(1.25rem, 2.5vw, 2.25rem);
+  left: clamp(1rem, 3vw, 3rem);
+  right: clamp(1rem, 3vw, 3rem);
   display: flex;
   justify-content: space-between;
   color: var(--text-dim);
   font-size: 0.8rem;
   letter-spacing: 0.04em;
+  z-index: 5;
 }
 
-/* === Carousel === */
+/* === Honeycomb === */
 
-.brands-carousel {
-  position: relative;
-  max-width: 1400px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 1rem;
-}
-
-.brands-viewport {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  padding: 0.25rem 0;
-}
-
-.brands-track {
-  display: flex;
-  align-items: flex-start; /* don't stretch slides to match the tallest */
-  width: 100%;
-  /* Smoother decel: cards-glide-into-place feel, no overshoot bounce. */
-  transition: transform 0.85s cubic-bezier(0.83, 0, 0.17, 1);
-  will-change: transform;
-}
-
-.brands-slide {
-  flex: 0 0 100%;
-  min-width: 0;
-  padding: 0 0.25rem;
-  box-sizing: border-box;
-}
-
-/* The CARD itself just glides in with the track — no extra animation
-   on the box. Only the LOGOS inside spin. The animation is scoped to
-   `.brand-circle img` (a single element per circle, no scale/opacity)
-   so it stays cheap even on low-end devices. Delayed slightly so the
-   logos are visibly inside the viewport before they spin. */
-.brands-slide.is-active .brand-circle img {
-  animation: brand-logo-spin 0.7s cubic-bezier(0.83, 0, 0.17, 1) 0.2s both;
-  transform-origin: center center;
-}
-
-.brands-slide.is-active .brand-circle:nth-child(1) img,
-.brands-slide.is-active .brand-group-row:nth-child(2) .brand-circle:nth-child(1) img { animation-delay: 0.20s; }
-.brands-slide.is-active .brand-circle:nth-child(2) img,
-.brands-slide.is-active .brand-group-row:nth-child(2) .brand-circle:nth-child(2) img { animation-delay: 0.27s; }
-.brands-slide.is-active .brand-circle:nth-child(3) img,
-.brands-slide.is-active .brand-group-row:nth-child(2) .brand-circle:nth-child(3) img { animation-delay: 0.34s; }
-.brands-slide.is-active .brand-circle:nth-child(4) img,
-.brands-slide.is-active .brand-group-row:nth-child(2) .brand-circle:nth-child(4) img { animation-delay: 0.41s; }
-.brands-slide.is-active .brand-circle:nth-child(5) img,
-.brands-slide.is-active .brand-group-row:nth-child(2) .brand-circle:nth-child(5) img { animation-delay: 0.48s; }
-
-@keyframes brand-logo-spin {
-  from { transform: rotate(-360deg); }
-  to   { transform: rotate(0deg); }
-}
-
-/* Inactive slides are clipped by the viewport's overflow: hidden when
-   off-screen, but stay paintable during the transition — that's how
-   the user sees the OUTGOING slide leave to the left and the NEW slide
-   arrive from the right. We do NOT hide them with visibility: hidden
-   because that would make the slide-in animation invisible. Just
-   disable interaction on slides that aren't currently active. */
-.brands-slide:not(.is-active) {
-  pointer-events: none;
-}
-
-/* Prev / next buttons. The chevron is rendered as text content inside
-   each button (see Clients.jsx). Font-size is bigger than before so it
-   reads clearly, and the per-direction translateX nudge compensates for
-   the asymmetric sidebearings on the ‹ › glyphs (the font draws them
-   with a leading whitespace gap, so without the nudge they look offset
-   from the button's geometric centre). */
-.brands-nav {
-  width: 48px;
-  height: 48px;
-  padding: 0;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.32);
-  background: rgba(255, 255, 255, 0.04);
-  color: #fff;
-  font-size: 2rem;
-  font-family: var(--font-display);
-  font-weight: 400;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  user-select: none;
-  transition:
-    border-color 0.3s ease,
-    background 0.3s ease,
-    transform 0.3s ease;
-  z-index: 2;
-}
-
-/* SVG chevron — perfectly centred inside the button, scales with size. */
-.brands-nav svg {
-  width: 50%;
-  height: 50%;
-  display: block;
-}
-
-.brands-nav:hover {
-  border-color: rgba(255, 255, 255, 0.7);
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.brands-nav:active { transform: scale(0.95); }
-
-/* Dots — slim progress-bar style sitting just below the cards. Active
-   dot extends to a longer pill in its category colour. */
-.brands-dots {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.45rem;
-  margin-top: 0.75rem;
-}
-
-.brands-dot {
-  width: 18px;
-  height: 3px;
-  border-radius: 999px;
-  border: none;
-  background: rgba(255, 255, 255, 0.16);
-  padding: 0;
-  cursor: pointer;
-  transition:
-    background 0.4s cubic-bezier(0.83, 0, 0.17, 1),
-    width 0.5s cubic-bezier(0.83, 0, 0.17, 1);
-}
-
-.brands-dot:hover { background: rgba(255, 255, 255, 0.32); }
-
-.brands-dot.is-active {
-  background: var(--dot-color, var(--accent));
-  width: 44px;
-}
-
-/* === Industry container === */
-
-.brand-group {
-  position: relative;
-  border: 1.5px solid color-mix(in srgb, var(--trace-color, #fff) 65%, transparent);
-  border-radius: 22px;
-  padding: 1.4rem clamp(1rem, 3vw, 2rem);
-  background:
-    radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--trace-color, #fff) 8%, transparent), transparent 60%),
-    rgba(255, 255, 255, 0.012);
-  overflow: hidden;
-  isolation: isolate;
-}
-
-/* Category name as a big, faded watermark dead-centred behind the brand
-   circles. Standard centering pattern (top/left 50% + translate(-50%,-50%))
-   works because we removed the conflicting `inset: 0 0 0 0` shorthand. */
-.brand-group-label {
+.brands-honeycomb {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 9vw, 7rem);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  white-space: nowrap;
-  text-align: center;
-  color: color-mix(in srgb, var(--trace-color, #fff) 18%, transparent);
-  pointer-events: none;
-  z-index: 0;
-  user-select: none;
-  text-transform: uppercase;
-}
-
-/* Brand grid is now an explicit 2-row stack — top row (ceil(n/2)) +
-   bottom row (floor(n/2)). Every category renders as 2 lines, even
-   single-brand or huge categories, so the carousel reads consistently
-   slide to slide. */
-.brand-group-grid {
-  position: relative;
-  z-index: 1;
+  left: 0;
+  right: 0;
+  top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.1rem;
+  gap: clamp(0.9rem, 2vw, 1.9rem);
+  margin: 0 auto;
+  max-width: 1400px;
+  padding: clamp(1.5rem, 4vw, 4rem) clamp(1rem, 3vw, 3rem);
+  z-index: 2;
+  /* The JS rAF loop rewrites this transform every frame for the internal
+     scroll. will-change keeps the browser from re-creating the paint
+     layer on every change. */
+  will-change: transform;
 }
 
-.brand-group-row {
+.brands-honeycomb-row {
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  gap: clamp(1rem, 2vw, 2rem);
 }
 
-.brand-circle {
+/* The 4-orb rows are centred between the 5-orb rows because flex justify-
+   content already does that — no manual margin offset needed when the row
+   counts differ by 1. The visual is the watchOS staggered grid: a 5 above
+   a 4 above a 5, every line dead-centred to the section. */
+
+/* === Brand orb === */
+
+.brand-orb {
+  --orb-size: clamp(100px, 11vw, 170px);
+  --orb-scale: 0.55;
+  --orb-op: 0.35;
+  --orb-color: var(--c-blue);
   flex: 0 0 auto;
-  width: clamp(86px, 9vw, 120px);
-  aspect-ratio: 1 / 1;
+  width: var(--orb-size);
+  height: var(--orb-size);
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transform: scale(var(--orb-scale));
+  opacity: var(--orb-op);
+  /* The scroll-driven scale is rewritten every animation frame, so adding
+     a real CSS transition here would fight the rAF loop. The 0.05s curve
+     just smooths the per-frame writes. Hover transition lives on the inner
+     element, where the rAF loop never touches transform. */
+  transition: transform 0.05s linear, opacity 0.18s linear;
+  will-change: transform, opacity;
+}
+
+.brand-orb-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background:
+    radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--orb-color) 28%, transparent), transparent 65%),
+    color-mix(in srgb, var(--orb-color) 12%, #0c0c0e);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 0.75rem;
-  backdrop-filter: blur(2px);
+  padding: 16%;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--orb-color) 35%, transparent),
+    0 8px 22px rgba(0, 0, 0, 0.55);
   transition:
-    border-color 0.4s cubic-bezier(0.83, 0, 0.17, 1),
-    background 0.4s cubic-bezier(0.83, 0, 0.17, 1),
-    transform 0.45s cubic-bezier(0.83, 0, 0.17, 1);
+    transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.45s ease,
+    background 0.45s ease;
 }
 
-.brand-circle:hover {
-  border-color: var(--trace-color, rgba(255, 255, 255, 0.85));
-  background: rgba(255, 255, 255, 0.04);
-  transform: translateY(-3px);
-}
-
-.brand-circle img {
+.brand-orb-inner img {
   display: block;
   max-width: 100%;
   max-height: 100%;
   width: auto;
   height: auto;
   object-fit: contain;
-  opacity: 0.94;
-  transition: opacity 0.35s ease;
+  filter: saturate(1.05);
 }
 
-.brand-circle:hover img { opacity: 1; }
-
-.brand-fallback {
-  display: block;
-  font-family: var(--font-display);
-  font-size: clamp(0.78rem, 0.95vw, 0.95rem);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  text-align: center;
-  line-height: 1.15;
-  color: #f5f5f5;
-  padding: 0.25rem;
-  opacity: 0.92;
+/* Hover scales the inner only, so the rAF-driven outer scale is untouched.
+   Bumped to 1.32 for a more pronounced watchOS-style focus pop. The colour
+   of the orb saturates and a glowing ring appears in the orb's brand
+   colour. */
+.brand-orb:hover .brand-orb-inner {
+  transform: scale(1.32);
+  background:
+    radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--orb-color) 55%, transparent), transparent 65%),
+    color-mix(in srgb, var(--orb-color) 26%, #0c0c0e);
+  box-shadow:
+    inset 0 0 0 1.5px var(--orb-color),
+    0 0 0 2px color-mix(in srgb, var(--orb-color) 35%, transparent),
+    0 18px 38px color-mix(in srgb, var(--orb-color) 30%, rgba(0, 0, 0, 0.65));
 }
 
 /* === Responsive === */
 
 @media (max-width: 900px) {
-  .brands { padding: 3rem 1rem 2.5rem; }
-  .brands-head { margin-bottom: 1.75rem; flex-direction: column; gap: 0.5rem; }
-  .brands-carousel { gap: 0.5rem; }
-  .brands-nav { width: 42px; height: 42px; font-size: 1.7rem; }
-  .brand-group { padding: 1.25rem 0.75rem; border-radius: 18px; }
-  .brand-group-label {
-    font-size: clamp(1.4rem, 5.5vw, 2.4rem);
-    white-space: normal;
-    max-width: 90%;
-    line-height: 1.05;
+  /* svh (small viewport height) is locked to the URL-bar-visible state —
+     it does NOT grow when iOS Safari hides its address bar mid-scroll.
+     vh, by contrast, jumps every time the bar shows/hides, which made
+     the sticky stage resize during scroll and the rAF math snap to new
+     bounds. Using svh here removes that mobile layout shift.
+     Section is intentionally TALLER than the 100svh sticky stage — the
+     difference is the sticky runway during which the honeycomb slides
+     up. Tuned to balance two concerns: too short a runway makes the
+     honeycomb move too fast per pixel scrolled (jumpy feel); too long
+     leaves visible empty stage AFTER the orbs have animated through. */
+  .brands { min-height: 112svh; }
+  .brands-stage { height: 100svh; }
+  .brands-head {
+    flex-direction: column;
+    gap: 0.5rem;
+    top: clamp(3rem, 7vw, 5rem);
   }
-  .brand-group-grid { gap: 0.55rem; }
-  .brand-group-row { gap: 0.45rem; }
-  /* Smaller circles + tighter gap so the FMCG slide (5 logos in the top
-     row) fits on a 360-px phone viewport without overflow. */
-  .brand-circle { width: clamp(50px, 13vw, 76px); padding: 0.45rem; }
-  .brands-dots { margin-top: 1.5rem; }
+  .brands-honeycomb { padding: 1rem; gap: 0.95rem; }
+  .brands-honeycomb-row { gap: 0.95rem; }
+  /* On mobile the honeycomb's last row stops about 30% above the stage
+     bottom (so it stays inside the fish-eye scale curve and reads at
+     full size). Without a tall mask, that ~30% strip below the last
+     row reads as a hard black void. The bottom mask is therefore
+     sized to cover that empty zone with a smooth fade. The top edge
+     uses the same height for symmetry — at p=0 there's a similar
+     empty strip ABOVE the first row that the top mask hides. */
+  .brands-edge { height: clamp(120px, 30svh, 260px); }
+  /* The rAF loop already rewrites --orb-scale every frame; the 0.05s
+     transition was meant to smooth desktop jitter but on mobile it lags
+     behind and produces visible stutter. Drop it for transform on
+     mobile; opacity fade is fine to keep. */
+  .brand-orb { transition: opacity 0.18s linear; }
+  .brand-orb {
+    --orb-size: clamp(104px, 22vw, 150px);
+  }
+  .brand-orb-inner { padding: 16%; }
+  .brand-orb:hover .brand-orb-inner { transform: scale(1.22); }
 }
 
 @media (max-width: 480px) {
-  .brands-carousel { grid-template-columns: 1fr; }
-  .brands-nav {
-    position: absolute;
-    top: 50%;
-    /* Nudge the centred button further up so it sits on the active card's
-       logos, not below the card. The 2rem offset compensates for the
-       dots row + its margin that sit underneath the viewport in the
-       carousel's overall height. */
-    transform: translateY(calc(-50% - 0.5rem));
-    z-index: 3;
-    background: rgba(0, 0, 0, 0.55);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+  .brands { min-height: 106svh; }
+  .brands-honeycomb { gap: 0.65rem; padding: 0.5rem; }
+  .brands-honeycomb-row { gap: 0.7rem; }
+  .brands-edge { height: clamp(100px, 30svh, 220px); }
+  .brand-orb {
+    --orb-size: clamp(86px, 24vw, 120px);
   }
-  .brands-prev { left: 0.25rem; }
-  .brands-next { right: 0.25rem; }
+  .brand-orb-inner { padding: 18%; }
+}
 
-  .brand-group { padding: 1rem 0.5rem; border-radius: 16px; }
-  .brand-group-label {
-    font-size: clamp(1.2rem, 5.4vw, 1.9rem);
-    white-space: normal;
-    max-width: 92%;
-    line-height: 1.05;
+@media (prefers-reduced-motion: reduce) {
+  .brand-orb {
+    transition: none;
   }
-  .brand-group-grid { gap: 0.45rem; }
-  .brand-group-row { gap: 0.35rem; }
-  .brand-circle { width: clamp(44px, 13vw, 64px); padding: 0.35rem; }
-  .brands-dots { margin-top: 0.65rem; gap: 0.35rem; }
-  .brands-dot { width: 14px; height: 2.5px; }
-  .brands-dot.is-active { width: 32px; }
+  .brand-orb:hover .brand-orb-inner { transform: scale(1.06); }
 }

@@ -64,8 +64,8 @@ export default function ContactPage() {
               {act === 0 ? "Start your growth journey with us." : current.title}
             </BlurInText>
             <p className="cw-stage-sub">
-              {act === 0 && "Whether it's a fresh idea or an old brand asking for a second wind — we're listening. Drop your details and we'll write back."}
-              {act === 1 && "Give us the headline. One line is enough — what's the project, the launch or the growth target?"}
+              {act === 0 && "Whether it's a fresh idea or an old brand asking for a second wind, we're listening. Drop your details and we'll write back."}
+              {act === 1 && "Give us the headline. One line is enough: what's the project, the launch or the growth target?"}
               {act === 2 && "Now the long version. Goals, timelines, what's worked, what hasn't. The more honest, the better."}
               {act === 3 && "That's all we need. Hit send and we'll reply within one business day."}
             </p>
@@ -131,19 +131,19 @@ export default function ContactPage() {
                   <div className="cw-recap">
                     <div className="cw-recap-row">
                       <span className="cw-recap-k">Name</span>
-                      <span className="cw-recap-v">{form.name || "—"}</span>
+                      <span className="cw-recap-v">{form.name || "…"}</span>
                     </div>
                     <div className="cw-recap-row">
                       <span className="cw-recap-k">Email</span>
-                      <span className="cw-recap-v">{form.email || "—"}</span>
+                      <span className="cw-recap-v">{form.email || "…"}</span>
                     </div>
                     <div className="cw-recap-row">
                       <span className="cw-recap-k">Subject</span>
-                      <span className="cw-recap-v">{form.subject || "—"}</span>
+                      <span className="cw-recap-v">{form.subject || "…"}</span>
                     </div>
                     <div className="cw-recap-row">
                       <span className="cw-recap-k">Message</span>
-                      <span className="cw-recap-v cw-recap-msg">{form.message || "—"}</span>
+                      <span className="cw-recap-v cw-recap-msg">{form.message || "…"}</span>
                     </div>
                   </div>
 
@@ -205,7 +205,7 @@ export default function ContactPage() {
                       className="cw-social"
                       target="_blank"
                       rel="noreferrer"
-                      aria-label={`${s.label} — ${s.handle}`}
+                      aria-label={`${s.label}: ${s.handle}`}
                     >
                       <span className="cw-social-k">{s.k}</span>
                       <span className="cw-social-h">{s.handle}</span>

@@ -9,25 +9,25 @@ const PANELS = [
     id: "01",
     kicker: "Who",
     title: ["We are", "Circle."],
-    copy: "A social-first studio for brands that would rather build something true than shout something loud. Strategy, content, and performance — one team, one operating system.",
+    copy: "A social-first studio for brands that would rather build something true than shout something loud. Strategy, content, and performance: one team, one operating system.",
   },
   {
     id: "02",
     kicker: "Belief",
     title: ["Craft over", "noise."],
-    copy: "Attention is cheap. Attention that compounds is not. We design work that earns the second look — and the third — across feeds, formats, and funnels.",
+    copy: "Attention is cheap. Attention that compounds is not. We design work that earns the second look, and the third, across feeds, formats, and funnels.",
   },
   {
     id: "03",
     kicker: "Approach",
     title: ["Stories that", "ship."],
-    copy: "We start where the brand already makes sense, then translate it into the channels where it has to move. Brief, build, test, tune — on repeat, on the record.",
+    copy: "We start where the brand already makes sense, then translate it into the channels where it has to move. Brief, build, test, tune, on repeat, on the record.",
   },
   {
     id: "04",
     kicker: "Today",
     title: ["Always", "in motion."],
-    copy: "Platforms shift weekly. So do we. The work is never done — just dated. That is the whole point of a Circle: keep going, keep closing the loop.",
+    copy: "Platforms shift weekly. So do we. The work is never done, just dated. That is the whole point of a Circle: keep going, keep closing the loop.",
   },
 ];
 
@@ -99,7 +99,7 @@ export default function AboutScroll() {
 
           <article className="about-h-panel about-h-panel-end">
             <div className="about-h-panel-meta">
-              <span className="about-h-num">—</span>
+              <span className="about-h-num">/</span>
               <span className="about-h-kick">Circle</span>
             </div>
             <h2 className="about-h-title about-h-title-end">

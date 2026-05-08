@@ -6,22 +6,21 @@
 .page-signature {
   position: absolute;
   left: 3vw;
-  top: 10vh;
-  width: clamp(38rem, 82vw, 96rem);
-  height: clamp(13rem, 30vw, 34rem);
+  top: 12vh;
+  width: clamp(22rem, 50vw, 58rem);
+  height: clamp(7rem, 18vw, 20rem);
   color: var(--accent);
   pointer-events: none;
   z-index: 1;
-  transform: rotate(-4deg);
-  transform-origin: left center;
+  /* No tilt — the word renders straight in the page's display font. */
   filter: drop-shadow(0 6px 24px rgba(255, 122, 61, 0.18));
   overflow: visible;
 }
 
 @media (max-width: 900px) {
   .page-signature {
-    width: clamp(26rem, 110vw, 64rem);
-    height: clamp(13rem, 52vw, 24rem);
+    width: clamp(16rem, 70vw, 40rem);
+    height: clamp(7rem, 32vw, 14rem);
     left: 36vw;
     top: 7vh;
   }
@@ -29,8 +28,8 @@
 
 @media (max-width: 480px) {
   .page-signature {
-    width: clamp(22rem, 130vw, 48rem);
-    height: clamp(10rem, 60vw, 18rem);
+    width: clamp(13rem, 80vw, 28rem);
+    height: clamp(5.5rem, 36vw, 11rem);
     left: 30vw;
     top: 5vh;
   }

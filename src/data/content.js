@@ -7,35 +7,35 @@ export const services = [
     title: "Brand Consultation",
     tagline: "Strategy that uncovers your story and shapes a brand built to last.",
     image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=900&q=80",
-    copy: "Strategy sessions that uncover your story, sharpen your positioning, and shape a brand built to outlast trends — not chase them."
+    copy: "Strategy sessions that uncover your story, sharpen your positioning, and shape a brand built to outlast trends, not chase them."
   },
   {
     id: "02",
     title: "Influencer Marketing",
     tagline: "Creators matched to audience, briefed for impact, measured against real outcomes.",
     image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=900&q=80",
-    copy: "Creators matched to the right audience, briefed for the right message, measured against real outcomes — not vanity metrics."
+    copy: "Creators matched to the right audience, briefed for the right message, measured against real outcomes, not vanity metrics."
   },
   {
     id: "03",
     title: "Branding & Content Planning",
     tagline: "Identity systems and editorial calendars with one unmistakable voice.",
     image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=80",
-    copy: "Identity systems and editorial calendars that turn your voice into a steady publishing rhythm across every channel — even when no one is watching."
+    copy: "Identity systems and editorial calendars that turn your voice into a steady publishing rhythm across every channel, even when no one is watching."
   },
   {
     id: "04",
     title: "Social Media Marketing",
-    tagline: "A daily presence with a point of view — content, community, conversion.",
+    tagline: "A daily presence with a point of view: content, community, conversion.",
     image: "https://images.unsplash.com/photo-1535303311164-664fc9ec6532?auto=format&fit=crop&w=900&q=80",
-    copy: "A daily presence with a point of view — content, community, and conversion, all moving in the same direction. Always-on, accountable, and engineered for compounding."
+    copy: "A daily presence with a point of view: content, community, and conversion, all moving in the same direction. Always-on, accountable, and engineered for compounding."
   },
   {
     id: "05",
     title: "Website Development",
     tagline: "Fast, accessible, considered websites that scale with the business.",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=900&q=80",
-    copy: "Fast, accessible, considered websites — built to convert today and crafted to scale as your business grows. Design systems, headless stacks, performance budgets."
+    copy: "Fast, accessible, considered websites, built to convert today and crafted to scale as your business grows. Design systems, headless stacks, performance budgets."
   },
   {
     id: "06",
@@ -47,16 +47,16 @@ export const services = [
   {
     id: "07",
     title: "Performance Marketing (Google & Meta Ads)",
-    tagline: "Paid media built around CAC, ROAS and the funnel — growth, not impressions.",
+    tagline: "Paid media built around CAC, ROAS and the funnel: growth, not impressions.",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80",
-    copy: "Paid media built around CAC, ROAS, and the funnel — campaigns that earn you growth, not just impressions. Daily optimisation, weekly reporting, monthly compounding."
+    copy: "Paid media built around CAC, ROAS, and the funnel: campaigns that earn you growth, not just impressions. Daily optimisation, weekly reporting, monthly compounding."
   },
   {
     id: "08",
     title: "SEO / SEM",
-    tagline: "Organic and paid search working as one engine — long game and short.",
+    tagline: "Organic and paid search working as one engine: long game and short.",
     image: "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?auto=format&fit=crop&w=900&q=80",
-    copy: "Organic visibility paired with paid search — the long game and the short game, working as one engine. Technical audits, topical authority and SERP-ready content."
+    copy: "Organic visibility paired with paid search: the long game and the short game, working as one engine. Technical audits, topical authority and SERP-ready content."
   }
 ];
 
@@ -133,7 +133,7 @@ export const testimonials = [
     role: "Head of Brand, Investitute"
   },
   {
-    quote: "The only agency we have worked with that speaks brand and performance in the same sentence — without flinching.",
+    quote: "The only agency we have worked with that speaks brand and performance in the same sentence, without flinching.",
     author: "Marco de Vries",
     role: "Founder, Northbound"
   },

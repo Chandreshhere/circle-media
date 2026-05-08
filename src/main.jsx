@@ -19,6 +19,7 @@ import "./styles/about.css";
 import "./styles/featured-work.css";
 import "./styles/about-scroll.css";
 import "./styles/ads-partners.css";
+import "./styles/platforms.css";
 import "./styles/testimonials.css";
 import "./styles/clients.css";
 import "./styles/reach.css";

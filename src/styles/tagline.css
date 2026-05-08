@@ -142,11 +142,11 @@
     line-height: 1.2;
   }
 
-  .tagline-img-1 { width: 16vw; top: 8%; left: 3%; }
-  .tagline-img-2 { width: 16vw; top: 3%; right: 3%; }
+  .tagline-img-1 { width: 24vw; top: 8%; left: 3%; }
+  .tagline-img-2 { width: 24vw; top: 3%; right: 3%; }
   .tagline-img-5 { width: 16vw; top: 3%; left: 50%; margin-left: -8vw; }
-  .tagline-img-3 { width: 18vw; bottom: 0%; left: 3%; }
-  .tagline-img-8 { width: 18vw; bottom: 10%; right: 3%; }
+  .tagline-img-3 { width: 26vw; bottom: 0%; left: 3%; }
+  .tagline-img-8 { width: 26vw; bottom: 10%; right: 3%; }
 }
 
 @media (max-width: 600px) {
@@ -156,10 +156,10 @@
     font-size: clamp(1.35rem, 5.4vw, 2rem);
     line-height: 1.25;
   }
-  .tagline-img-1 { width: 20vw; top: 7%; left: 3%; }
-  .tagline-img-2 { width: 20vw; top: 2%; right: 3%; }
-  .tagline-img-3 { width: 22vw; bottom: -1%; left: 3%; }
-  .tagline-img-8 { width: 22vw; bottom: 9%; right: 3%; }
+  .tagline-img-1 { width: 30vw; top: 7%; left: 3%; }
+  .tagline-img-2 { width: 30vw; top: 2%; right: 3%; }
+  .tagline-img-3 { width: 32vw; bottom: -1%; left: 3%; }
+  .tagline-img-8 { width: 32vw; bottom: 9%; right: 3%; }
   /* Drop the centre tile on narrow viewports — not enough horizontal
      room between the two corner tiles. */
   .tagline-img-5 { display: none; }
@@ -169,7 +169,8 @@
   .tagline { min-height: 90vh; padding: 9vh 5vw; }
   .tagline-inner { padding: 0 0.25rem; }
   .tagline-heading { font-size: clamp(1.15rem, 5.2vw, 1.6rem); line-height: 1.3; }
-  .tagline-img-1 { width: 24vw; top: 6%; }
-  .tagline-img-2 { width: 24vw; top: 2%; }
-  .tagline-img-3 { width: 26vw; bottom: -2%; }
+  .tagline-img-1 { width: 34vw; top: 6%; }
+  .tagline-img-2 { width: 34vw; top: 2%; }
+  .tagline-img-3 { width: 36vw; bottom: -2%; }
+  .tagline-img-8 { width: 36vw; }
 }

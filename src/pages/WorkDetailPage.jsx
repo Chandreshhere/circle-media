@@ -16,7 +16,7 @@ const COLLECTIONS = {
     title: "Instagram Posts",
     script: "Posts",
     intro:
-      "Single-frame creatives engineered to stop the scroll. Every frame earns its place: a hook, a turn, a payoff — then we ship at the cadence the algorithm rewards.",
+      "Single-frame creatives engineered to stop the scroll. Every frame earns its place: a hook, a turn, a payoff, then we ship at the cadence the algorithm rewards.",
     bullets: [
       "Hook-first concepting, scroll-tested copy",
       "Carousel architecture with a payoff per slide",
@@ -31,7 +31,7 @@ const COLLECTIONS = {
     title: "Instagram Stories",
     script: "Stories",
     intro:
-      "Vertical narratives that keep audiences swiping forward. Sequences built to move people from a tap to a click — motion, polls and stickers that feel like the brand, not like a template.",
+      "Vertical narratives that keep audiences swiping forward. Sequences built to move people from a tap to a click: motion, polls and stickers that feel like the brand, not like a template.",
     bullets: [
       "Sequenced narratives, not one-off frames",
       "Polls, quizzes and stickers that earn reach",
@@ -46,7 +46,7 @@ const COLLECTIONS = {
     title: "Curated Feeds",
     script: "Feeds",
     intro:
-      "Cohesive grids that read like a magazine cover. Every nine squares compose at a glance and reward a longer scroll — typography, palette and pacing tuned so the feed becomes the brand.",
+      "Cohesive grids that read like a magazine cover. Every nine squares compose at a glance and reward a longer scroll: typography, palette and pacing tuned so the feed becomes the brand.",
     bullets: [
       "Grid systems built for nine-tile rhythm",
       "Brand-true typography and palette",
@@ -61,7 +61,7 @@ const COLLECTIONS = {
     title: "Reels & Short Video",
     script: "Reels",
     intro:
-      "Short-form video built for the algorithm. Hook in three seconds, payoff in fifteen — concepted, shot and cut for the platforms that decide the next scroll.",
+      "Short-form video built for the algorithm. Hook in three seconds, payoff in fifteen: concepted, shot and cut for the platforms that decide the next scroll.",
     bullets: [
       "Concepts shaped by hook and platform native",
       "On-set direction, edit and motion in-house",
@@ -76,7 +76,7 @@ const COLLECTIONS = {
     title: "Brand Identity",
     script: "Identity",
     intro:
-      "Identity systems with a voice you'll recognise anywhere. From naming and logo to type, tone and templates — the kit that makes every touchpoint sound like one brand.",
+      "Identity systems with a voice you'll recognise anywhere. From naming and logo to type, tone and templates: the kit that makes every touchpoint sound like one brand.",
     bullets: [
       "Naming, logo, mark and wordmark",
       "Type system + colour with usage rules",
@@ -91,7 +91,7 @@ const COLLECTIONS = {
     title: "Analytics Dashboards",
     script: "Analytics",
     intro:
-      "Reporting frames that make growth measurable at a glance. We pair creative with the numbers that prove it — dashboards, weekly read-outs and the next decision, on one page.",
+      "Reporting frames that make growth measurable at a glance. We pair creative with the numbers that prove it: dashboards, weekly read-outs and the next decision, on one page.",
     bullets: [
       "20+ clients across D2C, retail and services",
       "5+ social handles managed end-to-end",

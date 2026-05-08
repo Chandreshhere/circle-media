@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 const QUOTE_CYCLE = [
   "Build brands that compound, season after season.",
   "Create. Launch. Grow. Scale.",
-  "Strategy, content, performance — one operating system.",
+  "Strategy, content, performance: one operating system.",
   "Measured. Accountable. Relentless."
 ];
 
@@ -245,35 +245,35 @@ export default function Reveal() {
           <span className="reveal-stats-kicker">Growing with You</span>
 
           <div className="reveal-stat reveal-stat-1" data-exit-x="-700">
-            <span className="reveal-stat-v" data-target="15">
+            <span className="reveal-stat-v" data-target="40">
               <span className="reveal-stat-num">0</span>
               <sup>+</sup>
             </span>
-            <span className="reveal-stat-k">Number of Clients</span>
+            <span className="reveal-stat-k">Clients Onboard</span>
           </div>
 
           <div className="reveal-stat reveal-stat-2" data-exit-x="-900">
+            <span className="reveal-stat-v" data-target="12">
+              <span className="reveal-stat-num">0</span>
+              <sup>+</sup>
+            </span>
+            <span className="reveal-stat-k">Industries Served</span>
+          </div>
+
+          <div className="reveal-stat reveal-stat-3" data-exit-x="-650">
+            <span className="reveal-stat-v" data-target="800">
+              <span className="reveal-stat-num">0</span>
+              <sup>+</sup>
+            </span>
+            <span className="reveal-stat-k">Performance Campaigns</span>
+          </div>
+
+          <div className="reveal-stat reveal-stat-4" data-exit-x="-850">
             <span className="reveal-stat-v" data-target="6">
               <span className="reveal-stat-num">0</span>
               <sup>+</sup>
             </span>
             <span className="reveal-stat-k">Years of Experience</span>
-          </div>
-
-          <div className="reveal-stat reveal-stat-3" data-exit-x="-650">
-            <span className="reveal-stat-v" data-target="8">
-              <span className="reveal-stat-num">0</span>
-              <sup>+</sup>
-            </span>
-            <span className="reveal-stat-k">Ecommerce Sites</span>
-          </div>
-
-          <div className="reveal-stat reveal-stat-4" data-exit-x="-850">
-            <span className="reveal-stat-v" data-target="5">
-              <span className="reveal-stat-num">0</span>
-              <sup>+</sup>
-            </span>
-            <span className="reveal-stat-k">Social Media Handles</span>
           </div>
         </div>
 

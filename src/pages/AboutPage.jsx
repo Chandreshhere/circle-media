@@ -23,20 +23,20 @@ const PRINCIPLES = [
   {
     id: "03",
     title: "Dashboards beat decks.",
-    copy: "Every campaign reports in real time. If it does not move the dial, we kill it — and learn.",
+    copy: "Every campaign reports in real time. If it does not move the dial, we kill it, and learn.",
   },
   {
     id: "04",
     title: "The best work outlives the calendar.",
-    copy: "Brand systems, content engines, retention loops — built to compound long after the launch sprint.",
+    copy: "Brand systems, content engines, retention loops, built to compound long after the launch sprint.",
   },
 ];
 
 const STATS = [
-  { v: "15",  suf: "+", k: "Number of Clients" },
+  { v: "12",  suf: "+", k: "Industries Served" },
+  { v: "40",  suf: "+", k: "Clients Onboard" },
+  { v: "800", suf: "+", k: "Performance Campaigns" },
   { v: "6",   suf: "+", k: "Years of Experience" },
-  { v: "8",   suf: "+", k: "Ecommerce Sites" },
-  { v: "5",   suf: "+", k: "Social Media Handles" },
 ];
 
 const VALUES = [
@@ -106,7 +106,7 @@ export default function AboutPage() {
               className="about-hero-copy"
             >
               Circle is a full-service marketing studio for ambitious brands.
-              Strategy, creative and performance under one roof — run by
+              Strategy, creative and performance under one roof, run by
               operators, not account managers.
             </BlurInText>
 
@@ -125,7 +125,7 @@ export default function AboutPage() {
       </section>
 
       <section className="about-stats" ref={statsRef}>
-        <p className="label">[Receipts / 2019—2025]</p>
+        <p className="label">[Receipts / 2019-2025]</p>
         <div className="about-stats-grid">
           {STATS.map((s) => (
             <div key={s.k}>
@@ -151,8 +151,8 @@ export default function AboutPage() {
               <p>
                 Brands needed a partner that could move from brand platform to
                 campaign to retention loop without losing the plot. So we
-                stitched the disciplines back together — strategy, creative,
-                media, data — into a single team.
+                stitched the disciplines back together: strategy, creative,
+                media, data, into a single team.
               </p>
               <p>
                 Circle is that team. Measured against your number, not scope
@@ -166,7 +166,7 @@ export default function AboutPage() {
 
       <section className="about-principles">
         <div className="about-principles-head">
-          <p className="label">[Principles / 01—04]</p>
+          <p className="label">[Principles / 01-04]</p>
           <BlurInText
             as="h2"
             split="words"

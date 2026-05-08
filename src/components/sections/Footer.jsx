@@ -1,9 +1,32 @@
 import { Link } from "react-router-dom";
 
+const PHONE = "+918889977666";
+const PHONE_DISPLAY = "+91 88899 77666";
+const WHATSAPP = `https://wa.me/${PHONE.replace(/\D/g, "")}?text=${encodeURIComponent(
+  "Hi Circle, I'd like to talk about a project."
+)}`;
+
 const socials = [
-  { k: "Instagram", href: "#" },
-  { k: "LinkedIn",  href: "#" },
-  { k: "Behance",   href: "#" },
+  {
+    k: "Instagram",
+    href: "https://instagram.com/marketingbycircle",
+    color: "var(--c-pink)",
+  },
+  {
+    k: "Facebook",
+    href: "https://facebook.com/marketingbycircle",
+    color: "var(--c-blue)",
+  },
+  {
+    k: "LinkedIn",
+    href: "https://linkedin.com/company/marketingbycircle",
+    color: "var(--c-mint)",
+  },
+  {
+    k: "WhatsApp",
+    href: WHATSAPP,
+    color: "var(--c-yellow)",
+  },
 ];
 
 const navLinks = [
@@ -18,7 +41,6 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-inner">
-        {/* Top row — collab CTA on the left, site Navigate list on the right. */}
         <div className="f-top">
           <div className="f-top-left">
             <p className="f-eyebrow">[Start something]</p>
@@ -27,10 +49,15 @@ export default function Footer() {
               Let&apos;s <em>collaborate.</em>
             </h2>
 
-            <a className="f-email" href="mailto:info@marketingbycircle.com">
-              info@marketingbycircle.com
-              <span className="f-email-arrow" aria-hidden="true">↗</span>
-            </a>
+            <div className="f-cta-actions">
+              <a className="f-cta-btn f-cta-btn-primary" href={WHATSAPP} target="_blank" rel="noreferrer">
+                Message us on WhatsApp
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a className="f-cta-btn f-cta-btn-ghost" href={`tel:${PHONE}`}>
+                {PHONE_DISPLAY}
+              </a>
+            </div>
           </div>
 
           <div className="f-top-right">
@@ -45,44 +72,31 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Contact row — label on the left, details laid out horizontally. */}
-        <div className="f-contact-row">
-          <p className="f-col-label">Contact</p>
-          <ul className="f-contact f-contact-horizontal">
-            <li>
-              <a href="mailto:info@marketingbycircle.com">
-                info@marketingbycircle.com
-              </a>
-            </li>
-            <li>
-              <a href="tel:+919425958589">+91 94259 58589</a>
-            </li>
-            <li>
+        {/* Compact bottom strip — address on the left, socials on the right.
+            Phone + WhatsApp are already in the CTA buttons above, so we
+            don't repeat them here. */}
+        <div className="f-bottom">
+          <span className="f-bottom-addr">Indore · Bombay · India</span>
+
+          <nav className="f-bottom-socials">
+            {socials.map((s) => (
               <a
-                href="https://marketingbycircle.com"
+                key={s.k}
+                href={s.href}
                 target="_blank"
                 rel="noreferrer"
+                className="f-bottom-social"
+                style={{ "--soc-color": s.color }}
               >
-                marketingbycircle.com
-              </a>
-            </li>
-            <li className="f-contact-addr">Bangalore · IN</li>
-          </ul>
-        </div>
-
-        <div className="f-row">
-          <nav className="f-socials">
-            {socials.map((s) => (
-              <a key={s.k} href={s.href} className="f-social">
                 {s.k}
               </a>
             ))}
           </nav>
-
-          <p className="f-credit">
-            © 2026 Circle <span className="f-credit-dot" /> Bangalore
-          </p>
         </div>
+
+        <p className="f-credit">
+          © 2026 Circle <span className="f-credit-dot" /> Indore · Bombay
+        </p>
       </div>
     </footer>
   );

@@ -39,7 +39,7 @@ export default function ServicesPage() {
               className="services-hero-copy"
             >
               Six disciplines, one team, one operating system. We plug into
-              your stack or run standalone — either way, the output is
+              your stack or run standalone. Either way, the output is
               measured, accountable and compounding.
             </BlurInText>
 

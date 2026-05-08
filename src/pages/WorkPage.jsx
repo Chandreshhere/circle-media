@@ -351,7 +351,7 @@ export default function WorkPage() {
         <section className="work-hero">
           <div className="work-hero-grid">
             <div className="work-hero-left">
-              <p className="work-hero-crumb">[03] Selected Work · 2019—2025</p>
+              <p className="work-hero-crumb">[03] Selected Work · 2019-2025</p>
               <h1 className="work-hero-title">
                 <span className="line">We let the</span>
                 <span className="line"><em className="work-hero-script">Work</em></span>
@@ -370,7 +370,7 @@ export default function WorkPage() {
 
               <BlurInText as="p" split="words" stagger={0.02} blur={10} className="work-hero-copy">
                 From engaging social media strategies to powerful website
-                solutions, we do it all — creative, consistent, and result-driven.
+                solutions, we do it all: creative, consistent, and result-driven.
               </BlurInText>
 
               <p className="work-hero-copy">
@@ -388,7 +388,7 @@ export default function WorkPage() {
           <p className="w-sec-eye anim-rise">[01] Social Media · Carousel</p>
           <h2 className="w-sec-title anim-rise">Carousel.</h2>
           <p className="w-sec-copy anim-rise">
-            Multi-frame creatives that earn the swipe — story arcs designed for
+            Multi-frame creatives that earn the swipe: story arcs designed for
             the scroll, not the press kit.
           </p>
           <div className="w-carousel-stage">
@@ -515,7 +515,7 @@ export default function WorkPage() {
           <p className="w-sec-eye anim-rise">[04] Reels · Short Video</p>
           <h2 className="w-sec-title anim-rise">Reels.</h2>
           <p className="w-sec-copy anim-rise">
-            We don&apos;t just make Reels — we tell stories in seconds. Fast.{" "}
+            We don&apos;t just make Reels, we tell stories in seconds. Fast.{" "}
             <span className="w-accent">Engaging.</span> Scroll-stopping.
           </p>
 
@@ -547,7 +547,7 @@ export default function WorkPage() {
           <h2 className="w-sec-title anim-rise">Reel Insights.</h2>
           <p className="w-sec-copy anim-rise">
             Numbers that prove the creative. Watch time, view rate, profile
-            activity — every reel reports back.
+            activity: every reel reports back.
           </p>
 
           <div className="w-insight-stage">
@@ -828,7 +828,7 @@ export default function WorkPage() {
           <p className="w-sec-eye anim-rise">[11] Search · SEO &amp; SEM</p>
           <h2 className="w-sec-title anim-rise">SEO &amp; SEM.</h2>
           <p className="w-sec-copy anim-rise">
-            Organic visibility paired with paid search — long game and short
+            Organic visibility paired with paid search: long game and short
             game, on one engine. Plus Google My Business that closes the loop.
           </p>
 
@@ -967,7 +967,7 @@ export default function WorkPage() {
                       <span className="w-seo-review-stars">★★★★★</span>
                     </div>
                     <p className="w-seo-review-body">
-                      "Outstanding butter chicken — the lassi tops it off. Service moves fast even at peak hours."
+                      "Outstanding butter chicken, the lassi tops it off. Service moves fast even at peak hours."
                     </p>
                   </div>
 
@@ -998,7 +998,7 @@ export default function WorkPage() {
           <p className="w-sec-eye anim-rise">[12] Website Development</p>
           <h2 className="w-sec-title anim-rise">Website Development.</h2>
           <p className="w-sec-copy anim-rise">
-            Fast, accessible, considered websites — built to convert today and
+            Fast, accessible, considered websites, built to convert today and
             crafted to scale as the business grows.
           </p>
 

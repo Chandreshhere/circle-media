@@ -3,9 +3,18 @@ import gsap from "gsap";
 import DynamicBackground from "../fx/DynamicBackground.jsx";
 import { getLenis as getTrueLenis } from "../../App.jsx";
 
+// Rotating service phrases — deliberately reworded so they don't match the
+// names on /services. The services page lists deliverables ("Brand
+// Consultation", "Influencer Marketing", etc.); the hero reframes them as
+// growth-outcome verbs / categories so the page reads as "what we move
+// the needle on" rather than a service catalogue.
 const HERO_SERVICES = [
-  "social media marketing",
-  "e-commerce listings & optimisation",
+  "Scaling brands",
+  "Performance ads",
+  "Search visibility",
+  "Social storytelling",
+  "Marketplace growth",
+  "Content systems",
 ];
 
 export default function Hero() {
@@ -131,16 +140,12 @@ export default function Hero() {
 
       <div className="hero-split-content" ref={copyRef}>
         <p className="hero-split-eyebrow" data-hero-reveal>
-          <span>[01]</span>
-          <span className="hero-split-eyebrow-line" />
-          <span>Circle — Est. 2019</span>
+          <span>Circle, Est. 2019</span>
         </p>
 
         <h1 className="hero-split-title" data-hero-reveal>
-          <span className="hero-split-title-lead">
-            A digital marketing agency
-            <br />
-            specializing in
+          <span className="hero-split-prelude">
+            We&rsquo;re your growth partner for
           </span>
           <span className="hero-split-accent">
             <span
@@ -153,8 +158,8 @@ export default function Hero() {
         </h1>
 
         <p className="hero-split-sub" data-hero-reveal>
-          Content, community and performance — engineered to move the number
-          that matters.
+          SEO, SEM, brand strategy and performance content built to grow your
+          business.
         </p>
 
         <p className="hero-split-scroll" data-hero-reveal>

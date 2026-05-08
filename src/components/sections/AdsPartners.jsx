@@ -45,7 +45,7 @@ export default function AdsPartners() {
       <div className="ap-head">
         <p className="label">[Partners]</p>
         <h3>
-          Verified by the platforms that shape modern commerce — performance
+          Verified by the platforms that shape modern commerce: performance
           partners we run, measure, and ship with every day.
         </h3>
       </div>

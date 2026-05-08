@@ -9,8 +9,13 @@
   margin-top: -2rem;
   background: var(--bg);
   color: var(--text);
-  overflow: hidden;
+  /* No overflow clip on the section so the globe canvas can extend past
+     the section's top edge and visually overlay the previous section.
+     The arcs sit much higher above the planet now and would otherwise
+     be cropped by the section bounds. */
+  overflow: visible;
   border-bottom: 1px solid var(--border);
+  z-index: 1;
 }
 
 .reach-inner {
@@ -129,19 +134,26 @@
   color: var(--text-dim);
 }
 
-/* === Stat === */
+/* === Stats grid === */
 
-.reach-stat {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
+.reach-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 2rem;
   padding-top: 1.25rem;
   border-top: 1px solid var(--border);
 }
 
+.reach-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+
 .reach-stat-num {
   font-family: var(--font-display);
-  font-size: clamp(3.5rem, 6vw, 5.5rem);
+  font-size: clamp(2.4rem, 4.2vw, 3.6rem);
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.04em;
@@ -157,10 +169,11 @@
 
 .reach-stat-label {
   font-family: var(--font-body);
-  font-size: clamp(0.85rem, 1vw, 1rem);
+  font-size: clamp(0.78rem, 0.95vw, 0.95rem);
   line-height: 1.35;
   color: var(--text-dim);
-  letter-spacing: 0.01em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 /* === Right column — globe === */
@@ -173,18 +186,30 @@
   align-self: start;
   /* Lift the globe so it sits aligned with the top of the left column
      (header / pills) instead of centred against the left column's full
-     height. */
-  margin-top: -10rem;
+     height. The taller canvas now reaches above the section's top edge,
+     so the arcs visibly arc into the previous section. z-index keeps the
+     canvas painting over that section's content. */
+  margin-top: -16rem;
+  z-index: 5;
+  pointer-events: none;
 }
 
-/* WebGL canvas mount — fixed aspect square; cursor signals dragability. */
+/* WebGL canvas mount — taller-than-square so the lifted arcs at the top
+   of the scene aren't cropped at the canvas edge. The aspect ratio change
+   widens the camera frustum vertically, giving the flight paths room to
+   sweep up. The pointer-events override on the canvas restores drag
+   interactivity that the parent disabled to let clicks pass through to
+   the section above. */
 .reach-globe-3d {
+  position: relative;
   width: 100%;
-  max-width: 480px;
-  aspect-ratio: 1 / 1;
+  max-width: 520px;
+  aspect-ratio: 3 / 4;
   cursor: grab;
-  touch-action: none; /* prevent the page from scrolling while dragging */
+  touch-action: none;
   user-select: none;
+  pointer-events: auto;
+  overflow: visible;
 }
 
 .reach-globe-3d canvas {
@@ -229,9 +254,10 @@
   .reach-pill-name { font-size: 0.78rem; }
   .reach-pill-tag  { font-size: 0.6rem; letter-spacing: 0.05em; }
 
-  .reach-stat { gap: 0.75rem; padding-top: 0.85rem; }
-  .reach-stat-num   { font-size: clamp(2.4rem, 9vw, 3.4rem); }
-  .reach-stat-label { font-size: 0.72rem; }
+  .reach-stats { gap: 1.1rem 1.25rem; padding-top: 0.85rem; }
+  .reach-stat { gap: 0.3rem; }
+  .reach-stat-num   { font-size: clamp(1.9rem, 7vw, 2.6rem); }
+  .reach-stat-label { font-size: 0.66rem; letter-spacing: 0.05em; }
 
   .reach-right { order: 0; margin-top: 0; }
   .reach-globe-3d { max-width: 100%; }
@@ -257,7 +283,8 @@
   .reach-pill-name { font-size: 0.66rem; }
   .reach-pill-tag  { font-size: 0.5rem; letter-spacing: 0.04em; }
 
-  .reach-stat { gap: 0.55rem; padding-top: 0.65rem; }
-  .reach-stat-num   { font-size: clamp(1.8rem, 8vw, 2.4rem); }
+  .reach-stats { gap: 0.85rem 0.9rem; padding-top: 0.65rem; }
+  .reach-stat { gap: 0.25rem; }
+  .reach-stat-num   { font-size: clamp(1.6rem, 6.5vw, 2.1rem); }
   .reach-stat-label { font-size: 0.62rem; line-height: 1.3; }
 }

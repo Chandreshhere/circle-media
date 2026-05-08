@@ -24,7 +24,7 @@ const buildRing = () => {
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
 const TEXT_INTRO = "Brands we've worked with.";
-const TEXT_OUTRO = "Reach out — work with us.";
+const TEXT_OUTRO = "Reach out, work with us.";
 const TEXT_SWITCH_AT = 0.55;
 
 export default function CircleRing() {

@@ -6,11 +6,16 @@ import * as THREE from "three";
    drag to rotate manually. Drag inertia carries the spin a little after
    release before easing back to the constant idle rotation. */
 
+// Pin positions tuned for VISUAL spread on the rendered globe — not just
+// the geographic centroid of each country. India sits in the south so it
+// reads clearly below Dubai; USA is anchored on the east coast (NY) and
+// Canada on the west coast (Vancouver), so the two North-American pins
+// are diagonally across the continent instead of stacked over each other.
 const PINS = [
-  { lat: 20.5937, lon: 78.9629,  label: "India" },
-  { lat: 25.2048, lon: 55.2708,  label: "UAE" },
-  { lat: 37.0902, lon: -95.7129, label: "USA" },
-  { lat: 23.8859, lon: 45.0792,  label: "Saudi Arabia" },
+  { lat: 12.97,  lon: 77.59,   label: "India"  },   // Bangalore
+  { lat: 25.20,  lon: 55.27,   label: "Dubai"  },   // Dubai
+  { lat: 40.71,  lon: -74.00,  label: "USA"    },   // New York
+  { lat: 49.28,  lon: -123.12, label: "Canada" },   // Vancouver
 ];
 
 const latLonToVec3 = (lat, lon, radius) => {
@@ -38,8 +43,13 @@ export default function GlobeWebGL() {
     let { w, h } = getSize();
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
-    camera.position.z = 5.2;
+    // Wider vertical FOV + slightly further camera so the lifted flight
+    // arcs (mid-points pushed out to ~2.2× the planet radius) sit fully
+    // inside the camera frustum instead of being clipped at the top of
+    // the canvas. The taller canvas aspect (3:4) then renders that
+    // headroom as visible canvas space above the planet.
+    const camera = new THREE.PerspectiveCamera(48, w / h, 0.1, 100);
+    camera.position.z = 6.4;
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -139,14 +149,18 @@ export default function GlobeWebGL() {
       meridianRefs.push(meridian);
     }
 
-    // Dot grid covering the globe — gives the digital-earth aesthetic.
+    // Dot grid covering the globe. Resolution dropped much further so
+    // each white dot sits clearly apart from its neighbours — the
+    // planet reads as a sparse constellation of points rather than a
+    // textured surface. Each dot is also a touch larger and brighter to
+    // compensate for the lower density.
     const dotPositions = [];
-    const N_LAT = 44;
+    const N_LAT = 16;
     for (let i = 1; i < N_LAT; i++) {
       const lat = -90 + (180 * i) / N_LAT;
       const numLon = Math.max(
-        4,
-        Math.round(2 * Math.PI * Math.cos((lat * Math.PI) / 180) * 14)
+        3,
+        Math.round(2 * Math.PI * Math.cos((lat * Math.PI) / 180) * 5)
       );
       for (let j = 0; j < numLon; j++) {
         const lon = -180 + (360 * j) / numLon;
@@ -163,10 +177,10 @@ export default function GlobeWebGL() {
       dotsGeo,
       new THREE.PointsMaterial({
         color: 0xffffff,
-        size: 0.022,
+        size: 0.04,
         sizeAttenuation: true,
         transparent: true,
-        opacity: 0.5,
+        opacity: 0.7,
       })
     );
     group.add(dots);
@@ -183,55 +197,67 @@ export default function GlobeWebGL() {
     );
     group.add(atmosphere);
 
-    // Country pins — small bright spheres + a billboard ring for "presence".
+    // Country pins — bigger, more saturated pink spheres with two halo
+    // rings so each marker reads clearly against the sparser dot grid.
+    const PIN_PINK = 0xff3d7f;
     const pinObjs = [];
     PINS.forEach((p) => {
-      const pos = latLonToVec3(p.lat, p.lon, radius * 1.012);
+      const pos = latLonToVec3(p.lat, p.lon, radius * 1.015);
 
       const dot = new THREE.Mesh(
-        new THREE.SphereGeometry(0.045, 20, 20),
-        new THREE.MeshBasicMaterial({ color: 0xff5577 })
+        new THREE.SphereGeometry(0.07, 24, 24),
+        new THREE.MeshBasicMaterial({ color: PIN_PINK })
       );
       dot.position.copy(pos);
       group.add(dot);
 
-      // Halo — slightly larger faint sphere around the pin.
       const halo = new THREE.Mesh(
-        new THREE.SphereGeometry(0.075, 20, 20),
+        new THREE.SphereGeometry(0.13, 24, 24),
         new THREE.MeshBasicMaterial({
-          color: 0xff5577,
+          color: PIN_PINK,
           transparent: true,
-          opacity: 0.25,
+          opacity: 0.4,
         })
       );
       halo.position.copy(pos);
       group.add(halo);
 
-      pinObjs.push({ dot, halo, basePos: pos.clone() });
+      // Outer ring picks up the pulse animation in the render loop and
+      // gives the marker an actively-pinging look.
+      const halo2 = new THREE.Mesh(
+        new THREE.SphereGeometry(0.2, 20, 20),
+        new THREE.MeshBasicMaterial({
+          color: PIN_PINK,
+          transparent: true,
+          opacity: 0.18,
+        })
+      );
+      halo2.position.copy(pos);
+      group.add(halo2);
+
+      pinObjs.push({ dot, halo, halo2, basePos: pos.clone() });
     });
 
-    // Connection arcs — curved "flight path" lines from the home pin
-    // (India) to every other served country, lifted above the chord so
-    // each reads as an arc, not a straight line through the planet.
+    // Connection arcs — solid pink lines from the home pin (India) to
+    // every other served country. Midpoints are lifted off the surface
+    // so each arc sweeps high above the planet rather than hugging it.
     const arcRefs = [];
     const home = pinObjs[0].basePos;
     pinObjs.slice(1).forEach((target) => {
       const a = home;
       const b = target.basePos;
       const mid = a.clone().add(b).multiplyScalar(0.5);
-      // Lift the midpoint outward — height proportional to chord length so
-      // long-distance arcs rise higher than short ones.
-      const liftFactor = 1.18 + 0.45 * (a.distanceTo(b) / (radius * 2));
+      const liftFactor = 1.55 + 0.7 * (a.distanceTo(b) / (radius * 2));
       mid.normalize().multiplyScalar(radius * liftFactor);
       const curve = new THREE.QuadraticBezierCurve3(a, mid, b);
-      const points = curve.getPoints(48);
+      const points = curve.getPoints(64);
       const arcGeo = new THREE.BufferGeometry().setFromPoints(points);
       const arc = new THREE.Line(
         arcGeo,
         new THREE.LineBasicMaterial({
-          color: 0xff7a3d,        // accent orange
+          color: PIN_PINK,
           transparent: true,
-          opacity: 0.78,
+          opacity: 0.95,
         })
       );
       group.add(arc);
@@ -321,11 +347,16 @@ export default function GlobeWebGL() {
         group.rotation.x *= 0.985;
       }
 
-      // Pin halo pulse — gentle scale breathing.
-      const pulse = 1 + Math.sin(t * 0.04) * 0.18;
+      // Pin halo pulse — gentle scale breathing on the inner halo, plus a
+      // wider outward ping on the outer halo so the marker visibly throbs.
+      const pulse = 1 + Math.sin(t * 0.04) * 0.22;
+      const ping = 1 + (Math.sin(t * 0.05) * 0.5 + 0.5) * 0.6;
       pinObjs.forEach((pin, i) => {
-        const phase = pulse + (i % 2) * 0.04;
+        const phase = pulse + (i % 2) * 0.05;
         pin.halo.scale.setScalar(phase);
+        pin.halo2.scale.setScalar(ping + (i % 2) * 0.08);
+        pin.halo2.material.opacity =
+          0.22 - (Math.sin(t * 0.05) * 0.5 + 0.5) * 0.18;
       });
 
       renderer.render(scene, camera);
@@ -350,11 +381,13 @@ export default function GlobeWebGL() {
       dots.material.dispose();
       atmosphere.geometry.dispose();
       atmosphere.material.dispose();
-      pinObjs.forEach(({ dot, halo }) => {
+      pinObjs.forEach(({ dot, halo, halo2 }) => {
         dot.geometry.dispose();
         dot.material.dispose();
         halo.geometry.dispose();
         halo.material.dispose();
+        halo2.geometry.dispose();
+        halo2.material.dispose();
       });
       ringRefs.forEach((r) => {
         r.geometry.dispose();

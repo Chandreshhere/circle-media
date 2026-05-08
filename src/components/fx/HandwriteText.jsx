@@ -18,8 +18,11 @@ export default function HandwriteText({
   strokeWidth = 1.4,
   ...rest
 }) {
+  // Display font reads better in uppercase for the big drawn page-signature
+  // word ("Studio", "Work", "Services"). The Prestige Script fallback ran
+  // lowercase; we don't need that anymore now that we render in sans-serif.
   const text =
-    typeof children === "string" ? children.toLowerCase() : children;
+    typeof children === "string" ? children.toUpperCase() : children;
   const textRef = useRef(null);
   const [box, setBox] = useState(null);
   const idRef = useRef(`hw-${++uid}`);
@@ -70,9 +73,9 @@ export default function HandwriteText({
       {...rest}
     >
       <style>{`
-        .${id} { font-family: "Prestige Signature Script", "Mr Dafoe", "Monsieur La Doulaise", "Allura", "Sacramento", "Pacifico", cursive;
-                 font-size: 260px; font-weight: 400; letter-spacing: -0.03em;
-                 text-transform: lowercase; }
+        .${id} { font-family: "Neue Haas Grotesk Display Pro", "Satoshi", sans-serif;
+                 font-size: 260px; font-weight: 500; letter-spacing: -0.04em;
+                 text-transform: uppercase; }
         .${id}-fill   { fill: currentColor; }
         .${id}-stroke {
           fill: none;

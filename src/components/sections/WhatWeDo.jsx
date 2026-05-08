@@ -68,7 +68,7 @@ const CARDS = [
     id: "02",
     title: "Influencer Marketing",
     color: "var(--c-blue)",
-    desc: "Creators matched to the right audience, briefed for the right message, measured against real outcomes — not vanity metrics.",
+    desc: "Creators matched to the right audience, briefed for the right message, measured against real outcomes, not vanity metrics.",
   },
   {
     id: "03",
@@ -80,13 +80,13 @@ const CARDS = [
     id: "04",
     title: "Social Media Marketing",
     color: "var(--c-mint)",
-    desc: "A daily presence with a point of view — content, community, and conversion, all moving in the same direction.",
+    desc: "A daily presence with a point of view: content, community, and conversion, all moving in the same direction.",
   },
   {
     id: "05",
     title: "Website Development",
     color: "var(--c-pink)",
-    desc: "Fast, accessible, considered websites — built to convert today and crafted to scale as your business grows.",
+    desc: "Fast, accessible, considered websites, built to convert today and crafted to scale as your business grows.",
   },
   {
     id: "06",
@@ -96,15 +96,15 @@ const CARDS = [
   },
   {
     id: "07",
-    title: "Performance Marketing (Google & Meta Ads)",
+    title: "Performance Marketing",
     color: "var(--c-blue)",
-    desc: "Paid media built around CAC, ROAS, and the funnel — campaigns that earn you growth, not just impressions.",
+    desc: "Paid media built around CAC, ROAS, and the funnel: campaigns that earn you growth, not just impressions.",
   },
   {
     id: "08",
     title: "SEO / SEM",
     color: "var(--c-mint)",
-    desc: "Organic visibility paired with paid search — the long game and the short game, working as one engine.",
+    desc: "Organic visibility paired with paid search: the long game and the short game, working as one engine.",
   },
 ].map((c, i) => ({ ...c, shape: SHAPES[i], path: buildPath(SHAPES[i], 5) }));
 
@@ -401,10 +401,7 @@ export default function WhatWeDo() {
 
             <div className="wwd-card-content">
               <span className="wwd-card-id">{card.id}</span>
-              <div className="wwd-card-text">
-                <h3 className="wwd-card-title">{card.title}</h3>
-                <p className="wwd-card-desc">{card.desc}</p>
-              </div>
+              <h3 className="wwd-card-title">{card.title}</h3>
             </div>
           </article>
         ))}

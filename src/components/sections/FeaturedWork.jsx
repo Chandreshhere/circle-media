@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 const ITEMS = [
   {
     title: "Social Media Marketing",
-    copy: "Strategy, content and community management — built to grow reach and engagement across every feed.",
+    copy: "Strategy, content and community management built to grow reach and engagement across every feed.",
     img: "/assets/project/project1.jpg",
   },
   {
@@ -13,7 +13,7 @@ const ITEMS = [
   },
   {
     title: "Website Development",
-    copy: "Custom, responsive sites — design-led, commerce-ready and built to last.",
+    copy: "Custom, responsive sites: design-led, commerce-ready and built to last.",
     img: "/assets/project/project3.jpg",
   },
   {
