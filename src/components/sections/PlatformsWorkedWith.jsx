@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -73,20 +74,53 @@ function PlatformModal({ platform, onClose }) {
       if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", onKey);
+
+    /* iOS Safari body scroll-lock: just `overflow: hidden` on body
+       breaks momentum scrolling INSIDE fixed-position descendants
+       (the overlay/modal here). The fix is to make the body itself
+       position:fixed at the saved scroll position. The overlay can
+       then scroll natively because the body isn't a scroll competitor.
+       Restore the original scroll position when the modal closes. */
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const prev = {
+      position: document.body.style.position,
+      top: document.body.style.top,
+      left: document.body.style.left,
+      right: document.body.style.right,
+      width: document.body.style.width,
+      overflow: document.body.style.overflow,
+    };
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
     document.body.style.overflow = "hidden";
+
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      document.body.style.position = prev.position;
+      document.body.style.top = prev.top;
+      document.body.style.left = prev.left;
+      document.body.style.right = prev.right;
+      document.body.style.width = prev.width;
+      document.body.style.overflow = prev.overflow;
+      window.scrollTo(0, scrollY);
     };
   }, [onClose]);
 
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;
+    /* Opacity-only fade-in. The previous translate+scale enter animation
+       left a `transform` value on the panel after completion, which on
+       iOS Safari was preventing the parent overlay's overflow:auto from
+       initiating native momentum scroll on touch. Fade-only keeps the
+       panel free of any leftover transform. */
     gsap.fromTo(
       panel,
-      { opacity: 0, y: 30, scale: 0.96 },
-      { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }
+      { opacity: 0 },
+      { opacity: 1, duration: 0.4, ease: "power2.out", clearProps: "transform" }
     );
     const path = panel.querySelector(".pww-modal-curve path");
     if (path) {
@@ -99,7 +133,13 @@ function PlatformModal({ platform, onClose }) {
     }
   }, [platform.id]);
 
-  return (
+  /* Render to a portal at document.body so the modal escapes any
+     ancestor that might have `transform`, `filter`, or `perspective`
+     applied (e.g. GSAP-animated wrappers, ScrollTrigger pin transforms).
+     Such ancestors create a containing block for `position: fixed`
+     descendants, which traps the overlay inside that ancestor's box and
+     can break native overflow scroll on iOS Safari. */
+  return createPortal(
     <div
       className="pww-modal-overlay"
       onClick={onClose}
@@ -201,7 +241,8 @@ function PlatformModal({ platform, onClose }) {
           </ul>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

@@ -106,3 +106,63 @@
   .reveal-hero-footer .mn { font-size: 0.7rem; letter-spacing: 0.04em; }
 }
 
+/* "Keep scrolling" hint — appears at the bottom of the pinned holder
+   section so users realise they need to keep scrolling vertically for
+   the horizontal stats/about animation to play. The pin timeline
+   fades opacity to 0 the moment scroll begins (see Reveal.jsx). */
+.reveal-scroll-hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.25rem, 4vh, 2.5rem);
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  pointer-events: none;
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  animation: reveal-hint-bob 1.6s ease-in-out infinite;
+}
+
+.reveal-scroll-hint-arrow {
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(to bottom, transparent, var(--text-dim) 70%);
+  position: relative;
+}
+
+.reveal-scroll-hint-arrow::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 6px;
+  height: 6px;
+  border-right: 1px solid var(--text-dim);
+  border-bottom: 1px solid var(--text-dim);
+  transform: translate(-50%, 3px) rotate(45deg);
+}
+
+@keyframes reveal-hint-bob {
+  0%, 100% { transform: translate(-50%, 0); opacity: 0.55; }
+  50%      { transform: translate(-50%, 5px); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-scroll-hint { animation: none; }
+}
+
+@media (max-width: 480px) {
+  .reveal-scroll-hint {
+    font-size: 0.52rem;
+    letter-spacing: 0.14em;
+    gap: 0.3rem;
+  }
+  .reveal-scroll-hint-arrow { height: 18px; }
+}
+

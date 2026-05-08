@@ -80,6 +80,10 @@ export default function Reveal() {
     });
 
     pinTl
+      // Fade the "keep scrolling" hint out the moment the user starts
+      // scrolling within the pinned section. They've found the section,
+      // they're now scrolling — the hint has done its job.
+      .to(".reveal-scroll-hint", { opacity: 0, duration: 0.15 }, 0)
       .to({}, { duration: 0.3 })
       .to(img, { xPercent: -160, rotation: -540, duration: 0.7 }, 0.3)
       .to(
@@ -241,6 +245,15 @@ export default function Reveal() {
       </section>
 
       <section className="reveal-img-holder" ref={holderRef}>
+        {/* Scroll-down hint — the section pins and turns horizontal, so
+            users don't always realise they need to keep scrolling.
+            Hidden via CSS once the section is pinned (the body gets a
+            data-attr from ScrollTrigger's pin lifecycle). */}
+        <div className="reveal-scroll-hint" aria-hidden="true">
+          <span className="reveal-scroll-hint-label">Keep scrolling</span>
+          <span className="reveal-scroll-hint-arrow" />
+        </div>
+
         <div className="reveal-stats-bg" aria-hidden="true">
           <span className="reveal-stats-kicker">Growing with You</span>
 

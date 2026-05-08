@@ -238,6 +238,15 @@
   justify-content: center;
   padding: clamp(1rem, 3vw, 3rem);
   animation: pww-overlay-in 0.35s ease-out;
+  /* Allow the overlay itself to scroll if the modal is taller than the
+     viewport — this is the fallback for mobile where native momentum
+     scrolling inside a flex-centred child can stall on iOS Safari.
+     touch-action: pan-y tells iOS to treat vertical drags as scroll
+     (not pinch / horizontal pan / browser navigation gestures). */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 
 @keyframes pww-overlay-in {
@@ -260,6 +269,13 @@
     0 30px 80px rgba(0, 0, 0, 0.6),
     0 0 0 1px rgba(var(--pww-accent-rgb, 255, 197, 92), 0.18) inset;
   color: var(--text);
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  /* Allow the modal to grow tall — the OVERLAY scrolls on mobile (see
+     above). flex-shrink: 0 stops the flex parent from squishing it,
+     which is what was preventing momentum scrolling on iOS. */
+  flex-shrink: 0;
 }
 
 .pww-modal::before {
@@ -504,7 +520,22 @@
   .pww-card-badge { font-size: 0.66rem; padding: 0.35rem 0.7rem; }
   .pww-card-foot { font-size: 0.66rem; }
 
-  .pww-modal { padding: 1.5rem 1.25rem; max-height: 88vh; }
+  /* Mobile uses a simpler scroll model: the overlay is a plain block
+     (not flex) so the modal lays out in normal flow, and the overlay
+     itself is the ONLY scroll container. iOS Safari handles this much
+     more reliably than nested overflow:auto scrollers. */
+  .pww-modal-overlay {
+    display: block;
+    padding: 1rem 0.75rem 2rem;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pww-modal {
+    padding: 1.5rem 1.25rem;
+    max-height: none;
+    overflow: visible;
+    margin: 0 auto;
+  }
   .pww-modal-head { gap: 0.85rem; margin-bottom: 1.1rem; }
   .pww-modal-logo { width: 100px; height: 44px; padding: 0.5rem 0.85rem; }
   .pww-modal-title { font-size: 1.55rem; }

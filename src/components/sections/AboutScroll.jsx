@@ -77,7 +77,10 @@ export default function AboutScroll() {
           <span className="about-h-eyebrow-line" />
           <span>About Us</span>
         </span>
-        <span className="about-h-hint">Scroll →</span>
+        <span className="about-h-hint">
+          Keep scrolling
+          <span className="about-h-hint-arrow" aria-hidden="true" />
+        </span>
       </div>
 
       <div className="about-h-viewport">

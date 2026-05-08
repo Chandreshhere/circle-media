@@ -44,10 +44,53 @@
 
 .about-h-hint {
   font-family: var(--font-body);
-  font-size: 0.82rem;
-  letter-spacing: 0.2em;
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-mute);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  animation: about-h-hint-bob 1.6s ease-in-out infinite;
+}
+
+.about-h-hint-arrow {
+  display: inline-block;
+  width: 16px;
+  height: 1px;
+  background: var(--text-dim);
+  position: relative;
+}
+
+.about-h-hint-arrow::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-top: 1px solid var(--text-dim);
+  border-right: 1px solid var(--text-dim);
+  transform: translate(1.5px, -50%) rotate(45deg);
+}
+
+@keyframes about-h-hint-bob {
+  0%, 100% { transform: translateX(0); opacity: 0.7; }
+  50%      { transform: translateX(4px); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-h-hint { animation: none; }
+}
+
+@media (max-width: 600px) {
+  .about-h-hint {
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    gap: 0.35rem;
+  }
+  .about-h-hint-arrow { width: 12px; }
+  .about-h-hint-arrow::after { width: 4px; height: 4px; }
 }
 
 .about-h-viewport {
@@ -177,7 +220,7 @@
   }
   .about-h-eyebrow { font-size: 0.78rem; gap: 0.7rem; letter-spacing: 0.12em; }
   .about-h-eyebrow-line { width: 36px; }
-  .about-h-hint { font-size: 0.74rem; letter-spacing: 0.16em; }
+  .about-h-hint { font-size: 0.6rem; letter-spacing: 0.14em; }
   .about-h-track {
     padding: 0 1.25rem;
     gap: 1.25rem;
