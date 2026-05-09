@@ -193,53 +193,24 @@
 /* === Responsive === */
 
 @media (max-width: 900px) {
-  /* MOBILE: drop the sticky-stage internal scroll entirely. The
-     section now flows in normal page scroll — no pinning, no rAF
-     translate, no edge masks. The honeycomb shows in place and the
-     user gets one continuous page scroll past it. */
-  .brands {
-    min-height: auto;
-    height: auto;
-    padding: 2rem 0 2rem;
-  }
-  .brands-stage {
-    position: static;
-    height: auto;
-    overflow: visible;
-  }
-  .brands-edge {
-    /* Fade strips were only meaningful inside the sticky stage. */
-    display: none;
-  }
+  /* Long runway = each pixel of finger scroll moves the honeycomb
+     LESS (smaller per-pixel motion = slower visual feel) without any
+     lerp/inertia. SMOOTH = 1 in Clients.jsx means motion is exactly
+     1:1 with scroll position — when finger lifts, motion stops
+     immediately. Reach is pulled up by ~55svh below to cover the
+     post-sticky empty area. */
+  .brands { min-height: 170svh; }
+  .brands-stage { height: 100svh; }
+  .brands-edge { height: clamp(50px, 8svh, 100px); }
   .brands-head {
-    position: relative;
-    top: auto;
-    left: auto;
-    right: auto;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem 1.25rem;
+    top: clamp(1.25rem, 3.5vw, 2.25rem);
   }
-  .brands-honeycomb {
-    position: relative;
-    top: auto;
-    left: auto;
-    right: auto;
-    transform: none !important;
-    padding: 0.5rem;
-    gap: 0.95rem;
-    will-change: auto;
-  }
+  .brands-honeycomb { padding: 1rem; gap: 0.95rem; }
   .brands-honeycomb-row { gap: 0.95rem; }
-  /* rAF was driving --orb-scale per frame on desktop. With the rAF
-     skipped on mobile (Clients.jsx early-return), force every orb to
-     full size + opacity so they read normally in flow. */
   .brand-orb {
     --orb-size: clamp(96px, 20vw, 138px);
-    --orb-scale: 1 !important;
-    --orb-op: 1 !important;
     transition: opacity 0.18s linear;
   }
   .brand-orb-inner { padding: 16%; }
@@ -247,12 +218,11 @@
 }
 
 @media (max-width: 480px) {
-  .brands { padding: 1.5rem 0 1.5rem; }
+  .brands { min-height: 160svh; }
   .brands-honeycomb { gap: 0.65rem; padding: 0.5rem; }
   .brands-honeycomb-row { gap: 0.7rem; }
-  .brand-orb {
-    --orb-size: clamp(80px, 22vw, 110px);
-  }
+  .brands-edge { height: clamp(40px, 7svh, 80px); }
+  .brand-orb { --orb-size: clamp(80px, 22vw, 110px); }
   .brand-orb-inner { padding: 18%; }
 }
 

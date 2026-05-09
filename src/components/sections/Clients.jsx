@@ -102,19 +102,15 @@ export default function Clients() {
     isMobile ? ROW_PATTERN_MOBILE : ROW_PATTERN_DESKTOP
   );
 
-  // Internal scroll + Apple-Watch fish-eye.
-  // The section is taller than the viewport. Inside it sits a sticky
-  // "stage" that locks to the viewport while the user scrolls through
-  // the section's runway. During that runway the honeycomb translates
-  // from below the stage to above it, so logos visibly drift up through
-  // the gradient-masked screen — the watchOS launcher feel without any
-  // GSAP scroll-jacking.
-  // MOBILE: skip this entirely. The CSS at ≤900px (.brands-stage
-  // becomes static, .brands-honeycomb becomes relative) lets the
-  // honeycomb scroll naturally with the page, so the user gets one
-  // continuous page scroll instead of an internal sticky-stage scroll.
+  // Apple-Watch fish-eye.
+  // Desktop: sticky "stage" + honeycomb translate via rAF.
+  // Mobile:  no sticky stage / no internal scroll — the honeycomb
+  //          flows in normal page scroll, but the rAF still drives
+  //          per-orb scale so each orb grows as it passes through
+  //          the viewport centre (the watchOS lift effect, just
+  //          synced to natural page scroll instead of an internal
+  //          runway).
   useEffect(() => {
-    if (isMobile) return;
     const root = rootRef.current;
     if (!root) return;
 
@@ -126,13 +122,13 @@ export default function Clients() {
     let raf = 0;
     let inView = false;
 
-    /* Smoothed (lerp'd) values so per-frame writes don't snap to the
-       new target. Lower factor = more lag = smoother motion.
-       0.035 ≈ ~28 frames (~470ms) to converge — very heavy inertia,
-       slow drifty feel even on quick flicks.
-       Desktop uses no lerp (factor 1) so the existing scrub feel
-       stays unchanged there. */
-    const SMOOTH = isMobile ? 0.035 : 1;
+    /* No lerp on mobile — every frame writes the exact target. The
+       previous lerp made the honeycomb keep drifting for ~½ second
+       after the user's finger lifted, which read as "scrolling on
+       its own". Setting SMOOTH = 1 binds motion 1:1 to scroll
+       position; the longer runway in CSS keeps per-pixel motion
+       small enough that it doesn't feel jumpy. */
+    const SMOOTH = 1;
     let smoothOffset = null;
     const orbScale = new WeakMap();
     const orbOp = new WeakMap();
@@ -142,7 +138,9 @@ export default function Clients() {
       const stageRect = stage.getBoundingClientRect();
       const stageH = stageRect.height || vh;
       const centre = stageRect.top + stageH / 2;
-      const range = stageH * 0.55;
+      const range  = stageH * 0.55;
+      const cullTop    = stageRect.top - 200;
+      const cullBottom = stageRect.bottom + 200;
       const rootRect = root.getBoundingClientRect();
 
       // Progress through the sticky runway: 0 when the section's top
@@ -153,11 +151,11 @@ export default function Clients() {
       const p = Math.max(0, Math.min(1, scrolled / runway));
 
       const honeyH = honey.scrollHeight;
-      // Mobile lifted from 0.4 → 0.25 so the honeycomb starts higher
-      // in the stage, removing the big empty band between the
-      // brands-head text and the first row of orbs.
-      const startY = stageH * (isMobile ? 0.25 : 0.3);
-      const endY = -honeyH + stageH * (isMobile ? 0.65 : 0.7);
+      // Mobile pushes endY to 0.95 so honey's bottom reaches near the
+      // stage bottom at p=1 (last row visible just inside the bottom
+      // mask). Desktop stays at 0.7.
+      const startY = stageH * 0.3;
+      const endY = -honeyH + stageH * (isMobile ? 0.95 : 0.7);
       const targetOffset = startY + p * (endY - startY);
       if (smoothOffset === null) smoothOffset = targetOffset;
       smoothOffset += (targetOffset - smoothOffset) * SMOOTH;
@@ -165,16 +163,16 @@ export default function Clients() {
 
       // Mobile narrows the fish-eye scale curve so per-frame visual
       // change is less dramatic — feels less "snappy" during scroll.
-      const minScale = isMobile ? 0.7  : 0.55;
-      const maxScale = isMobile ? 1.0  : 1.1;
-      const minOp    = isMobile ? 0.55 : 0.35;
-      const maxOp    = isMobile ? 1.0  : 1.0;
+      const minScale = isMobile ? 0.65 : 0.55;
+      const maxScale = isMobile ? 1.05 : 1.1;
+      const minOp    = isMobile ? 0.5  : 0.35;
+      const maxOp    = 1.0;
 
       for (const orb of orbs) {
         const rect = orb.getBoundingClientRect();
-        if (rect.bottom < stageRect.top - 200 || rect.top > stageRect.bottom + 200) {
+        if (rect.bottom < cullTop || rect.top > cullBottom) {
           orb.style.setProperty("--orb-scale", String(minScale));
-          orb.style.setProperty("--orb-op", "0.25");
+          orb.style.setProperty("--orb-op", String(minOp));
           orbScale.delete(orb);
           orbOp.delete(orb);
           continue;

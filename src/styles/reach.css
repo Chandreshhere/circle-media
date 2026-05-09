@@ -226,11 +226,11 @@
    variant. === */
 
 @media (max-width: 900px) {
-  /* Brands now flows in normal page scroll on mobile (no sticky stage,
-     no empty bottom runway), so the big negative margin is no longer
-     needed — restore a small negative pull just to remove a bit of
-     gap between the last orb row and Reach. */
-  .reach { padding: 0 1.25rem 3rem; margin-top: -1.5rem; }
+  /* Pull Reach up by ~58svh to absorb the post-sticky empty area of
+     brands (brands min-height = 170svh, stage = 100svh ⇒ 70svh of
+     runway, of which ~12svh is occupied by the still-visible last
+     orbs at scroll end and ~58svh is empty section bg below). */
+  .reach { padding: 0 1.25rem 3rem; margin-top: -58svh; }
   .reach-inner { padding-left: clamp(0.5rem, 2vw, 1.25rem); }
 
   .reach-head { margin-bottom: 1.5rem; max-width: 100%; }
@@ -268,7 +268,7 @@
 }
 
 @media (max-width: 480px) {
-  .reach { padding: 0 1rem 2.5rem; margin-top: -1.25rem; }
+  .reach { padding: 0 1rem 2.5rem; margin-top: -50svh; }
   .reach-inner { padding-left: clamp(0.25rem, 1.5vw, 0.75rem); }
 
   .reach-title { font-size: clamp(1.15rem, 5.5vw, 1.5rem); }
