@@ -193,13 +193,11 @@
 /* === Responsive === */
 
 @media (max-width: 900px) {
-  /* Long runway = each pixel of finger scroll moves the honeycomb
-     LESS (smaller per-pixel motion = slower visual feel) without any
-     lerp/inertia. SMOOTH = 1 in Clients.jsx means motion is exactly
-     1:1 with scroll position — when finger lifts, motion stops
-     immediately. Reach is pulled up by ~55svh below to cover the
-     post-sticky empty area. */
-  .brands { min-height: 170svh; }
+  /* Moderate runway. Speed control is shared between runway length
+     (longer = slower per scroll pixel) and a tiny lerp in Clients.jsx
+     (~50ms smoothing, imperceptible delay) that prevents per-frame
+     stepping from feeling jumpy. */
+  .brands { min-height: 150svh; }
   .brands-stage { height: 100svh; }
   .brands-edge { height: clamp(50px, 8svh, 100px); }
   .brands-head {
@@ -218,7 +216,7 @@
 }
 
 @media (max-width: 480px) {
-  .brands { min-height: 160svh; }
+  .brands { min-height: 142svh; }
   .brands-honeycomb { gap: 0.65rem; padding: 0.5rem; }
   .brands-honeycomb-row { gap: 0.7rem; }
   .brands-edge { height: clamp(40px, 7svh, 80px); }

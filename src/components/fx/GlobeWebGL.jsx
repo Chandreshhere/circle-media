@@ -332,8 +332,16 @@ export default function GlobeWebGL() {
     window.addEventListener("resize", onResize);
 
     // ---- Animation loop ----
+    /* PERF: pause the loop when the canvas is off-screen. The globe
+       used to spin its rAF (Three.js render + halo pulse + matrix
+       updates) every frame regardless of where the user was on the
+       page — a constant CPU/GPU drain that contributed to the rest
+       of the page jittering on mobile. IntersectionObserver gates
+       the rAF so it only ticks while in view, with a 200px margin so
+       the scene is rendered before the user actually sees it. */
     let raf;
     let t = 0;
+    let inView = false;
     const animate = () => {
       t += 1;
 
@@ -360,11 +368,29 @@ export default function GlobeWebGL() {
       });
 
       renderer.render(scene, camera);
-      raf = requestAnimationFrame(animate);
+      if (inView) raf = requestAnimationFrame(animate);
     };
-    animate();
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        const wasInView = inView;
+        inView = entry.isIntersecting;
+        if (inView && !wasInView) {
+          raf = requestAnimationFrame(animate);
+        } else if (!inView && wasInView) {
+          cancelAnimationFrame(raf);
+        }
+      },
+      { rootMargin: "200px 0px" }
+    );
+    io.observe(mount);
+    // Initial render (one frame) so the globe is painted immediately
+    // when first scrolled into view, even before the IO callback fires.
+    renderer.render(scene, camera);
 
     return () => {
+      io.disconnect();
+      inView = false;
       cancelAnimationFrame(raf);
       mount.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointermove", onPointerMove);

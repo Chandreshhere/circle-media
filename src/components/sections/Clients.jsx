@@ -122,13 +122,14 @@ export default function Clients() {
     let raf = 0;
     let inView = false;
 
-    /* No lerp on mobile — every frame writes the exact target. The
-       previous lerp made the honeycomb keep drifting for ~½ second
-       after the user's finger lifted, which read as "scrolling on
-       its own". Setting SMOOTH = 1 binds motion 1:1 to scroll
-       position; the longer runway in CSS keeps per-pixel motion
-       small enough that it doesn't feel jumpy. */
-    const SMOOTH = 1;
+    /* Light lerp on mobile (0.45) — the iOS native scroll fires
+       between rAF frames irregularly, which without ANY smoothing
+       reads as "jumpy". 0.45 ≈ ~3 frames (~50ms) to converge:
+       imperceptible delay (the eye doesn't notice <80ms lag), but
+       enough smoothing to glue per-frame writes together so motion
+       reads as continuous instead of stepped.
+       Desktop: full 1:1 (no lerp), unchanged. */
+    const SMOOTH = isMobile ? 0.45 : 1;
     let smoothOffset = null;
     const orbScale = new WeakMap();
     const orbOp = new WeakMap();

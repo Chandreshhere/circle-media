@@ -103,14 +103,26 @@ export default function ShaderBackground({
     };
     window.addEventListener("mousemove", onMove);
 
+    /* PERF: pause render loop when off-screen. */
     let id;
+    let inView = false;
     const t0 = performance.now();
     const tick = () => {
       uniforms.uTime.value = (performance.now() - t0) / 1000;
       renderer.render(scene, camera);
-      id = requestAnimationFrame(tick);
+      if (inView) id = requestAnimationFrame(tick);
     };
-    id = requestAnimationFrame(tick);
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        const wasInView = inView;
+        inView = entry.isIntersecting;
+        if (inView && !wasInView) id = requestAnimationFrame(tick);
+        else if (!inView && wasInView) cancelAnimationFrame(id);
+      },
+      { rootMargin: "200px 0px" }
+    );
+    io.observe(el);
+    renderer.render(scene, camera);
 
     const onResize = () => {
       const rw = el.clientWidth || window.innerWidth;
@@ -121,6 +133,8 @@ export default function ShaderBackground({
     window.addEventListener("resize", onResize);
 
     return () => {
+      io.disconnect();
+      inView = false;
       cancelAnimationFrame(id);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("resize", onResize);

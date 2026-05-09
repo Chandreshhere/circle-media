@@ -97,19 +97,39 @@ export default function WavyImage({
       setSize();
     });
 
+    /* PERF: pause the WebGL render loop when the canvas is off-screen.
+       WavyImage is used in multiple places on the About page; each
+       instance was running its own rAF + Three.js render every frame
+       even when miles off-screen, summing to a large continuous CPU
+       drain that made the rest of the page jitter on mobile. */
     let raf;
+    let inView = false;
     const start = performance.now();
     const tick = () => {
       material.uniforms.uTime.value = (performance.now() - start) / 1000;
       renderer.render(scene, camera);
-      raf = requestAnimationFrame(tick);
+      if (inView) raf = requestAnimationFrame(tick);
     };
-    tick();
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        const wasInView = inView;
+        inView = entry.isIntersecting;
+        if (inView && !wasInView) raf = requestAnimationFrame(tick);
+        else if (!inView && wasInView) cancelAnimationFrame(raf);
+      },
+      { rootMargin: "150px 0px" }
+    );
+    io.observe(container);
+    // Initial render so the first paint is correct before IO callback.
+    renderer.render(scene, camera);
 
     const ro = new ResizeObserver(() => setSize());
     ro.observe(container);
 
     return () => {
+      io.disconnect();
+      inView = false;
       cancelAnimationFrame(raf);
       ro.disconnect();
       renderer.dispose();
