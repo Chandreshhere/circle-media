@@ -123,14 +123,12 @@ export default function Clients() {
     let inView = false;
 
     /* Smoothed (lerp'd) values so per-frame writes don't snap to the
-       new target. On mobile the runway is short, which means each px
-       of scroll translates the honeycomb a lot — writing the raw
-       target every frame produces a jumpy/sensitive feel. Lerping
-       toward the target adds a touch of motion lag (~5 frames to
-       converge) which the eye reads as smooth scroll.
+       new target. Lower factor = more lag = smoother motion.
+       0.035 ≈ ~28 frames (~470ms) to converge — very heavy inertia,
+       slow drifty feel even on quick flicks.
        Desktop uses no lerp (factor 1) so the existing scrub feel
        stays unchanged there. */
-    const SMOOTH = isMobile ? 0.18 : 1;
+    const SMOOTH = isMobile ? 0.035 : 1;
     let smoothOffset = null;
     const orbScale = new WeakMap();
     const orbOp = new WeakMap();
@@ -151,8 +149,11 @@ export default function Clients() {
       const p = Math.max(0, Math.min(1, scrolled / runway));
 
       const honeyH = honey.scrollHeight;
-      const startY = stageH * (isMobile ? 0.4 : 0.3);
-      const endY = -honeyH + stageH * (isMobile ? 0.8 : 0.7);
+      // Mobile lifted from 0.4 → 0.25 so the honeycomb starts higher
+      // in the stage, removing the big empty band between the
+      // brands-head text and the first row of orbs.
+      const startY = stageH * (isMobile ? 0.25 : 0.3);
+      const endY = -honeyH + stageH * (isMobile ? 0.65 : 0.7);
       const targetOffset = startY + p * (endY - startY);
       if (smoothOffset === null) smoothOffset = targetOffset;
       smoothOffset += (targetOffset - smoothOffset) * SMOOTH;

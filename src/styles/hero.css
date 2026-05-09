@@ -54,6 +54,25 @@
   background: var(--bg);
 }
 
+/* Static fallback logo behind the WebGL canvas. Visible only when WebGL
+   fails / hasn't painted yet — the canvas overlays it once particles
+   render. Fits inside the column with the same proportions the WebGL
+   uses (~72-78% target fill). */
+.hero-split-particles-fallback {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 72%;
+  height: 72%;
+  max-width: 72%;
+  max-height: 72%;
+  object-fit: contain;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
 /* Soft right-edge fade so the canvas dissolves into the copy column
    instead of presenting a hard seam. */
 .hero-split-particles::after {

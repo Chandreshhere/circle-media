@@ -135,6 +135,19 @@ export default function Hero() {
   return (
     <section className="hero-split">
       <div className="hero-split-particles" aria-hidden="true">
+        {/* Static fallback logo behind the WebGL canvas. If WebGL fails
+            (older phones, low-power mode, GPU blacklist) or the canvas
+            is slow to render its first frame on a slow connection, the
+            user still sees the logo instead of a blank dark box. The
+            WebGL canvas covers it once particles paint. */}
+        <img
+          className="hero-split-particles-fallback"
+          src="/newlogo.png"
+          alt=""
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
         <DynamicBackground logoPath="/newlogo.png" bgColor="#050506" />
       </div>
 

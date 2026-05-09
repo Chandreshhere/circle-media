@@ -226,7 +226,7 @@
 @media (max-width: 900px) {
   /* Mobile: let the puzzle overflow past the section's bottom edge as an
      overlay onto whatever section follows, instead of being clipped. */
-  .process { padding: 1.5rem 1.25rem 1.25rem; overflow: visible; }
+  .process { padding: 1.5rem 1.25rem 5rem; overflow: visible; }
   .process .process-head {
     flex-direction: column;
     align-items: flex-start;
@@ -255,7 +255,7 @@
   .process .process-puzzle {
     position: absolute;
     top: clamp(7.5rem, 19vw, 12rem);
-    right: clamp(-1rem, -1vw, 0.25rem);
+    right: clamp(3rem, 7vw, 5rem);
     left: auto;
     width: clamp(120px, 27vw, 170px);
     height: clamp(120px, 27vw, 170px);
@@ -281,7 +281,7 @@
 }
 
 @media (max-width: 480px) {
-  .process { padding: 1rem 1rem 1rem; }
+  .process { padding: 1rem 1rem 8rem; }
   .process-step { padding: 1.4rem 0.85rem; min-height: 200px; gap: 0.85rem; }
   .process-step h3 { font-size: 1.05rem; }
   .process-step p { font-size: 0.78rem; line-height: 1.45; }
@@ -291,7 +291,7 @@
     width: clamp(95px, 28vw, 130px);
     height: clamp(95px, 28vw, 130px);
     top: clamp(11rem, 30vw, 16rem);
-    right: clamp(-1rem, -1.5vw, 0);
+    right: clamp(2.5rem, 6vw, 4rem);
     margin: 0;
     transform: scale(0.9);
     transform-origin: center top;

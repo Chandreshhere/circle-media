@@ -159,7 +159,12 @@ const DynamicBackground = ({ logoPath = "/newlogo.png", bgColor = "#050506" }) =
 
     const loadLogo = () => {
       const image = new Image();
-      image.crossOrigin = "anonymous";
+      /* No crossOrigin attribute for same-origin images. On iOS Safari,
+         requesting the same image with crossOrigin set produces a
+         different cache key from the preload <link> in index.html and
+         can fail outright on first load — visible as a blank black
+         hero instead of the particle logo. */
+      image.decoding = "async";
 
       image.onload = () => {
         if (isCleanedUpRef.current) return;

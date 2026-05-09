@@ -203,15 +203,16 @@
      up. Tuned to balance two concerns: too short a runway makes the
      honeycomb move too fast per pixel scrolled (jumpy feel); too long
      leaves visible empty stage AFTER the orbs have animated through. */
-  /* Section height is moderate; the smoothness comes mostly from the
-     lerp in the rAF loop (Clients.jsx) rather than from a long runway.
-     The bottom edge mask hides any visible empty stage at scroll end. */
-  .brands { min-height: 118svh; }
+  /* Smoothness comes from the lerp in Clients.jsx (SMOOTH = 0.05).
+     Keep min-height tight to avoid a big empty black zone after the
+     orbs at scroll end — Reach is also pulled up via -svh margin to
+     absorb any remaining gap. */
+  .brands { min-height: 115svh; }
   .brands-stage { height: 100svh; }
   .brands-head {
     flex-direction: column;
     gap: 0.5rem;
-    top: clamp(3rem, 7vw, 5rem);
+    top: clamp(1.25rem, 3.5vw, 2.25rem);
   }
   .brands-honeycomb { padding: 1rem; gap: 0.95rem; }
   .brands-honeycomb-row { gap: 0.95rem; }
@@ -229,19 +230,19 @@
      mobile; opacity fade is fine to keep. */
   .brand-orb { transition: opacity 0.18s linear; }
   .brand-orb {
-    --orb-size: clamp(104px, 22vw, 150px);
+    --orb-size: clamp(96px, 20vw, 138px);
   }
   .brand-orb-inner { padding: 16%; }
   .brand-orb:hover .brand-orb-inner { transform: scale(1.22); }
 }
 
 @media (max-width: 480px) {
-  .brands { min-height: 110svh; }
+  .brands { min-height: 108svh; }
   .brands-honeycomb { gap: 0.65rem; padding: 0.5rem; }
   .brands-honeycomb-row { gap: 0.7rem; }
   .brands-edge { height: clamp(100px, 30svh, 220px); }
   .brand-orb {
-    --orb-size: clamp(86px, 24vw, 120px);
+    --orb-size: clamp(80px, 22vw, 110px);
   }
   .brand-orb-inner { padding: 18%; }
 }
