@@ -300,24 +300,27 @@ export default function WhatWeDo() {
           stage.classList.add("is-locked");
           self.disable(false, false);
 
-          // Release the pin: section becomes a regular 100vh block in
-          // flow. Pin only existed during the cards-rising/spread phase;
-          // afterwards scroll-up and scroll-down are both normal.
+          // Release the pin so the section becomes a regular 100vh
+          // block in flow — afterwards scroll-up and scroll-down are
+          // both normal (no long re-traversal of the pin).
           //
-          // On mobile/touch this kill+snap+refresh sequence races with
-          // ScrollTrigger.normalizeScroll() (installed in App.jsx for
-          // touch devices), and the snap fails — the visible result is
-          // the page leaping straight to the footer the moment the
-          // spread completes. Leaving the pin alive on mobile keeps
-          // scroll continuity (the pin auto-releases at its `end` and
-          // flow continues normally into the next section).
+          // On touch devices the previous version of this routine
+          // raced with ScrollTrigger.normalizeScroll() (installed in
+          // App.jsx for touch) and the post-kill scroll snap failed,
+          // leaving the user dropped near the footer. Fix: disable
+          // the normalizer for the duration of kill + scrollTo +
+          // refresh, then re-enable it. With the normalizer paused
+          // the scroll snap actually takes effect and the section
+          // collapses cleanly into a regular 100vh block.
           const isTouch =
             typeof window !== "undefined" &&
             (window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
               window.innerWidth <= 900);
-          if (isTouch) return;
 
           const sectionStart = pinTrigger.start;
+          const normalizer = isTouch ? ScrollTrigger.normalizeScroll() : null;
+          if (normalizer) normalizer.disable();
+
           pinTrigger.kill();
 
           const lenis = getLenis();
@@ -327,6 +330,12 @@ export default function WhatWeDo() {
             window.scrollTo(0, sectionStart);
           }
           ScrollTrigger.refresh();
+
+          if (normalizer) {
+            // Re-enable on the next frame so the scroll position has
+            // settled before the normalizer takes back control.
+            requestAnimationFrame(() => normalizer.enable());
+          }
         },
       },
     });

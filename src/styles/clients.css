@@ -193,55 +193,21 @@
 /* === Responsive === */
 
 @media (max-width: 900px) {
-  /* MOBILE: NO sticky stage. The honeycomb is just a regular block
-     that scrolls past with the page. Orbs only move as much as the
-     page scrolls — no internal-runway translation, no iOS momentum
-     "carrying on" the animation after the finger lifts. The watchOS
-     lift is preserved via per-orb fish-eye scaling driven by each
-     orb's distance to the viewport centre (Clients.jsx). */
-  .brands {
-    min-height: auto;
-    padding: 1.5rem 0 1.5rem;
-  }
-  .brands-stage {
-    position: static;
-    height: auto;
-    overflow: visible;
-  }
-  /* Edge gradient strips are sticky to viewport top/bottom while the
-     section is on screen — preserves the watchOS edge fade without a
-     sticky stage. */
-  .brands-edge {
-    position: sticky;
-    height: clamp(50px, 8svh, 100px);
-  }
-  .brands-edge-top {
-    top: 0;
-    margin-bottom: calc(-1 * clamp(50px, 8svh, 100px));
-  }
-  .brands-edge-bottom {
-    bottom: 0;
-    margin-top: calc(-1 * clamp(50px, 8svh, 100px));
-  }
+  /* Sticky-stage internal scroll restored. The runway is intentionally
+     LONG (180svh after the 100svh stage = total 280svh section) so
+     that each pixel of scroll moves the honeycomb only a tiny amount
+     — even iOS momentum scroll only nudges the orbs slowly. No lerp
+     in Clients.jsx (SMOOTH = 1) so motion stops the moment the page
+     scroll stops, no inertia drift. */
+  .brands { min-height: 280svh; }
+  .brands-stage { height: 100svh; }
+  .brands-edge { height: clamp(50px, 8svh, 100px); }
   .brands-head {
-    position: relative;
-    top: auto;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem 1rem;
+    top: clamp(1.25rem, 3.5vw, 2.25rem);
   }
-  .brands-honeycomb {
-    position: relative;
-    top: auto;
-    left: auto;
-    right: auto;
-    transform: none !important;
-    padding: 0.5rem;
-    gap: 0.95rem;
-    will-change: auto;
-  }
+  .brands-honeycomb { padding: 1rem; gap: 0.95rem; }
   .brands-honeycomb-row { gap: 0.95rem; }
   .brand-orb {
     --orb-size: clamp(96px, 20vw, 138px);
@@ -252,12 +218,10 @@
 }
 
 @media (max-width: 480px) {
-  .brands { padding: 1.25rem 0 1.25rem; }
+  .brands { min-height: 250svh; }
   .brands-honeycomb { gap: 0.65rem; padding: 0.5rem; }
   .brands-honeycomb-row { gap: 0.7rem; }
   .brands-edge { height: clamp(40px, 7svh, 80px); }
-  .brands-edge-top { margin-bottom: calc(-1 * clamp(40px, 7svh, 80px)); }
-  .brands-edge-bottom { margin-top: calc(-1 * clamp(40px, 7svh, 80px)); }
   .brand-orb { --orb-size: clamp(80px, 22vw, 110px); }
   .brand-orb-inner { padding: 18%; }
 }

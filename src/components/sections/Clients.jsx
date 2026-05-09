@@ -122,14 +122,12 @@ export default function Clients() {
     let raf = 0;
     let inView = false;
 
-    /* Light lerp on mobile (0.45) — the iOS native scroll fires
-       between rAF frames irregularly, which without ANY smoothing
-       reads as "jumpy". 0.45 ≈ ~3 frames (~50ms) to converge:
-       imperceptible delay (the eye doesn't notice <80ms lag), but
-       enough smoothing to glue per-frame writes together so motion
-       reads as continuous instead of stepped.
-       Desktop: full 1:1 (no lerp), unchanged. */
-    const SMOOTH = isMobile ? 0.45 : 1;
+    /* No lerp — every frame writes the exact target. Motion is
+       bound 1:1 to scroll position. When the page scroll stops
+       (finger lifts AND iOS momentum fades), the orbs stop
+       immediately. The long runway in CSS keeps per-pixel motion
+       small so motion is naturally slow. */
+    const SMOOTH = 1;
     let smoothOffset = null;
     const orbScale = new WeakMap();
     const orbOp = new WeakMap();
@@ -138,32 +136,26 @@ export default function Clients() {
       const vh = window.innerHeight;
       const stageRect = stage.getBoundingClientRect();
       const stageH = stageRect.height || vh;
+      const centre = stageRect.top + stageH / 2;
+      const range  = stageH * 0.55;
+      const cullTop    = stageRect.top - 200;
+      const cullBottom = stageRect.bottom + 200;
+      const rootRect = root.getBoundingClientRect();
 
-      /* Mobile uses VIEWPORT centre — section is in normal flow so
-         each orb scales as it physically passes through the screen
-         middle (watchOS lift). Desktop uses the sticky stage centre. */
-      const centre = isMobile ? vh / 2 : stageRect.top + stageH / 2;
-      const range  = isMobile ? vh * 0.55 : stageH * 0.55;
-      const cullTop    = isMobile ? -200 : stageRect.top - 200;
-      const cullBottom = isMobile ? vh + 200 : stageRect.bottom + 200;
+      // Progress through the sticky runway: 0 when the section's top
+      // first hits the viewport top, 1 when its bottom has reached
+      // the bottom of the sticky stage.
+      const runway = Math.max(1, rootRect.height - stageH);
+      const scrolled = -rootRect.top;
+      const p = Math.max(0, Math.min(1, scrolled / runway));
 
-      /* Honey translate is desktop-only. On mobile, honey is in
-         normal flow and shouldn't translate (otherwise iOS scroll
-         momentum keeps moving it after the finger lifts — the
-         "moving on its own" feeling). */
-      if (!isMobile) {
-        const rootRect = root.getBoundingClientRect();
-        const runway = Math.max(1, rootRect.height - stageH);
-        const scrolled = -rootRect.top;
-        const p = Math.max(0, Math.min(1, scrolled / runway));
-        const honeyH = honey.scrollHeight;
-        const startY = stageH * 0.3;
-        const endY = -honeyH + stageH * 0.7;
-        const targetOffset = startY + p * (endY - startY);
-        if (smoothOffset === null) smoothOffset = targetOffset;
-        smoothOffset += (targetOffset - smoothOffset) * SMOOTH;
-        honey.style.transform = `translate3d(0, ${smoothOffset.toFixed(1)}px, 0)`;
-      }
+      const honeyH = honey.scrollHeight;
+      const startY = stageH * 0.3;
+      const endY = -honeyH + stageH * (isMobile ? 0.95 : 0.7);
+      const targetOffset = startY + p * (endY - startY);
+      if (smoothOffset === null) smoothOffset = targetOffset;
+      smoothOffset += (targetOffset - smoothOffset) * SMOOTH;
+      honey.style.transform = `translate3d(0, ${smoothOffset.toFixed(1)}px, 0)`;
 
       // Mobile narrows the fish-eye scale curve so per-frame visual
       // change is less dramatic — feels less "snappy" during scroll.
