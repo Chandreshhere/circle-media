@@ -108,9 +108,13 @@ export default function Clients() {
   // the section's runway. During that runway the honeycomb translates
   // from below the stage to above it, so logos visibly drift up through
   // the gradient-masked screen — the watchOS launcher feel without any
-  // GSAP scroll-jacking. Per-orb scale is driven by each orb's distance
-  // from the viewport centre. The rAF loop only runs while in view.
+  // GSAP scroll-jacking.
+  // MOBILE: skip this entirely. The CSS at ≤900px (.brands-stage
+  // becomes static, .brands-honeycomb becomes relative) lets the
+  // honeycomb scroll naturally with the page, so the user gets one
+  // continuous page scroll instead of an internal sticky-stage scroll.
   useEffect(() => {
+    if (isMobile) return;
     const root = rootRef.current;
     if (!root) return;
 

@@ -304,11 +304,19 @@ export default function WhatWeDo() {
           // flow. Pin only existed during the cards-rising/spread phase;
           // afterwards scroll-up and scroll-down are both normal.
           //
-          // Snap scrollY to the section's natural top so the visible
-          // content stays the same (cards still at viewport top, in the
-          // spread layout) — the pinSpacer is collapsing under us, and
-          // without this snap the page would either jump forward into
-          // post-Services content or get clamped to the new doc end.
+          // On mobile/touch this kill+snap+refresh sequence races with
+          // ScrollTrigger.normalizeScroll() (installed in App.jsx for
+          // touch devices), and the snap fails — the visible result is
+          // the page leaping straight to the footer the moment the
+          // spread completes. Leaving the pin alive on mobile keeps
+          // scroll continuity (the pin auto-releases at its `end` and
+          // flow continues normally into the next section).
+          const isTouch =
+            typeof window !== "undefined" &&
+            (window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+              window.innerWidth <= 900);
+          if (isTouch) return;
+
           const sectionStart = pinTrigger.start;
           pinTrigger.kill();
 

@@ -193,54 +193,63 @@
 /* === Responsive === */
 
 @media (max-width: 900px) {
-  /* svh (small viewport height) is locked to the URL-bar-visible state —
-     it does NOT grow when iOS Safari hides its address bar mid-scroll.
-     vh, by contrast, jumps every time the bar shows/hides, which made
-     the sticky stage resize during scroll and the rAF math snap to new
-     bounds. Using svh here removes that mobile layout shift.
-     Section is intentionally TALLER than the 100svh sticky stage — the
-     difference is the sticky runway during which the honeycomb slides
-     up. Tuned to balance two concerns: too short a runway makes the
-     honeycomb move too fast per pixel scrolled (jumpy feel); too long
-     leaves visible empty stage AFTER the orbs have animated through. */
-  /* Smoothness comes from the lerp in Clients.jsx (SMOOTH = 0.05).
-     Keep min-height tight to avoid a big empty black zone after the
-     orbs at scroll end — Reach is also pulled up via -svh margin to
-     absorb any remaining gap. */
-  .brands { min-height: 115svh; }
-  .brands-stage { height: 100svh; }
-  .brands-head {
-    flex-direction: column;
-    gap: 0.5rem;
-    top: clamp(1.25rem, 3.5vw, 2.25rem);
+  /* MOBILE: drop the sticky-stage internal scroll entirely. The
+     section now flows in normal page scroll — no pinning, no rAF
+     translate, no edge masks. The honeycomb shows in place and the
+     user gets one continuous page scroll past it. */
+  .brands {
+    min-height: auto;
+    height: auto;
+    padding: 2rem 0 2rem;
   }
-  .brands-honeycomb { padding: 1rem; gap: 0.95rem; }
+  .brands-stage {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+  .brands-edge {
+    /* Fade strips were only meaningful inside the sticky stage. */
+    display: none;
+  }
+  .brands-head {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem 1.25rem;
+  }
+  .brands-honeycomb {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    transform: none !important;
+    padding: 0.5rem;
+    gap: 0.95rem;
+    will-change: auto;
+  }
   .brands-honeycomb-row { gap: 0.95rem; }
-  /* On mobile the honeycomb's last row stops about 30% above the stage
-     bottom (so it stays inside the fish-eye scale curve and reads at
-     full size). Without a tall mask, that ~30% strip below the last
-     row reads as a hard black void. The bottom mask is therefore
-     sized to cover that empty zone with a smooth fade. The top edge
-     uses the same height for symmetry — at p=0 there's a similar
-     empty strip ABOVE the first row that the top mask hides. */
-  .brands-edge { height: clamp(120px, 30svh, 260px); }
-  /* The rAF loop already rewrites --orb-scale every frame; the 0.05s
-     transition was meant to smooth desktop jitter but on mobile it lags
-     behind and produces visible stutter. Drop it for transform on
-     mobile; opacity fade is fine to keep. */
-  .brand-orb { transition: opacity 0.18s linear; }
+  /* rAF was driving --orb-scale per frame on desktop. With the rAF
+     skipped on mobile (Clients.jsx early-return), force every orb to
+     full size + opacity so they read normally in flow. */
   .brand-orb {
     --orb-size: clamp(96px, 20vw, 138px);
+    --orb-scale: 1 !important;
+    --orb-op: 1 !important;
+    transition: opacity 0.18s linear;
   }
   .brand-orb-inner { padding: 16%; }
   .brand-orb:hover .brand-orb-inner { transform: scale(1.22); }
 }
 
 @media (max-width: 480px) {
-  .brands { min-height: 108svh; }
+  .brands { padding: 1.5rem 0 1.5rem; }
   .brands-honeycomb { gap: 0.65rem; padding: 0.5rem; }
   .brands-honeycomb-row { gap: 0.7rem; }
-  .brands-edge { height: clamp(100px, 30svh, 220px); }
   .brand-orb {
     --orb-size: clamp(80px, 22vw, 110px);
   }
