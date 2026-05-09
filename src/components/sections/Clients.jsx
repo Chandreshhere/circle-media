@@ -136,26 +136,33 @@ export default function Clients() {
       const vh = window.innerHeight;
       const stageRect = stage.getBoundingClientRect();
       const stageH = stageRect.height || vh;
-      const centre = stageRect.top + stageH / 2;
-      const range  = stageH * 0.55;
-      const cullTop    = stageRect.top - 200;
-      const cullBottom = stageRect.bottom + 200;
-      const rootRect = root.getBoundingClientRect();
 
-      // Progress through the sticky runway: 0 when the section's top
-      // first hits the viewport top, 1 when its bottom has reached
-      // the bottom of the sticky stage.
-      const runway = Math.max(1, rootRect.height - stageH);
-      const scrolled = -rootRect.top;
-      const p = Math.max(0, Math.min(1, scrolled / runway));
+      /* Mobile uses VIEWPORT centre (section flows in normal scroll,
+         no sticky stage). Each orb scales as it physically passes
+         through the middle of the screen. Desktop uses sticky-stage
+         centre (existing behaviour). */
+      const centre = isMobile ? vh / 2 : stageRect.top + stageH / 2;
+      const range  = isMobile ? vh * 0.55 : stageH * 0.55;
+      const cullTop    = isMobile ? -200 : stageRect.top - 200;
+      const cullBottom = isMobile ? vh + 200 : stageRect.bottom + 200;
 
-      const honeyH = honey.scrollHeight;
-      const startY = stageH * 0.3;
-      const endY = -honeyH + stageH * (isMobile ? 0.95 : 0.7);
-      const targetOffset = startY + p * (endY - startY);
-      if (smoothOffset === null) smoothOffset = targetOffset;
-      smoothOffset += (targetOffset - smoothOffset) * SMOOTH;
-      honey.style.transform = `translate3d(0, ${smoothOffset.toFixed(1)}px, 0)`;
+      /* Honey translate is desktop-only. On mobile the honeycomb is
+         a regular block in flow — it scrolls up with the page, which
+         is exactly what the user wants: small finger scroll = small
+         movement, no momentum-driven internal animation. */
+      if (!isMobile) {
+        const rootRect = root.getBoundingClientRect();
+        const runway = Math.max(1, rootRect.height - stageH);
+        const scrolled = -rootRect.top;
+        const p = Math.max(0, Math.min(1, scrolled / runway));
+        const honeyH = honey.scrollHeight;
+        const startY = stageH * 0.3;
+        const endY = -honeyH + stageH * 0.7;
+        const targetOffset = startY + p * (endY - startY);
+        if (smoothOffset === null) smoothOffset = targetOffset;
+        smoothOffset += (targetOffset - smoothOffset) * SMOOTH;
+        honey.style.transform = `translate3d(0, ${smoothOffset.toFixed(1)}px, 0)`;
+      }
 
       // Mobile narrows the fish-eye scale curve so per-frame visual
       // change is less dramatic — feels less "snappy" during scroll.

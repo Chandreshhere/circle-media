@@ -226,9 +226,9 @@
    variant. === */
 
 @media (max-width: 900px) {
-  /* Brands flows in normal page scroll on mobile (no sticky stage,
-     no empty runway), so just a small overlap to remove the seam. */
-  .reach { padding: 0 1.25rem 3rem; margin-top: -1.5rem; }
+  /* Brands has no sticky stage / no empty runway on mobile, so
+     just a tiny overlap to remove the seam between sections. */
+  .reach { padding: 0 1.25rem 3rem; margin-top: -1rem; }
   .reach-inner { padding-left: clamp(0.5rem, 2vw, 1.25rem); }
 
   .reach-head { margin-bottom: 1.5rem; max-width: 100%; }
@@ -266,7 +266,7 @@
 }
 
 @media (max-width: 480px) {
-  .reach { padding: 0 1rem 2.5rem; margin-top: -1.25rem; }
+  .reach { padding: 0 1rem 2.5rem; margin-top: -1rem; }
   .reach-inner { padding-left: clamp(0.25rem, 1.5vw, 0.75rem); }
 
   .reach-title { font-size: clamp(1.15rem, 5.5vw, 1.5rem); }
