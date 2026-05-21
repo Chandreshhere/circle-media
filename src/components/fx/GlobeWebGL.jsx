@@ -56,6 +56,13 @@ export default function GlobeWebGL() {
 
     let { w, h } = getSize();
 
+    /* Mobile profile — phones can't carry the same dot/arc weight as
+       desktop without dropping frames, so every density-related
+       constant downgrades below this width. Decided at init (not
+       per-frame) so the geometry can be sized correctly when the
+       buffer is first uploaded. */
+    const isMobile = typeof window !== "undefined" && window.innerWidth <= 820;
+
     const scene = new THREE.Scene();
     // Wider vertical FOV + slightly further camera so the lifted flight
     // arcs (mid-points pushed out to ~2.2× the planet radius) sit fully
@@ -71,7 +78,13 @@ export default function GlobeWebGL() {
       powerPreference: "high-performance",
     });
     renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    /* Mobile pixel ratio is capped lower than desktop — most phones
+       run at DPR 3 which means rendering 9× the pixels for the same
+       physical canvas. The dotted globe doesn't benefit from that
+       resolution, so 1.5 is the sweet spot for sharpness vs. fps. */
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2)
+    );
     mount.appendChild(renderer.domElement);
 
     // Container group — drag rotation applies to this so pins spin with the
@@ -177,13 +190,15 @@ export default function GlobeWebGL() {
     const dotPositions = [];
     const dotColors = [];
 
-    // --- Pass A: white base grid (28 lat bands × ~9 lon-per-radian). ---
-    const N_LAT = 28;
+    // --- Pass A: dense white base grid. 48 × 16 on desktop, halved
+    // on mobile so the upload + per-frame draw stays cheap. */
+    const N_LAT = isMobile ? 30 : 48;
+    const LON_MUL = isMobile ? 10 : 16;
     for (let i = 1; i < N_LAT; i++) {
       const lat = -90 + (180 * i) / N_LAT;
       const numLon = Math.max(
-        4,
-        Math.round(2 * Math.PI * Math.cos((lat * Math.PI) / 180) * 9)
+        6,
+        Math.round(2 * Math.PI * Math.cos((lat * Math.PI) / 180) * LON_MUL)
       );
       for (let j = 0; j < numLon; j++) {
         const lon = -180 + (360 * j) / numLon;
@@ -194,8 +209,10 @@ export default function GlobeWebGL() {
       }
     }
 
-    // --- Pass B: red accent points scattered evenly. ---
-    const ACCENT_COUNT = 240;
+    // --- Pass B: red accent points via Fibonacci sampling. Mobile
+    // gets ~half the count — still reads as a full red layer because
+    // the connection arcs above carry most of the "red" weight. ---
+    const ACCENT_COUNT = isMobile ? 280 : 600;
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
     for (let n = 0; n < ACCENT_COUNT; n++) {
       const y = 1 - (n / (ACCENT_COUNT - 1)) * 2; // -1..1
@@ -221,7 +238,7 @@ export default function GlobeWebGL() {
       dotsGeo,
       new THREE.PointsMaterial({
         vertexColors: true,
-        size: 0.035,
+        size: 0.028,
         sizeAttenuation: true,
         transparent: true,
         opacity: 0.85,
@@ -375,39 +392,36 @@ export default function GlobeWebGL() {
       arcRefs.push(arc);
     };
 
-    // PRIMARY: full mesh between all real (non-decorative) pins —
-    // every arc renders red to match the unified colour system.
+    // FULL MESH: every red pin (real + decorative) connects to every
+    // other red pin with a lifted arc. 11 pins → C(11,2) = 55 arcs
+    // covering every quadrant of the globe. Real-pin pairs get the
+    // brightest opacity + highest lift so the India / Dubai / US /
+    // Canada network still reads as the headline layer; arcs that
+    // include a decorative pin sit slightly softer underneath.
+    //
+    // Mobile: the same network topology is preserved (every pin still
+    // links to every other pin), but the curve segment count is
+    // dropped from 64/44 → 28/20 so we upload <40% of the vertices
+    // to the GPU. The arcs still read as smooth bezier curves at
+    // canvas-display size — extra segments only matter when zoomed.
+    const PRIMARY_SEG  = isMobile ? 28 : 64;
+    const SECONDARY_SEG = isMobile ? 20 : 44;
     const realPins = pinObjs.filter((p) => !p.decorative);
-    for (let i = 0; i < realPins.length; i++) {
-      for (let j = i + 1; j < realPins.length; j++) {
-        buildArc(realPins[i].basePos, realPins[j].basePos, {
+    const realSet = new Set(realPins);
+    for (let i = 0; i < pinObjs.length; i++) {
+      for (let j = i + 1; j < pinObjs.length; j++) {
+        const a = pinObjs[i];
+        const b = pinObjs[j];
+        const bothReal = realSet.has(a) && realSet.has(b);
+        buildArc(a.basePos, b.basePos, {
           color: PIN_RED,
-          opacity: 0.92,
-          lift: 1.55,
-          liftBoost: 0.7,
-          segments: 64,
+          opacity: bothReal ? 0.92 : 0.55,
+          lift: bothReal ? 1.55 : 1.32,
+          liftBoost: bothReal ? 0.7 : 0.5,
+          segments: bothReal ? PRIMARY_SEG : SECONDARY_SEG,
         });
       }
     }
-
-    // SECONDARY: every decorative pin → nearest real pin. Same red
-    // as the primary arcs, just lower opacity + flatter trajectory
-    // so they read as quieter feeder lines.
-    pinObjs.filter((p) => p.decorative).forEach((dec) => {
-      let nearest = realPins[0];
-      let bestD = Infinity;
-      for (const r of realPins) {
-        const d = dec.basePos.distanceTo(r.basePos);
-        if (d < bestD) { bestD = d; nearest = r; }
-      }
-      buildArc(dec.basePos, nearest.basePos, {
-        color: PIN_RED,
-        opacity: 0.55,
-        lift: 1.25,
-        liftBoost: 0.4,
-        segments: 40,
-      });
-    });
 
     // ---- Interaction: drag rotates the group, idle spin always present ----
     let isDragging = false;

@@ -38,7 +38,7 @@
   text-transform: none;
   font-size: clamp(1.8rem, 3.8vw, 3.8rem);
   line-height: 1.2;
-  letter-spacing: -0.015em;
+  letter-spacing: 0em;
   text-align: left;
 
   background-image: linear-gradient(

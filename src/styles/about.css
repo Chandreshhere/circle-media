@@ -57,7 +57,7 @@
 
 .about-stamp {
   font-size: 0.8rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.21em;
   text-transform: uppercase;
   opacity: 0.6;
   font-variant-numeric: tabular-nums;
@@ -108,12 +108,17 @@
 
 .about-title {
   position: absolute;
-  top: 20vh;
+  /* Was top:20vh — at 110%+ browser zoom the reported viewport height
+     shrinks and the title pulled close enough to the top that the
+     body paragraph below collided with it. Clamping adds a rem
+     floor (10rem ≈ 160px minimum offset) so the gap survives any
+     zoom level. */
+  top: clamp(10rem, 20vh, 24rem);
   left: 4vw;
   max-width: min(60vw, 16ch);
   font-size: clamp(2.8rem, 7.5vw, 7.5rem);
   line-height: 0.95;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   margin: 0;
   font-weight: 700;
   font-style: normal;
@@ -123,7 +128,10 @@
 
 .about-body {
   position: absolute;
-  bottom: 14vh;
+  /* Same protection as .about-title — clamp the bottom offset with a
+     rem floor (7rem ≈ 112px) so the body can't climb into the title
+     at high browser zoom. */
+  bottom: clamp(7rem, 14vh, 18rem);
   left: 4vw;
   max-width: 42ch;
   /* Bumped from clamp(1.05rem, 1.2vw, 1.2rem) so the "Specializing
@@ -152,7 +160,7 @@
 
 .about-stat-k {
   font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.23em;
   text-transform: uppercase;
   opacity: 0.55;
   font-weight: 500;
@@ -161,7 +169,7 @@
 
 .about-stat-v {
   font-size: clamp(3rem, 6.5vw, 6.5rem);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.005em;
   line-height: 0.95;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
@@ -237,7 +245,7 @@
   font-size: clamp(4rem, 8vw, 8rem);
   font-weight: 700;
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
   font-variant-numeric: tabular-nums;
   color: var(--text);
   font-style: normal;
@@ -267,7 +275,7 @@
 
 .reveal-stat-k {
   font-size: 0.95rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.21em;
   text-transform: uppercase;
   color: var(--text-dim);
   font-weight: 500;
@@ -275,11 +283,13 @@
   max-width: 22ch;
 }
 
-/* Random scatter — irregular positions, no symmetry */
-.reveal-stat-1 { top: 28vh;   left: 7vw; }
-.reveal-stat-2 { top: 24vh;   right: 9vw; }
-.reveal-stat-3 { bottom: 14vh; left: 14vw; }
-.reveal-stat-4 { bottom: 10vh; right: 6vw; }
+/* Random scatter — irregular positions, no symmetry. clamp() on
+   every vertical offset adds a rem floor so the four stat blocks
+   can't climb into each other at high browser zoom. */
+.reveal-stat-1 { top:    clamp(12rem, 28vh, 36rem); left: 7vw;  }
+.reveal-stat-2 { top:    clamp(10rem, 24vh, 32rem); right: 9vw; }
+.reveal-stat-3 { bottom: clamp(7rem,  14vh, 20rem); left: 14vw; }
+.reveal-stat-4 { bottom: clamp(5rem,  10vh, 16rem); right: 6vw; }
 
 .reveal-stat-1 .reveal-stat-v { color: var(--c-blue); }
 .reveal-stat-1 .reveal-stat-v sup { color: var(--c-blue); }
@@ -338,7 +348,7 @@
   font-family: var(--font-display);
   font-weight: 700;
   font-style: normal;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
   text-transform: uppercase;
   line-height: 0.85;
   color: rgba(255, 255, 255, 0.05);
@@ -366,7 +376,7 @@
 
 .process-float-num {
   font-size: 0.75rem;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.27em;
   text-transform: uppercase;
   opacity: 0.55;
   font-variant-numeric: tabular-nums;
@@ -375,7 +385,12 @@
 }
 
 .process-float-img {
-  width: 100%;
+  /* Was 100% of the card width — the wavy icon was as wide as the
+     title underneath which looked image-heavy. 60% (with a max
+     cap) shrinks the icon to roughly two-thirds of the card width
+     so the title + body copy carry more visual weight. */
+  width: 60%;
+  max-width: 14rem;
 }
 
 .process-float-img .wavy-image {
@@ -403,7 +418,7 @@
   font-weight: 700;
   font-style: normal;
   line-height: 1.05;
-  letter-spacing: -0.015em;
+  letter-spacing: 0em;
   margin: 0;
   text-transform: none;
 }
@@ -421,41 +436,52 @@
   margin: 0;
   max-width: 36ch;
   text-transform: none;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.08em;
   font-weight: 400;
   color: var(--text);
 }
 
 /* Scattered placements — irregular positions, no tilt.
-   High cards anchor from top, low cards anchor from bottom so they
-   never clip regardless of viewport height. All four cards were
-   lifted ~4vh on this pass — the bigger title/body type was sitting
-   too close to the bottom edge, and the scene reads better when
-   the cards float higher inside the pinned panel. */
+   High cards anchor from top, low cards anchor from bottom. All
+   vertical offsets use clamp(rem, vh, rem) so the rem floor keeps
+   neighbours apart at high browser zoom; the vh middle keeps the
+   "scattered" feel at normal zoom; the rem cap stops cards drifting
+   too far on tall monitors. */
+/* All four cards lifted ~6vh on this pass — was sitting too low in
+   the pinned panel, now floats higher so the "Process" ghost word
+   reads behind them and the section has clear bottom margin. */
 .process-float-1 {
-  top: 8vh;
+  top: clamp(2rem, 4vh, 8rem);
   left: -2vw;
   width: clamp(20rem, 24vw, 26rem);
 }
 
+/* Drop just the Research icon a touch — the rest of the card
+   (title + body) stays anchored at the top of the float, but the
+   image sits ~4vh lower so it doesn't sit flush against the
+   panel's top edge. */
+.process-float-1 .process-float-img {
+  transform: translateY(4vh);
+}
+
 .process-float-2 {
-  bottom: 10vh;
+  bottom: clamp(10rem, 18vh, 22rem);
   left: 26vw;
   width: clamp(20rem, 24vw, 26rem);
 }
 
 .process-float-2 .process-float-img {
-  transform: translateY(11vh);
+  transform: translateY(8vh);
 }
 
 .process-float-3 {
-  top: 4vh;
+  top: clamp(0.5rem, 1vh, 4rem);
   left: 54vw;
   width: clamp(20rem, 24vw, 26rem);
 }
 
 .process-float-4 {
-  bottom: 14vh;
+  bottom: clamp(12rem, 22vh, 26rem);
   left: 82vw;
   width: clamp(20rem, 24vw, 26rem);
 }
@@ -472,12 +498,12 @@
 @media (max-width: 900px) {
   .about-panel-process { flex-basis: 230vw; }
   .process-float { width: 52vw; }
-  /* Lifted each card ~4vh so the bigger title/body text has clear
-     vertical room and the scene reads higher up the pinned panel. */
-  .process-float-1 { top: 6vh;     left: 5vw;   }
-  .process-float-2 { top: auto; bottom: 12vh; left: 60vw;  }
-  .process-float-3 { top: 4vh;     left: 115vw; }
-  .process-float-4 { top: auto; bottom: 12vh; left: 165vw; }
+  /* Lifted each card ~4vh more this pass so they sit higher on the
+     pinned panel and the smaller icons + bigger titles have room. */
+  .process-float-1 { top: 2vh;     left: 5vw;   }
+  .process-float-2 { top: auto; bottom: 18vh; left: 60vw;  }
+  .process-float-3 { top: 1vh;     left: 115vw; }
+  .process-float-4 { top: auto; bottom: 18vh; left: 165vw; }
   .process-ghost-a { font-size: 44vw; top: 35vh; left: 40vw; }
 }
 
@@ -494,7 +520,9 @@
 .about-quote-stack {
   --quote-width: 100%;
   position: absolute;
-  top: 10vh;
+  /* Floor at 6rem so the heading never sits flush against the top
+     edge of the panel at high browser zoom. */
+  top: clamp(6rem, 10vh, 14rem);
   left: 4vw;
   display: flex;
   flex-direction: column;
@@ -522,7 +550,7 @@
   font-weight: 700;
   font-style: normal;
   text-transform: none;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.01em;
   line-height: 0.9;
   will-change: background-position;
 
@@ -544,7 +572,9 @@
 
 .quote-sub-wrap {
   position: absolute;
-  bottom: 12vh;
+  /* Floor at 6rem keeps the cycler comfortably above the panel's
+     bottom edge at any zoom level. */
+  bottom: clamp(6rem, 12vh, 16rem);
   /* Aligned to the right side of the panel — was left:4vw which
      stacked the cycling line directly under the rainbow heading.
      Now it sits on the right so the panel reads as heading-left +
@@ -566,7 +596,7 @@
   opacity: 0.85;
   margin: 0;
   text-transform: none;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   font-weight: 500;
   font-style: normal;
   line-height: 1.45;
@@ -631,7 +661,7 @@
 .about-banner-caption h3 {
   font-size: clamp(1.75rem, 3vw, 3rem);
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
   margin: 0;
 }
 
@@ -646,7 +676,7 @@
   .about-stat-clients { bottom: 22vh; left: 78vw; }
   .about-stat-focus   { top: 10vh;    left: 100vw; }
   .about-stat-v { font-size: clamp(2.4rem, 12vw, 4rem); }
-  .about-stat-k { font-size: 0.62rem; letter-spacing: 0.2em; }
+  .about-stat-k { font-size: 0.62rem; letter-spacing: 0.21em; }
   .about-banner-stack { height: 32vh; }
 
   /* Bumped from clamp(2.4rem, 12vw, 4rem) — was capping at ~64px
@@ -666,12 +696,12 @@
     line-height: 1.5;
     text-align: right;
   }
-  .about-stamp { font-size: 0.7rem; letter-spacing: 0.16em; }
+  .about-stamp { font-size: 0.7rem; letter-spacing: 0.17em; }
 
   .reveal-stat { width: 46vw; gap: 0.5rem; }
   .reveal-stat-v { font-size: clamp(2.6rem, 14vw, 4.2rem); }
-  .reveal-stat-k { font-size: 0.74rem; letter-spacing: 0.16em; max-width: 18ch; }
-  .reveal-stats-kicker { font-size: 0.72rem; letter-spacing: 0.2em; left: 5vw; }
+  .reveal-stat-k { font-size: 0.74rem; letter-spacing: 0.17em; max-width: 18ch; }
+  .reveal-stats-kicker { font-size: 0.72rem; letter-spacing: 0.21em; left: 5vw; }
 
   .process-float figcaption h3 { font-size: 1.5rem; }
   .process-float figcaption p {
@@ -679,7 +709,7 @@
     line-height: 1.45;
     opacity: 0.95;
   }
-  .process-float-num { font-size: 0.66rem; letter-spacing: 0.22em; }
+  .process-float-num { font-size: 0.66rem; letter-spacing: 0.23em; }
 
   /* Slightly larger heading and caption on very small phones too. */
   .quote-line { font-size: clamp(2.8rem, 18vw, 5.5rem); }

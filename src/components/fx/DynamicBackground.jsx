@@ -215,6 +215,14 @@ const DynamicBackground = ({ logoPath = "/newlogo.png", bgColor = "#050506" }) =
       const validColors = [];
       const gap = CONFIG.particleGap;
 
+      // Gentle brightness lift, no saturation boost — back to the
+      // logo's original look with just a touch more glow than the
+      // source PNG. SAT=1.0 is identity (keeps original chroma);
+      // BRI=1.05 lifts overall brightness ~5%.
+      const SAT = 1.0;
+      const BRI = 1.05;
+      const boost = (c, gray) => Math.min(1, (gray + (c - gray) * SAT) * BRI);
+
       for (let i = 0; i < h; i += gap) {
         for (let j = 0; j < w; j += gap) {
           const pixelIndex = (i * w + j) * 4;
@@ -225,10 +233,14 @@ const DynamicBackground = ({ logoPath = "/newlogo.png", bgColor = "#050506" }) =
             const y = i;
 
             validPositions.push(x, y);
+            const r = pixels[pixelIndex] / 255;
+            const g = pixels[pixelIndex + 1] / 255;
+            const b = pixels[pixelIndex + 2] / 255;
+            const gray = 0.299 * r + 0.587 * g + 0.114 * b;
             validColors.push(
-              pixels[pixelIndex] / 255,
-              pixels[pixelIndex + 1] / 255,
-              pixels[pixelIndex + 2] / 255,
+              Math.min(1, boost(r, gray)),
+              Math.min(1, boost(g, gray)),
+              Math.min(1, boost(b, gray)),
               pixels[pixelIndex + 3] / 255
             );
 
@@ -474,8 +486,27 @@ const DynamicBackground = ({ logoPath = "/newlogo.png", bgColor = "#050506" }) =
       resizeObs.observe(parent);
     }
 
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("touchmove", handleTouchMove, { passive: true });
+    /* Mouse + touch distortion handlers — re-enabled, but bound to
+       the canvas's PARENT container instead of `document`. Before:
+       any cursor movement anywhere on the page was firing the
+       distortion (particles got pulled even when the cursor was
+       far from the logo). Now: the wavy effect only triggers when
+       the cursor is over the hero particle column. The canvas
+       itself has pointer-events:none so we listen on the parent.
+       mouseLeave/touchEnd both park the mouse far offscreen so
+       in-flight particle inertia winds back to origin instead of
+       staying drawn toward the last cursor position. */
+    mouseRef.current.x = -100000;
+    mouseRef.current.y = -100000;
+    const interactionHost = canvas.parentElement || canvas;
+    const parkMouse = () => {
+      mouseRef.current.x = -100000;
+      mouseRef.current.y = -100000;
+    };
+    interactionHost.addEventListener("mousemove", handleMouseMove);
+    interactionHost.addEventListener("mouseleave", parkMouse);
+    interactionHost.addEventListener("touchmove", handleTouchMove, { passive: true });
+    interactionHost.addEventListener("touchend", parkMouse);
     window.addEventListener("resize", handleResize);
 
     loadLogo();
@@ -493,8 +524,15 @@ const DynamicBackground = ({ logoPath = "/newlogo.png", bgColor = "#050506" }) =
         animationFrameRef.current = null;
       }
 
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("touchmove", handleTouchMove);
+      /* Listeners are bound to the canvas's parent (interactionHost
+         in the registration block). Remove them by reference so
+         we don't leak listeners on hot-reload / route change. */
+      if (interactionHost) {
+        interactionHost.removeEventListener("mousemove", handleMouseMove);
+        interactionHost.removeEventListener("mouseleave", parkMouse);
+        interactionHost.removeEventListener("touchmove", handleTouchMove);
+        interactionHost.removeEventListener("touchend", parkMouse);
+      }
       window.removeEventListener("resize", handleResize);
 
       if (gl && !gl.isContextLost()) {

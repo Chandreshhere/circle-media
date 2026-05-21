@@ -12,7 +12,7 @@ const ACTS = [
 const SOCIALS = [
   { k: "IG", label: "Instagram", handle: "@marketingbycircle", href: "https://www.instagram.com/marketingbycircle/" },
   { k: "IN", label: "LinkedIn",  handle: "marketingbycircle",  href: "https://www.linkedin.com/company/marketingbycircle/" },
-  { k: "WA", label: "WhatsApp",  handle: "+91 94259 58589",    href: "https://wa.me/919425958589" },
+  { k: "WA", label: "WhatsApp",  handle: "+91 88899 77666",    href: "https://wa.me/918889977666" },
 ];
 
 export default function ContactPage() {
@@ -187,8 +187,8 @@ export default function ContactPage() {
               </div>
               <div className="cw-direct-block">
                 <p className="cw-direct-k">Phone</p>
-                <a className="cw-direct-v" href="tel:+919425958589">
-                  +91 94259 58589
+                <a className="cw-direct-v" href="tel:+918889977666">
+                  +91 88899 77666
                 </a>
               </div>
               <div className="cw-direct-block">

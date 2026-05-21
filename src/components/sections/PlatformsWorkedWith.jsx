@@ -15,15 +15,18 @@ const PLATFORMS = [
        "Verified Partner" badge — the real Amazon-issued artwork —
        shown inside the modal where there's enough room for it to read
        at full size. */
-    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
-    modalLogo: "/assets/socials/amazon-ads-verified.png",
+    /* User-supplied partner badge dropped at
+       public/assets/socials/amazon-partner.png (from ~/Desktop/logos/).
+       Used both on the home card and inside the modal. */
+    logo: "/assets/socials/amazon-partner.png",
+    modalLogo: "/assets/socials/amazon-partner.png",
     role: "Verified Advertising Partner",
-    blurb: "Sponsored Products, Brands and DSP — tuned for ROAS.",
+    blurb: "Sponsored Products, Brands and DSP, tuned for ROAS.",
     accent: "var(--c-yellow)",
     accentRgb: "255, 197, 92",
     modal: {
       headline: "Built to scale on Amazon.",
-      lead: "We run the full Amazon Ads stack as a verified partner — Sponsored Products, Brands, Display and DSP — tuned around ROAS, ACOS and new-to-brand growth.",
+      lead: "We run the full Amazon Ads stack as a verified partner, Sponsored Products, Brands, Display and DSP, tuned around ROAS, ACOS and new-to-brand growth.",
       stats: [
         { v: "7.2x", k: "Average ROAS",            note: "Across managed Sponsored Products accounts" },
         { v: "13%",  k: "Median ACOS",             note: "Down from 28% category baseline" },
@@ -44,12 +47,13 @@ const PLATFORMS = [
   {
     id: "meta",
     name: "Meta Business Partner",
-    /* Clean Meta wordmark on the card; the real Meta-issued
-       "Business Partner" badge is shown only inside the modal. */
-    logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg",
-    modalLogo: "https://images.seeklogo.com/logo-png/46/1/meta-business-partner-logo-png_seeklogo-466474.png",
+    /* User-supplied partner badge dropped at
+       public/assets/socials/meta-partner.png (from ~/Desktop/logos/).
+       Used both on the home card and inside the modal. */
+    logo: "/assets/socials/meta-partner.png",
+    modalLogo: "/assets/socials/meta-partner.png",
     role: "Verified Creative Agency",
-    blurb: "Facebook, Instagram and Reels — full-funnel creative + media.",
+    blurb: "Facebook, Instagram and Reels, full-funnel creative + media.",
     accent: "var(--c-blue)",
     accentRgb: "96, 165, 250",
     modal: {
@@ -323,7 +327,7 @@ export default function PlatformsWorkedWith() {
             >
               <div className="pww-card-mark">
                 <img
-                  src={p.logo}
+                  src={p.modalLogo || p.logo}
                   alt={`${p.name} logo`}
                   loading="lazy"
                   decoding="async"
@@ -335,7 +339,6 @@ export default function PlatformsWorkedWith() {
                   <span className="pww-card-dot" />
                   {p.role}
                 </span>
-                <h3 className="pww-card-name">{p.name}</h3>
                 <p className="pww-card-blurb">{p.blurb}</p>
               </div>
 

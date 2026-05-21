@@ -62,7 +62,7 @@ const CARDS = [
     id: "02",
     title: "Social Media & Performance Marketing",
     color: "var(--c-mint)",
-    desc: "Content, community, and paid media run as one engine — daily presence on socials with campaigns built around CAC, ROAS and the funnel.",
+    desc: "Content, community, and paid media run as one engine, daily presence on socials with campaigns built around CAC, ROAS and the funnel.",
   },
   {
     id: "03",
@@ -187,7 +187,15 @@ export default function WhatWeDo() {
       });
     });
 
-    const stackPhases = cards.length;   // one rise per card
+    /* Per-card rise tuning. Card 1 is animated by a pre-pin
+       one-shot trigger (see further down) so it lands before the
+       pin engages. The remaining (cards.length - 1) cards rise
+       during the pinned timeline at RISE_STEP intervals each
+       lasting RISE_DUR units, so the in-pin stack phase covers
+       (cards.length - 1) × RISE_STEP units of scroll. */
+    const RISE_DUR = 0.4;
+    const RISE_STEP = 0.4;
+    const stackPhases = (cards.length - 1) * RISE_STEP;
     const spreadPhase = 1.5;            // pieces fan out
     const holdPhase   = 0.6;            // hold final layout
     const totalPhases = stackPhases + spreadPhase + holdPhase;
@@ -326,15 +334,42 @@ export default function WhatWeDo() {
       },
     });
 
+    /* Card 1 rises EARLIER — fires once via a non-scrubbed
+       scrollTrigger as the section enters the viewport (top 85%),
+       so by the time the user has scrolled far enough for the pin
+       to engage, card 1 is already on the stack. `once: true` +
+       `overwrite: "auto"` keeps the one-shot from fighting the
+       main pinned timeline (the previous attempt with `scrub: true`
+       kept reapplying card 1's rest position after the spread
+       phase, leaving the top-left puzzle slot empty). */
+    const firstCard = cards[0];
+    const firstRest = RESTING[0];
+    const card1Rise = gsap.to(firstCard, {
+      xPercent: -50 + firstRest.x,
+      yPercent: -50 + firstRest.y,
+      rotation: firstRest.rot,
+      duration: 0.75,
+      ease: "power3.out",
+      overwrite: "auto",
+      scrollTrigger: {
+        trigger: root,
+        start: "top 85%",
+        once: true,
+      },
+    });
+
     // Phase 1 — cards rise into the centre stack one by one.
+    // Card 1 has already been animated above (via the pre-pin
+    // one-shot), so the pinned timeline only animates cards 2-N.
     cards.forEach((card, i) => {
+      if (i === 0) return;
       const rest = RESTING[i];
       tl.to(card, {
         xPercent: -50 + rest.x,
         yPercent: -50 + rest.y,
         rotation: rest.rot,
-        duration: 1,
-      }, i);
+        duration: RISE_DUR,
+      }, (i - 1) * RISE_STEP);
     });
 
     // Phase 2 — once the last card has landed, the stack segregates and the
@@ -365,6 +400,9 @@ export default function WhatWeDo() {
     return () => {
       // pinTrigger may already be killed by onLeave; guard with a flag.
       try { pinTrigger.kill(); } catch { /* already killed */ }
+      // Pre-pin one-shot for card 1.
+      try { card1Rise.scrollTrigger?.kill(); } catch { /* already killed */ }
+      try { card1Rise.kill(); } catch { /* already killed */ }
       tl.scrollTrigger?.kill();
       tl.kill();
     };

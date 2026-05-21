@@ -1,7 +1,7 @@
 // 6 services — mirrors the home page WhatWeDo puzzle, so /services reads
-// with the same vocabulary as the home page. Each service also names the
-// platform / tech logo we run it on, rendered as a chip after the copy on
-// the Services page.
+// with the same vocabulary as the home page. Each service also lists the
+// platforms / tools we run it on, rendered as a logo grid on the
+// Services page.
 export const services = [
   {
     id: "01",
@@ -9,15 +9,46 @@ export const services = [
     tagline: "Identity systems and editorial calendars with one unmistakable voice.",
     image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=80",
     copy: "Identity systems and editorial calendars that turn your voice into a steady publishing rhythm across every channel, even when no one is watching.",
-    platform: { name: "Figma", logo: "https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg" }
+    platforms: [
+      { name: "Figma",         logo: "https://api.iconify.design/logos:figma.svg" },
+      { name: "Illustrator",   logo: "https://api.iconify.design/logos:adobe-illustrator.svg" },
+      { name: "Photoshop",     logo: "https://api.iconify.design/logos:adobe-photoshop.svg" },
+      { name: "Canva",         logo: "https://commons.wikimedia.org/wiki/Special:FilePath/Canva_logo.svg" },
+      { name: "InDesign",      logo: "https://api.iconify.design/logos:adobe-indesign.svg" },
+      { name: "Adobe XD",      logo: "https://api.iconify.design/logos:adobe-xd.svg" },
+      { name: "After Effects", logo: "https://api.iconify.design/logos:adobe-after-effects.svg" },
+      { name: "Sketch",        logo: "https://api.iconify.design/logos:sketch.svg" },
+      { name: "Behance",       logo: "https://api.iconify.design/logos:behance.svg" },
+      { name: "Dribbble",      logo: "https://api.iconify.design/logos:dribbble-icon.svg" },
+      { name: "Lightroom",     logo: "https://api.iconify.design/logos:adobe-lightroom.svg" },
+      { name: "Notion",        logo: "https://api.iconify.design/logos:notion-icon.svg" }
+    ]
   },
   {
     id: "02",
-    title: "Social Media & Performance Marketing",
+    title: "Social & Performance",
     tagline: "Content, community and paid media run as one engine: daily presence, accountable growth.",
     image: "https://images.unsplash.com/photo-1535303311164-664fc9ec6532?auto=format&fit=crop&w=900&q=80",
-    copy: "A daily social presence paired with paid media built around CAC, ROAS and the funnel — content, community and campaigns moving in the same direction. Always-on, accountable, engineered for compounding.",
-    platform: { name: "Meta Ads", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" }
+    copy: "A daily social presence paired with paid media built around CAC, ROAS and the funnel, content, community and campaigns moving in the same direction. Always-on, accountable, engineered for compounding.",
+    platforms: [
+      { name: "Instagram", logo: "https://api.iconify.design/logos:instagram-icon.svg" },
+      { name: "Facebook",  logo: "https://api.iconify.design/logos:facebook.svg" },
+      { name: "X",         logo: "https://api.iconify.design/logos:x.svg" },
+      { name: "LinkedIn",  logo: "https://api.iconify.design/logos:linkedin-icon.svg" },
+      { name: "YouTube",   logo: "https://api.iconify.design/logos:youtube-icon.svg" },
+      { name: "TikTok",    logo: "https://api.iconify.design/logos:tiktok-icon.svg" },
+      { name: "Snapchat",  logo: "https://commons.wikimedia.org/wiki/Special:FilePath/Snap_Inc._logo.svg" },
+      { name: "WhatsApp",  logo: "https://api.iconify.design/logos:whatsapp-icon.svg" },
+      { name: "Threads",   logo: "https://api.iconify.design/logos:threads-icon.svg" },
+      { name: "Pinterest", logo: "https://api.iconify.design/logos:pinterest.svg" },
+      { name: "Meta",      logo: "https://api.iconify.design/logos:meta-icon.svg" },
+      { name: "Reddit",    logo: "https://api.iconify.design/logos:reddit-icon.svg" },
+      { name: "Telegram",  logo: "https://api.iconify.design/logos:telegram.svg" },
+      { name: "Discord",   logo: "https://api.iconify.design/logos:discord-icon.svg" },
+      { name: "Twitch",    logo: "https://api.iconify.design/logos:twitch.svg" },
+      { name: "Mastodon",  logo: "https://api.iconify.design/logos:mastodon-icon.svg" },
+      { name: "Bluesky",   logo: "https://api.iconify.design/logos:bluesky.svg" }
+    ]
   },
   {
     id: "03",
@@ -25,7 +56,25 @@ export const services = [
     tagline: "Fast, accessible, considered websites that scale with the business.",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=900&q=80",
     copy: "Fast, accessible, considered websites, built to convert today and crafted to scale as your business grows. Design systems, headless stacks, performance budgets.",
-    platform: { name: "Shopify", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Shopify_logo_2018.svg" }
+    platforms: [
+      { name: "Shopify",     logo: "https://api.iconify.design/logos:shopify.svg" },
+      { name: "WordPress",   logo: "https://api.iconify.design/logos:wordpress-icon.svg" },
+      { name: "Webflow",     logo: "https://api.iconify.design/logos:webflow.svg" },
+      { name: "React",       logo: "https://api.iconify.design/logos:react.svg" },
+      { name: "Next.js",     logo: "https://api.iconify.design/logos:nextjs-icon.svg" },
+      { name: "Framer",      logo: "https://api.iconify.design/logos:framer.svg" },
+      { name: "Wix",         logo: "https://api.iconify.design/logos:wix.svg" },
+      { name: "Tailwind",    logo: "https://api.iconify.design/logos:tailwindcss-icon.svg" },
+      { name: "HTML5",       logo: "https://api.iconify.design/logos:html-5.svg" },
+      { name: "CSS3",        logo: "https://api.iconify.design/logos:css-3.svg" },
+      { name: "JavaScript",  logo: "https://api.iconify.design/logos:javascript.svg" },
+      { name: "TypeScript",  logo: "https://api.iconify.design/logos:typescript-icon.svg" },
+      { name: "GitHub",      logo: "https://api.iconify.design/logos:github-icon.svg" },
+      { name: "Vercel",      logo: "https://api.iconify.design/logos:vercel-icon.svg" },
+      { name: "Squarespace", logo: "https://api.iconify.design/logos:squarespace.svg" },
+      { name: "Astro",       logo: "https://api.iconify.design/logos:astro-icon.svg" },
+      { name: "Vite",        logo: "https://api.iconify.design/logos:vite.svg" }
+    ]
   },
   {
     id: "04",
@@ -33,7 +82,20 @@ export const services = [
     tagline: "Catalogue, copy and storefront tuning that lifts discoverability and lifetime value.",
     image: "https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=900&q=80",
     copy: "Catalogue copy, imagery, and storefront tuning that lifts discoverability, add-to-cart, and lifetime value across Amazon, Flipkart, Shopify and beyond.",
-    platform: { name: "Amazon", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" }
+    platforms: [
+      { name: "Amazon",    logo: "https://commons.wikimedia.org/wiki/Special:FilePath/Amazon_logo.svg" },
+      { name: "Flipkart",  logo: "https://commons.wikimedia.org/wiki/Special:FilePath/Flipkart_logo_(2026).svg" },
+      { name: "Myntra",    logo: "https://commons.wikimedia.org/wiki/Special:FilePath/65c5da9f878952603e370d03_Myntra-Logo_1.svg" },
+      { name: "Shopify",   logo: "https://api.iconify.design/logos:shopify.svg" },
+      { name: "Blinkit",   logo: "https://commons.wikimedia.org/wiki/Special:FilePath/Blinkit-yellow-app-icon.svg" },
+      { name: "Meesho",    logo: "https://commons.wikimedia.org/wiki/Special:FilePath/Meesho_logo.png" },
+      { name: "Nykaa",     logo: "https://commons.wikimedia.org/wiki/Special:FilePath/Nykaa_New_Logo.svg" },
+      { name: "Swiggy",    logo: "https://commons.wikimedia.org/wiki/Special:FilePath/Swiggy_logo.png" },
+      { name: "Zomato",    logo: "https://commons.wikimedia.org/wiki/Special:FilePath/Zomato_Logo.svg" },
+      { name: "Snapdeal",  logo: "https://commons.wikimedia.org/wiki/Special:FilePath/Snapdeal_New_Logo.svg" },
+      { name: "Mailchimp", logo: "https://api.iconify.design/logos:mailchimp.svg" },
+      { name: "HubSpot",   logo: "https://api.iconify.design/logos:hubspot.svg" }
+    ]
   },
   {
     id: "05",
@@ -41,15 +103,46 @@ export const services = [
     tagline: "Organic and paid search working as one engine: long game and short.",
     image: "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?auto=format&fit=crop&w=900&q=80",
     copy: "Organic visibility paired with paid search: the long game and the short game, working as one engine. Technical audits, topical authority and SERP-ready content.",
-    platform: { name: "Google Ads", logo: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Ads_logo.svg" }
+    platforms: [
+      { name: "Google Ads",     logo: "https://api.iconify.design/logos:google-ads.svg" },
+      { name: "Analytics",      logo: "https://api.iconify.design/logos:google-analytics.svg" },
+      { name: "Search Console", logo: "https://api.iconify.design/logos:google-search-console.svg" },
+      { name: "Google",         logo: "https://api.iconify.design/logos:google-icon.svg" },
+      { name: "Bing",           logo: "https://api.iconify.design/logos:bing.svg" },
+      { name: "SEMrush",        logo: "https://commons.wikimedia.org/wiki/Special:FilePath/Semrush_logo.svg" },
+      { name: "Ahrefs",         logo: "https://svgl.app/library/ahrefs.svg" },
+      { name: "Yoast",          logo: "https://api.iconify.design/simple-icons:yoast.svg?color=%23a4286a" },
+      { name: "Tag Manager",    logo: "https://api.iconify.design/logos:google-tag-manager.svg" },
+      { name: "Hotjar",         logo: "https://api.iconify.design/logos:hotjar.svg" },
+      { name: "Mixpanel",       logo: "https://api.iconify.design/logos:mixpanel.svg" },
+      { name: "HubSpot",        logo: "https://api.iconify.design/logos:hubspot.svg" },
+      { name: "Mailchimp",      logo: "https://api.iconify.design/logos:mailchimp.svg" }
+    ]
   },
   {
     id: "06",
     title: "Production Shoot",
     tagline: "On-location and studio shoots briefed to the channel, captured for performance.",
     image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=900&q=80",
-    copy: "Studio and on-location shoots — products, lifestyle, brand films — briefed to the channel, captured for the brief, and edited so every frame earns its place.",
-    platform: { name: "Adobe Premiere", logo: "https://upload.wikimedia.org/wikipedia/commons/f/f2/Adobe_Premiere_Pro_Logo.svg" }
+    copy: "Studio and on-location shoots, products, lifestyle, brand films, briefed to the channel, captured for the brief, and edited so every frame earns its place.",
+    platforms: [
+      { name: "Premiere Pro",    logo: "https://api.iconify.design/logos:adobe-premiere.svg" },
+      { name: "After Effects",   logo: "https://api.iconify.design/logos:adobe-after-effects.svg" },
+      { name: "DaVinci Resolve", logo: "https://commons.wikimedia.org/wiki/Special:FilePath/DaVinci_Resolve_17_logo.svg" },
+      { name: "Lightroom",       logo: "https://api.iconify.design/logos:adobe-lightroom.svg" },
+      { name: "Photoshop",       logo: "https://api.iconify.design/logos:adobe-photoshop.svg" },
+      { name: "YouTube",         logo: "https://api.iconify.design/logos:youtube-icon.svg" },
+      { name: "Vimeo",           logo: "https://api.iconify.design/logos:vimeo.svg" },
+      { name: "Reels",           logo: "https://api.iconify.design/logos:instagram-icon.svg" },
+      { name: "Movie Camera",    logo: "https://api.iconify.design/noto:movie-camera.svg" },
+      { name: "Clapper Board",   logo: "https://api.iconify.design/noto:clapper-board.svg" },
+      { name: "Film Reel",       logo: "https://api.iconify.design/noto:film-projector.svg" },
+      { name: "Film Frames",     logo: "https://api.iconify.design/noto:film-frames.svg" },
+      { name: "Camera",          logo: "https://api.iconify.design/noto:camera-with-flash.svg" },
+      { name: "Studio Mic",      logo: "https://api.iconify.design/noto:studio-microphone.svg" },
+      { name: "Television",      logo: "https://api.iconify.design/noto:television.svg" },
+      { name: "Tape",            logo: "https://api.iconify.design/noto:videocassette.svg" }
+    ]
   }
 ];
 
@@ -222,7 +315,7 @@ export const featuredBrands = [
     industry: "Healthcare",
     scope: ["Performance Marketing", "Website", "Content"],
     stat: { v: "−42%", k: "Lead CPA" },
-    note: "OPD lead engine — Meta + Google, with a new doctor-led content shelf.",
+    note: "OPD lead engine, Meta + Google, with a new doctor-led content shelf.",
     accent: "var(--c-blue)",
   },
   {
@@ -248,11 +341,14 @@ export const featuredBrands = [
 /* Headline numbers shown above the featured-brand grid on /brands.
    These summarise the agency's footprint across the full client list,
    not a single account. */
+/* Roster-level metrics shown on /brands. Numbers + labels are the
+   SAME canonical set used on the home Reveal stats and the About
+   page so the figure shows consistently everywhere on the site. */
 export const brandsStats = [
-  { v: "40",  sup: "+", k: "Brands served" },
-  { v: "12",  sup: "+", k: "Industries" },
-  { v: "800", sup: "+", k: "Campaigns shipped" },
-  { v: "6",   sup: "yr", k: "On retainer (avg.)" },
+  { v: "40",  sup: "+", k: "Clients Onboard" },
+  { v: "12",  sup: "+", k: "Industries Served" },
+  { v: "800", sup: "+", k: "Performance Campaigns" },
+  { v: "6",   sup: "+", k: "Years of Experience" },
 ];
 
 /* What industries the brands span — drives the small pill row on the
@@ -264,7 +360,7 @@ export const brandIndustries = [
 ];
 
 export const navLinks = [
-  { to: "/", label: "Index", num: "01" },
+  { to: "/", label: "Home", num: "01" },
   { to: "/services", label: "Services", num: "02" },
   { to: "/work", label: "Work", num: "03" },
   { to: "/brands", label: "Brands", num: "04" },

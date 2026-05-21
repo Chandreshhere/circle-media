@@ -68,7 +68,7 @@ export default function HandwriteText({
     <svg
       className={`hw-svg ${className}`.trim()}
       viewBox={viewBox}
-      preserveAspectRatio="xMinYMid meet"
+      preserveAspectRatio="xMidYMid meet"
       aria-hidden="true"
       {...rest}
     >

@@ -32,9 +32,13 @@ const PRINCIPLES = [
   },
 ];
 
+/* Canonical site-wide stat set — same order, same numbers, same
+   labels as the home Reveal stats and the /brands BrandsShowcase.
+   Was reordered to lead with "Clients Onboard" to match the rest
+   of the site. */
 const STATS = [
-  { v: "12",  suf: "+", k: "Industries Served" },
   { v: "40",  suf: "+", k: "Clients Onboard" },
+  { v: "12",  suf: "+", k: "Industries Served" },
   { v: "800", suf: "+", k: "Performance Campaigns" },
   { v: "6",   suf: "+", k: "Years of Experience" },
 ];
@@ -79,25 +83,12 @@ export default function AboutPage() {
         <section className="about-hero">
         <div className="about-hero-grid">
           <div className="about-hero-left">
-            <p className="about-hero-crumb">[04] Studio · Philosophy · People</p>
-            <h1 className="about-hero-title">
-              <span className="line">A studio for</span>
-              <span className="line">
-                <em className="about-hero-script">brands</em>
-              </span>
-              <span className="line">built to</span>
-              <span className="line">compound.</span>
-            </h1>
+            {/* Hero title removed per request. */}
           </div>
 
           <div className="about-hero-right">
-            <nav className="about-hero-nav">
-              <a href="/work">Work,</a>
-              <a href="/services">Services,</a>
-              <a className="is-active" href="/about">Studio,</a>
-              <a href="/contact">Create with us</a>
-            </nav>
-
+            {/* Mirrors the Brands hero — one BlurInText copy +
+                one mute "Scroll for…" cue. */}
             <BlurInText
               as="p"
               split="words"
@@ -110,17 +101,12 @@ export default function AboutPage() {
               operators, not account managers.
             </BlurInText>
 
-            <p className="about-hero-copy">
-              We do not pitch decks for a living. We pitch numbers, and then
-              we ship the work that moves them.
+            <p className="about-hero-copy about-hero-copy-mute">
+              Scroll for the philosophy.
             </p>
-
-            <p className="about-hero-scroll">[Scroll for the philosophy ↓]</p>
           </div>
         </div>
 
-        <div className="about-hero-shape about-hero-shape-1" aria-hidden="true" />
-        <div className="about-hero-shape about-hero-shape-2" aria-hidden="true" />
         <HandwriteText className="page-signature">Studio</HandwriteText>
       </section>
 

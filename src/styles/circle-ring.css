@@ -102,7 +102,7 @@
   pointer-events: none;
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 7vw, 6rem);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.005em;
   line-height: 1.05;
   color: var(--text);
   text-align: center;

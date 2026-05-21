@@ -34,12 +34,12 @@
   position: relative;
   width: 100vw;
   min-height: 100vh;
+  min-height: 100svh;
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: stretch;
   background: var(--bg);
   overflow: hidden;
-  isolation: isolate;
 }
 
 .hero-split-particles {
@@ -70,7 +70,11 @@
   object-fit: contain;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.95;
+  opacity: 1;
+  /* Reset the global `img { filter: saturate(0.9) ... }` so the
+     fallback paints with natural colours plus a small brightness
+     lift — back to the "just a little brighter" look. */
+  filter: saturate(1) brightness(1.05) contrast(1);
 }
 
 /* Soft right-edge fade so the canvas dissolves into the copy column
@@ -93,27 +97,37 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1.75rem;
-  padding: 6rem 5vw 4rem;
-  max-width: 44rem;
+  gap: clamp(0.9rem, 2.4vh, 1.75rem);
+  padding: clamp(2.5rem, 8vh, 6rem) clamp(1.25rem, 5vw, 4rem) clamp(2rem, 6vh, 4rem);
+  max-width: min(44rem, 100%);
+  /* min-width: 0 lets this column shrink inside the 1fr grid track
+     when the user zooms in — without it, long words (or just larger
+     zoomed text) push the column wider than its track and the copy
+     overlaps the particle logo on the left. */
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .hero-split-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.9rem;
+  gap: 0.9em;
   font-family: var(--font-body);
-  font-size: 0.85rem;
-  letter-spacing: 0.16em;
+  font-size: clamp(0.72rem, 0.9vw + 0.45rem, 0.95rem);
+  letter-spacing: 0.17em;
   text-transform: uppercase;
   color: var(--text-mute);
   font-variant-numeric: tabular-nums;
 }
 
+/* em-based sizing so the line scales with the eyebrow's font-size
+   under zoom and across breakpoints — no fixed px. */
 .hero-split-eyebrow-line {
   display: inline-block;
-  width: 56px;
-  height: 1px;
+  width: 4em;
+  height: 0.08em;
+  min-height: 1px;
   background: var(--border-strong);
 }
 
@@ -129,7 +143,7 @@
      monitors. */
   font-size: clamp(2.4rem, 3.4vw, 4.6rem);
   line-height: 1.05;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.01em;
   color: var(--text);
   text-wrap: balance;
 }
@@ -144,7 +158,7 @@
   font-family: inherit;
   font-weight: 400;
   line-height: 1.05;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.01em;
   color: var(--text);
   text-transform: none;
   text-wrap: balance;
@@ -165,13 +179,25 @@
   text-transform: none;
 }
 
+/* Desktop only — bump the FIRST prelude line ("Circle Media,") so
+   the brand name reads larger than the supporting "Your Growth
+   Partner for" line below it. Mobile keeps the inherited size so
+   both lines stay in lockstep on phones. */
+@media (min-width: 1001px) {
+  .hero-split-prelude-line:first-child {
+    font-size: clamp(3.8rem, 5.4vw, 7rem);
+    letter-spacing: -0.015em;
+    line-height: 1;
+  }
+}
+
 .hero-split-title-lead {
   display: block;
   font-size: 0.55em;
   font-family: inherit;
   font-weight: 400;
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
   color: var(--text-dim);
   text-transform: none;
   margin-top: 0.6em;
@@ -181,7 +207,7 @@
   display: block;
   color: var(--accent);
   font-style: normal;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
   /* Override globals.css `span { font-size: 0.9rem; ... }` so the accent
      word inherits the parent <h1>'s display sizing instead of shrinking. */
   font-size: inherit;
@@ -231,8 +257,8 @@
 }
 
 .hero-split-sub {
-  max-width: 34rem;
-  font-size: 1.05rem;
+  max-width: min(34rem, 100%);
+  font-size: clamp(0.95rem, 0.5vw + 0.85rem, 1.15rem);
   line-height: 1.55;
   color: var(--text-dim);
 }
@@ -251,7 +277,7 @@
   gap: 0.2rem;
   font-family: var(--font-body);
   font-size: 0.8rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--text-mute);
 }
@@ -260,15 +286,15 @@
   font-style: normal;
   font-family: var(--font-display);
   font-size: 1.6rem;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
   color: var(--text);
   text-transform: none;
 }
 
 .hero-split-scroll {
-  margin-top: 0.5rem;
-  font-size: 0.82rem;
-  letter-spacing: 0.2em;
+  margin-top: clamp(0.25rem, 1vh, 0.6rem);
+  font-size: clamp(0.7rem, 0.6vw + 0.55rem, 0.88rem);
+  letter-spacing: 0.21em;
   text-transform: uppercase;
   color: var(--text-mute);
 }
@@ -277,7 +303,7 @@
   .hero-split {
     grid-template-columns: 1fr;
     min-height: 100svh;
-    padding-top: 2.5rem;
+    padding-top: clamp(1.5rem, 4vh, 3rem);
   }
   .hero-split-particles {
     height: 55vh;
@@ -292,39 +318,50 @@
     );
   }
   .hero-split-content {
-    padding: 0 1.5rem 4.5rem;
-    margin-top: -3rem;
+    padding: 0 clamp(1rem, 4vw, 1.5rem) clamp(2.5rem, 6vh, 4.5rem);
+    margin-top: clamp(-3.5rem, -4vh, -2rem);
     max-width: none;
-    gap: 1.4rem;
+    gap: clamp(0.9rem, 2vh, 1.4rem);
   }
   .hero-split-title {
     font-size: clamp(3rem, 9vw, 5rem);
   }
   .hero-split-sub {
-    font-size: 1.1rem;
+    font-size: clamp(0.95rem, 0.6vw + 0.85rem, 1.15rem);
     max-width: 100%;
   }
   .hero-split-meta {
-    gap: 1.25rem 2rem;
+    gap: clamp(0.9rem, 2vh, 1.25rem) clamp(1.25rem, 4vw, 2rem);
   }
   .hero-split-meta-item em {
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 1.5vw + 0.6rem, 1.6rem);
   }
 }
 
 @media (max-width: 600px) {
-  .hero-split { padding-top: 1.5rem; }
+  .hero-split { padding-top: clamp(1rem, 3vh, 1.75rem); }
   .hero-split-particles { height: 48vh; height: 48svh; }
-  .hero-split-content { padding: 0 1.25rem 3.5rem; margin-top: -2.25rem; gap: 1.1rem; }
+  .hero-split-content {
+    padding: 0 clamp(0.9rem, 4vw, 1.25rem) clamp(2rem, 5vh, 3.5rem);
+    margin-top: clamp(-3rem, -3.5vh, -1.75rem);
+    gap: clamp(0.75rem, 1.6vh, 1.1rem);
+  }
   .hero-split-title { font-size: clamp(2.6rem, 11.5vw, 4rem); line-height: 1.05; }
-  .hero-split-sub { font-size: 1.1rem; line-height: 1.5; }
-  .hero-split-eyebrow { font-size: 0.78rem; gap: 0.6rem; letter-spacing: 0.14em; }
-  .hero-split-eyebrow-line { width: 36px; }
-  .hero-split-scroll { font-size: 0.78rem; letter-spacing: 0.18em; }
+  .hero-split-sub { font-size: clamp(0.95rem, 0.7vw + 0.85rem, 1.15rem); line-height: 1.5; }
+  .hero-split-eyebrow {
+    font-size: clamp(0.7rem, 0.4vw + 0.6rem, 0.82rem);
+    gap: 0.6em;
+    letter-spacing: 0.15em;
+  }
+  .hero-split-eyebrow-line { width: 3em; }
+  .hero-split-scroll { font-size: clamp(0.7rem, 0.4vw + 0.6rem, 0.82rem); letter-spacing: 0.19em; }
 }
 
 @media (max-width: 380px) {
   .hero-split-particles { height: 42vh; height: 42svh; }
   .hero-split-title { font-size: clamp(2.2rem, 12vw, 3.4rem); }
-  .hero-split-content { padding: 0 1rem 3rem; gap: 0.95rem; }
+  .hero-split-content {
+    padding: 0 clamp(0.75rem, 3.5vw, 1rem) clamp(1.75rem, 4.5vh, 3rem);
+    gap: clamp(0.65rem, 1.4vh, 0.95rem);
+  }
 }

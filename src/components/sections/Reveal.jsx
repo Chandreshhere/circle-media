@@ -327,9 +327,10 @@ export default function Reveal() {
 
               <p className="about-body" data-float data-drift="90" data-spin="-1.5">
                 Specializing in social-media-first campaigns. Over 6 years of
-                experience and 25+ clients served, helping businesses build and
-                grow their online presence through content, influencer
-                marketing, and digital advertising.
+                experience and 40+ clients served across 12+ industries,
+                helping businesses build and grow their online presence
+                through content, influencer marketing, and digital
+                advertising.
               </p>
 
             </article>
@@ -343,7 +344,6 @@ export default function Reveal() {
                 data-drift="70"
                 data-spin="2"
               >
-                <span className="process-float-num">01</span>
                 <div className="process-float-img">
                   <WavyImage src="/assets/process/research.png" alt="Research" />
                 </div>
@@ -359,7 +359,6 @@ export default function Reveal() {
                 data-drift="110"
                 data-spin="-3"
               >
-                <span className="process-float-num">02</span>
                 <div className="process-float-img">
                   <WavyImage src="/assets/process/digital.png" alt="Digital" />
                 </div>
@@ -375,7 +374,6 @@ export default function Reveal() {
                 data-drift="50"
                 data-spin="-2"
               >
-                <span className="process-float-num">03</span>
                 <div className="process-float-img">
                   <WavyImage src="/assets/process/analyze.png" alt="Analyze" />
                 </div>
@@ -391,7 +389,6 @@ export default function Reveal() {
                 data-drift="130"
                 data-spin="3"
               >
-                <span className="process-float-num">04</span>
                 <div className="process-float-img">
                   <WavyImage src="/assets/process/evolve.png" alt="Evolve" />
                 </div>

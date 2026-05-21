@@ -11,14 +11,7 @@ export default function BrandsPage() {
         <section className="brands-page-hero">
           <div className="brands-page-hero-grid">
             <div className="brands-page-hero-left">
-              <p className="brands-page-crumb">[06] Brands · Partners · Work</p>
-              <h1 className="brands-page-title">
-                <span className="line">Brands we</span>
-                <span className="line">have grown</span>
-                <span className="line">
-                  <em className="brands-page-script">with.</em>
-                </span>
-              </h1>
+              {/* Hero title removed per request. */}
             </div>
 
             <div className="brands-page-hero-right">
@@ -30,8 +23,8 @@ export default function BrandsPage() {
                 className="brands-page-copy"
               >
                 40+ partners across FMCG, hospitality, healthcare, fashion,
-                education and real estate. Each one a long-running relationship
-                — content, performance and storefront, end to end.
+                education and real estate. Each one a long-running relationship,
+                content, performance and storefront, end to end.
               </BlurInText>
 
               <p className="brands-page-copy brands-page-copy-mute">

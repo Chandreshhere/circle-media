@@ -16,7 +16,7 @@
   font-family: var(--font-display);
   font-size: clamp(3.6rem, 9.5vw, 9.5rem);
   font-weight: 400;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.005em;
   color: var(--text);
 }
 
@@ -57,7 +57,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.85rem, 3vw, 2.7rem);
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
   color: var(--text);
 }
 

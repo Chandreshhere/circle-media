@@ -351,33 +351,21 @@ export default function WorkPage() {
         <section className="work-hero">
           <div className="work-hero-grid">
             <div className="work-hero-left">
-              <p className="work-hero-crumb">[03] Selected Work · 2019-2025</p>
-              <h1 className="work-hero-title">
-                <span className="line">We let the</span>
-                <span className="line"><em className="work-hero-script">Work</em></span>
-                <span className="line">speak,</span>
-                <span className="line">loudly.</span>
-              </h1>
+              {/* Hero title removed per request. */}
             </div>
 
             <div className="work-hero-right">
-              <nav className="work-hero-nav">
-                <a className="is-active" href="/work">Work,</a>
-                <a href="/services">Services,</a>
-                <a href="/about">About,</a>
-                <a href="/contact">Create with us</a>
-              </nav>
-
+              {/* Mirrors the Brands hero — one BlurInText copy +
+                  one mute "Scroll for…" cue, no nav, no extra
+                  paragraph. */}
               <BlurInText as="p" split="words" stagger={0.02} blur={10} className="work-hero-copy">
                 From engaging social media strategies to powerful website
                 solutions, we do it all: creative, consistent, and result-driven.
               </BlurInText>
 
-              <p className="work-hero-copy">
-                Every project below is shipped, measured, and kept moving.
+              <p className="work-hero-copy work-hero-copy-mute">
+                Scroll for the receipts.
               </p>
-
-              <p className="work-hero-scroll">[Scroll for the receipts ↓]</p>
             </div>
           </div>
           <HandwriteText className="page-signature">Work</HandwriteText>
