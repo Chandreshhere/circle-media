@@ -598,26 +598,36 @@
      viewport-centre distance (Clients.jsx). */
   .brands {
     min-height: auto;
-    padding: 1.5rem 0;
+    /* Was 1.5rem top/bottom — the first orb row's TOP edge sat right
+       under the sticky edge-fade gradient AND right against the
+       section bound, which read as the row being clipped. Bumped to
+       3rem top so the honeycomb has clear space above row 1. */
+    padding: 3rem 0 1.5rem;
+    /* Belt-and-suspenders: clip horizontal overflow on mobile so the
+       JS fish-eye's per-orb transform:scale can't paint an orb
+       outside the viewport even on a borderline-narrow phone. */
+    overflow-x: hidden;
   }
   .brands-stage {
     position: static;
     height: auto;
     overflow: visible;
   }
-  /* Edge gradient strips are sticky to viewport top/bottom for the
-     watchOS edge fade effect, but with no sticky-stage backing them. */
+  /* Edge gradient strips. On mobile they used to be 50-100px tall and
+     overlapped the first/last orb row, darkening the artwork and
+     making it look "cut at the top". Reduced to ~30-55px so the
+     gradient sits ABOVE the first row, not on top of it. */
   .brands-edge {
     position: sticky;
-    height: clamp(50px, 8svh, 100px);
+    height: clamp(28px, 5svh, 56px);
   }
   .brands-edge-top {
     top: 0;
-    margin-bottom: calc(-1 * clamp(50px, 8svh, 100px));
+    margin-bottom: calc(-1 * clamp(28px, 5svh, 56px));
   }
   .brands-edge-bottom {
     bottom: 0;
-    margin-top: calc(-1 * clamp(50px, 8svh, 100px));
+    margin-top: calc(-1 * clamp(28px, 5svh, 56px));
   }
   .brands-head {
     position: relative;
@@ -635,29 +645,50 @@
     right: auto;
     transform: none !important;
     padding: 0.5rem;
-    gap: 0.95rem;
+    /* Vertical gap between rows. Mobile uses a 4/3 row pattern; the
+       row gap below was 0.95rem, which still fits — only the orb
+       size + row inner gap caused the horizontal overflow. */
+    gap: 0.7rem;
     will-change: auto;
   }
-  .brands-honeycomb-row { gap: 0.95rem; }
+  /* The honeycomb has a 4/3 row pattern on mobile, so the 4-orb row
+     is the constraint. With 4 × ~24vw + 3 × ~15px gaps + ~16px
+     padding, the row was ~530px wide on a 480px screen — pushing
+     the outer orbs off-screen. Pulled the orb-size formula down to
+     ~19vw so 4 + 3 gaps + side padding stays under 100vw on every
+     phone width down to ~340px. */
   .brand-orb {
-    /* Bumped from clamp(96px, 20vw, 138px) — orbs felt small on
-       phones where the section already only fits 3-4 per row. */
-    --orb-size: clamp(112px, 24vw, 160px);
+    --orb-size: clamp(80px, 19vw, 120px);
     transition: opacity 0.18s linear;
   }
-  .brand-orb-inner { padding: 16%; }
+  .brands-honeycomb-row { gap: 0.55rem; }
+  /* Was 16%. Tightened to 13% so brand artwork sits closer to the
+     orb edge (Park Avenue Beer Shampoo's bat icon, Granny's tagline
+     line, Investitute's strapline) without being scaled down so
+     hard it loses legibility. 13% still keeps a square artwork's
+     corners inside the orb's circular clip — the geometric ceiling
+     (corners of an inscribed square sit ≈14.6% inside the orb edge
+     before hitting the circle) — so no element gets clipped by
+     the orb's `border-radius:50% + overflow:hidden`. */
+  .brand-orb-inner { padding: 13%; }
   .brand-orb:hover .brand-orb-inner { transform: scale(1.22); }
 }
 
 @media (max-width: 480px) {
-  .brands { padding: 1.25rem 0; }
-  .brands-honeycomb { gap: 0.65rem; padding: 0.5rem; }
-  .brands-honeycomb-row { gap: 0.7rem; }
-  .brands-edge { height: clamp(40px, 7svh, 80px); }
-  .brands-edge-top { margin-bottom: calc(-1 * clamp(40px, 7svh, 80px)); }
-  .brands-edge-bottom { margin-top: calc(-1 * clamp(40px, 7svh, 80px)); }
-  .brand-orb { --orb-size: clamp(96px, 26vw, 132px); }
-  .brand-orb-inner { padding: 18%; }
+  .brands { padding: 2.5rem 0 1.25rem; }
+  /* Tighter section + honeycomb side padding so the 4-orb row gets
+     every available pixel. 0.25rem padding × 2 sides + 0.4rem row
+     gap × 3 + orb-size × 4 = comfortably under 100vw at 360-480px. */
+  .brands-honeycomb { gap: 0.55rem; padding: 0.25rem; }
+  .brands-honeycomb-row { gap: 0.4rem; }
+  .brands-edge { height: clamp(22px, 4svh, 44px); }
+  .brands-edge-top { margin-bottom: calc(-1 * clamp(22px, 4svh, 44px)); }
+  .brands-edge-bottom { margin-top: calc(-1 * clamp(22px, 4svh, 44px)); }
+  /* Was clamp(96px, 26vw, 132px) — 26vw × 4 + gaps overshot every
+     phone width. 20vw × 4 = 80vw, plus gaps + side padding stays
+     well inside 100vw. */
+  .brand-orb { --orb-size: clamp(68px, 20vw, 100px); }
+  .brand-orb-inner { padding: 13%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

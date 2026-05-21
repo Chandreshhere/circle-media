@@ -185,8 +185,12 @@ export default function Clients({ brands, heading, eyebrow, cta }) {
       // stay legible on first paint instead of shrinking into tiny
       // dots — the previous lows read as "the section is small" on
       // the home page where the honeycomb sits below richer content.
+      // maxScale capped at 1.0 on phones — previous 1.08 grew the
+      // centre orb past its layout box, which on a 4-orb row sized
+      // to fill the viewport pushed neighbouring orbs visually off
+      // the screen edge.
       const minScale = isMobile ? 0.82 : 0.78;
-      const maxScale = isMobile ? 1.08 : 1.15;
+      const maxScale = isMobile ? 1.0  : 1.15;
       const minOp    = isMobile ? 0.7  : 0.6;
       const maxOp    = 1.0;
 
