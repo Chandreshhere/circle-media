@@ -559,8 +559,17 @@
 @media (max-width: 900px) {
   .about-panel-quote { flex-basis: 100vw; }
   .about-quote-stack { top: 14vh; left: 6vw; max-width: 92vw; }
-  .quote-line { font-size: clamp(3rem, 18vw, 7rem); }
-  .quote-sub-wrap { bottom: 8vh; left: 6vw; }
+  /* Bumped the rainbow quote lines on mobile — was 18vw, now 22vw
+     with a higher cap so "Expand Your Radius with Circle" feels
+     properly hero-scale on a phone. */
+  .quote-line { font-size: clamp(3.6rem, 22vw, 8rem); }
+  /* Moved the sub-line up from bottom:8vh to bottom:30vh so the
+     huge dead band between the heading and the "Measured.
+     Accountable. Relentless." cycler closes up. Bumped its font
+     size at the same time so it reads as a substantial caption,
+     not a small footnote. */
+  .quote-sub-wrap { bottom: 30vh; left: 6vw; }
+  .about-quote-sub { font-size: 1.5rem; line-height: 1.4; }
 }
 
 /* ——— Panel 4: Banner ——— */

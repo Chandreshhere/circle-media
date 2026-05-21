@@ -18,8 +18,7 @@ const PLATFORMS = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
     modalLogo: "/assets/socials/amazon-ads-verified.png",
     role: "Verified Advertising Partner",
-    blurb:
-      "Sponsored Products, Sponsored Brands, Sponsored Display and DSP campaigns built around ROAS, ACOS and new-to-brand growth.",
+    blurb: "Sponsored Products, Brands and DSP — tuned for ROAS.",
     accent: "var(--c-yellow)",
     accentRgb: "255, 197, 92",
     modal: {
@@ -50,8 +49,7 @@ const PLATFORMS = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg",
     modalLogo: "https://images.seeklogo.com/logo-png/46/1/meta-business-partner-logo-png_seeklogo-466474.png",
     role: "Verified Creative Agency",
-    blurb:
-      "Facebook, Instagram, Reels and Audience Network. Full-funnel creative and media buying with weekly performance read-outs.",
+    blurb: "Facebook, Instagram and Reels — full-funnel creative + media.",
     accent: "var(--c-blue)",
     accentRgb: "96, 165, 250",
     modal: {
