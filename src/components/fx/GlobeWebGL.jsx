@@ -93,14 +93,17 @@ export default function GlobeWebGL() {
     );
     group.add(planet);
 
-    // Wireframe — latitude / longitude grid. Bumped opacity so the lines
-    // read clearly, not just an implied grid behind the dots.
+    // Wireframe — latitude / longitude grid. Coloured red to match
+    // the rest of the surface (rings, meridians, dot grid). Opacity
+    // bumped slightly so the red lines still read clearly against
+    // the dark planet body.
+    const SURFACE_RED = 0xff3d3d;
     const wire = new THREE.LineSegments(
       new THREE.WireframeGeometry(new THREE.SphereGeometry(radius, 36, 24)),
       new THREE.LineBasicMaterial({
-        color: 0xffffff,
+        color: SURFACE_RED,
         transparent: true,
-        opacity: 0.22,
+        opacity: 0.28,
       })
     );
     group.add(wire);
@@ -135,9 +138,9 @@ export default function GlobeWebGL() {
       group.add(ring);
       ringRefs.push(ring);
     };
-    addRing(0,    0.55, 0xffffff); // equator
-    addRing(23,   0.30, 0xffffff); // tropic of cancer
-    addRing(-23,  0.30, 0xffffff); // tropic of capricorn
+    addRing(0,    0.6,  SURFACE_RED); // equator
+    addRing(23,   0.35, SURFACE_RED); // tropic of cancer
+    addRing(-23,  0.35, SURFACE_RED); // tropic of capricorn
 
     // Vertical meridians (every 30°) — visible longitude lines.
     const meridianRefs = [];
@@ -154,41 +157,32 @@ export default function GlobeWebGL() {
       const meridian = new THREE.Line(
         meridianGeo,
         new THREE.LineBasicMaterial({
-          color: 0xffffff,
+          color: SURFACE_RED,
           transparent: true,
-          opacity: 0.18,
+          opacity: 0.22,
         })
       );
       group.add(meridian);
       meridianRefs.push(meridian);
     }
 
-    // Dot grid covering the globe.
-    // Two passes, both rendered as a single THREE.Points cloud with
-    // per-vertex colour:
-    //   PASS A — dense low-density grid in white (the planet's
-    //   "surface" — keeps the recognisable globe-of-dots silhouette).
-    //   PASS B — a sparser overlay of accent-coloured points scattered
-    //   across the same sphere using deterministic Fibonacci sampling,
-    //   so every render gets the same layout. The accent colours cycle
-    //   through the site's brand palette (blue / pink / yellow / mint /
-    //   red) — each accent point sits slightly proud of the white grid
-    //   so it reads as a "lit data point" instead of a colour swap.
-    // The result is roughly 3-4x more dots than before AND each one
-    // carries a colour cue, giving the globe a richer "live network"
-    // feel without changing geometry density on either axis alone.
-    const PALETTE = [
-      [0.30, 0.42, 0.70], // c-blue   #4D6CB3
-      [0.93, 0.34, 0.54], // c-pink   #EE5789
-      [0.96, 0.69, 0.18], // c-yellow #F6AF2D
-      [0.35, 0.74, 0.47], // c-mint   #5ABE79
-      [0.95, 0.40, 0.33], // c-red    #F16754
-    ];
+    // Dot grid covering the globe — all surface dots render in red
+    // (matching the wireframe / rings / meridians). Two passes:
+    //   PASS A — dense base grid (28 lat × ~9 lon-per-radian), each
+    //   dot getting a slight tonal variation so the surface reads
+    //   as a real constellation rather than a perfect mesh.
+    //   PASS B — ~240 brighter "lit" points scattered evenly via
+    //   Fibonacci sphere sampling, sitting slightly proud of the
+    //   base grid so they pop as data nodes.
+    // Encoded as a single THREE.Points cloud with per-vertex colour
+    // (still uses vertexColors:true so each point can carry its own
+    // red intensity, even though the base hue is shared).
+    const RED_BASE = [1.0, 0.24, 0.24];   // matches SURFACE_RED (#ff3d3d)
+    const RED_LIT  = [1.0, 0.45, 0.35];   // warmer, brighter accent
     const dotPositions = [];
     const dotColors = [];
 
-    // --- Pass A: white grid (denser than before: 28 lat bands × ~9
-    // lon-per-radian = ~700 points after pole drop). ---
+    // --- Pass A: base red grid. ---
     const N_LAT = 28;
     for (let i = 1; i < N_LAT; i++) {
       const lat = -90 + (180 * i) / N_LAT;
@@ -200,17 +194,14 @@ export default function GlobeWebGL() {
         const lon = -180 + (360 * j) / numLon;
         const v = latLonToVec3(lat, lon, radius * 1.005);
         dotPositions.push(v.x, v.y, v.z);
-        // Slight per-point alpha variation so the surface reads as a
-        // real constellation rather than a perfect mesh. Encoded as
-        // colour value with 1.0 white scaled by a noise factor.
+        // Tonal variation: scale each dot's red by 0.65–1.0 so the
+        // surface looks like a real constellation, not a flat mesh.
         const tint = 0.65 + 0.35 * Math.abs(Math.sin(i * 1.7 + j * 2.3));
-        dotColors.push(tint, tint, tint);
+        dotColors.push(RED_BASE[0] * tint, RED_BASE[1] * tint, RED_BASE[2] * tint);
       }
     }
 
-    // --- Pass B: ~240 accent points scattered evenly via Fibonacci
-    // sphere sampling. Each point gets one of the 5 palette colours,
-    // cycling deterministically. ---
+    // --- Pass B: brighter "lit" red accent points scattered evenly. ---
     const ACCENT_COUNT = 240;
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
     for (let n = 0; n < ACCENT_COUNT; n++) {
@@ -221,8 +212,7 @@ export default function GlobeWebGL() {
       const z = Math.sin(theta) * r;
       const surf = radius * 1.012;
       dotPositions.push(x * surf, y * surf, z * surf);
-      const [pr, pg, pb] = PALETTE[n % PALETTE.length];
-      dotColors.push(pr, pg, pb);
+      dotColors.push(RED_LIT[0], RED_LIT[1], RED_LIT[2]);
     }
 
     const dotsGeo = new THREE.BufferGeometry();
