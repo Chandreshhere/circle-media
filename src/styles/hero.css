@@ -151,6 +151,20 @@
   margin-bottom: 0.1em;
 }
 
+/* Force "Circle Media," and "Your Growth Partner for" onto their own
+   lines regardless of available width, instead of letting the browser
+   wrap them as a single sentence. */
+.hero-split-prelude-line {
+  display: block;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-transform: none;
+}
+
 .hero-split-title-lead {
   display: block;
   font-size: 0.55em;

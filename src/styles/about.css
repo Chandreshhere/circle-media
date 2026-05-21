@@ -128,11 +128,13 @@
   max-width: 38ch;
   font-size: clamp(1.05rem, 1.2vw, 1.2rem);
   line-height: 1.55;
-  opacity: 0.82;
+  /* Bumped from 0.82 — at the previous value, the dim greys lost
+     definition on phones during the horizontal pan. */
+  opacity: 0.95;
   margin: 0;
   font-weight: 400;
   text-transform: none;
-  letter-spacing: 0.005em;
+  letter-spacing: 0.05em;
   color: var(--text);
   z-index: 3;
 }
@@ -172,7 +174,16 @@
 @media (max-width: 900px) {
   .about-panel-intro { flex-basis: 100vw; }
   .about-title { top: 14vh; left: 6vw; max-width: 90vw; }
-  .about-body  { bottom: 8vh; left: 6vw; max-width: 34ch; }
+  /* Pull the body copy up to sit right under the title — bottom-anchored
+     positioning left a huge dead band between heading and subtext on
+     phones (felt like a layout bug). Top-anchored is tighter and still
+     never collides with the title. */
+  .about-body  {
+    top: 44vh;
+    bottom: auto;
+    left: 6vw;
+    max-width: 34ch;
+  }
 }
 
 /* ——— Stats scattered behind the dropping logo ——— */
@@ -379,14 +390,18 @@
 }
 
 .process-float figcaption p {
-  font-size: clamp(0.85rem, 0.95vw, 1rem);
+  font-size: clamp(0.95rem, 1.05vw, 1.1rem);
   line-height: 1.5;
-  opacity: 0.72;
+  /* Was 0.72 — too dim to read against the dark backdrop while the panel
+     is mid-scroll on phones; lift to a near-text contrast so each step
+     reads clearly as the user pans across the horizontal section. */
+  opacity: 0.92;
   margin: 0;
   max-width: 36ch;
   text-transform: none;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.05em;
   font-weight: 400;
+  color: var(--text);
 }
 
 /* Scattered placements — irregular positions, no tilt.
@@ -511,7 +526,7 @@
   opacity: 0.78;
   margin: 0;
   text-transform: none;
-  letter-spacing: 0.005em;
+  letter-spacing: 0.04em;
   font-weight: 500;
   font-style: normal;
   line-height: 1.45;
@@ -585,7 +600,13 @@
   .about-banner-stack { height: 32vh; }
 
   .about-title { top: 12vh; font-size: clamp(2.4rem, 12vw, 4rem); }
-  .about-body { font-size: 0.95rem; max-width: 32ch; line-height: 1.5; }
+  .about-body {
+    top: 42vh;
+    bottom: auto;
+    font-size: 0.95rem;
+    max-width: 32ch;
+    line-height: 1.5;
+  }
   .about-stamp { font-size: 0.7rem; letter-spacing: 0.14em; }
 
   .reveal-stat { width: 46vw; gap: 0.5rem; }
@@ -594,7 +615,11 @@
   .reveal-stats-kicker { font-size: 0.72rem; letter-spacing: 0.22em; left: 5vw; }
 
   .process-float figcaption h3 { font-size: 1.2rem; }
-  .process-float figcaption p { font-size: 0.85rem; line-height: 1.45; }
+  .process-float figcaption p {
+    font-size: 0.95rem;
+    line-height: 1.45;
+    opacity: 0.95;
+  }
   .process-float-num { font-size: 0.66rem; letter-spacing: 0.2em; }
 
   .quote-line { font-size: clamp(2.4rem, 16vw, 5rem); }

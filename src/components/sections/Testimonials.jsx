@@ -15,6 +15,9 @@ export default function Testimonials() {
 
   return (
     <section className="testimonials">
+      <h2 className="testimonials-title">
+        Voices <span className="testimonials-title-em">from our partners.</span>
+      </h2>
       <div className="testimonials-head">
         <p className="label">[Voices / Clients]</p>
         <h3>

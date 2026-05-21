@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import WavyImage from "../fx/WavyImage.jsx";
@@ -224,6 +224,29 @@ export default function Reveal() {
       setCycleIdx((i) => (i + 1) % QUOTE_CYCLE.length);
     }, 1400);
     return () => clearInterval(id);
+  }, []);
+
+  /* CRITICAL: kill ScrollTriggers that this section owns BEFORE React
+     unmounts the DOM. useLayoutEffect cleanup fires before DOM mutation
+     (useEffect cleanup fires after), so any pin-spacer wrappers that
+     ScrollTrigger inserted around this section's trigger element are
+     unwrapped while the trigger is still in the document. Without
+     this, navigating away from Home throws:
+       Uncaught NotFoundError: Failed to execute 'removeChild' on 'Node'
+     because React expects the trigger's parent to be its JSX parent,
+     but ScrollTrigger has wrapped it in a `pin-spacer` div. The error
+     aborts the next page's commit and leaves the new route blank
+     until a full reload reinitialises React. */
+  useLayoutEffect(() => {
+    const holder = holderRef.current;
+    return () => {
+      if (!holder) return;
+      ScrollTrigger.getAll().forEach((t) => {
+        if (t.trigger && (t.trigger === holder || holder.contains(t.trigger))) {
+          t.kill(true);
+        }
+      });
+    };
   }, []);
 
   return (

@@ -158,7 +158,8 @@ export default function Hero() {
 
         <h1 className="hero-split-title" data-hero-reveal>
           <span className="hero-split-prelude">
-            Circle Media, Your Growth Partners for
+            <span className="hero-split-prelude-line">Circle Media,</span>
+            <span className="hero-split-prelude-line">Your Growth Partner for</span>
           </span>
           <span className="hero-split-accent">
             <span

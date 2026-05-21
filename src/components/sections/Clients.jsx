@@ -4,17 +4,25 @@ import { useEffect, useRef, useState } from "react";
    Section scrolls naturally (no pin, no scroll-jack). Each icon's scale +
    opacity is driven by its distance from the viewport centre, so icons grow
    as they pass through the middle of the screen — the fish-eye effect from
-   the watchOS home screen. Hover smoothly enlarges any single icon. */
+   the watchOS home screen. Hover smoothly enlarges any single icon.
 
-// User-specified order at the top (most well-known brands first), then the
-// rest in a deliberately mixed order so no single category clusters.
-const BRANDS = [
+   Renders on BOTH the home page (curated subset via `brands` prop) and the
+   /brands page (full roster, default export of FULL_BRANDS). The honeycomb
+   layout adapts to the row count automatically — the row-pattern arrays
+   wrap once the brand list runs out. */
+
+// Full default roster — used when no `brands` prop is passed (i.e., on
+// the /brands page). User-specified order at the top (most well-known
+// brands first), then the rest mixed so no single category clusters.
+const FULL_BRANDS = [
   // Adam's Ale moved up to lead line 1; DNS Hospitals slides one slot
-  // down behind it. Line 2's first orb (was Conscious Food) is now
-  // Pro Brew Republic — Conscious Food drops into the mid-list.
+  // down behind it. Park Avenue uses the supplied transparent PNG so
+  // the wordmark sits flush with the other transparent-PNG logos.
+  // Agrawal Namkeen added to the FMCG block.
   { name: "Adam's Ale",                   logo: "/logos/hospitality/1.png" },
   { name: "DNS Hospitals",                logo: "/logos/healthcare/2.png" },
-  { name: "Park Avenue",                  logo: "/logos/park-avenue.jpg" },
+  { name: "Park Avenue",                  logo: "/logos/park-avenue.png" },
+  { name: "Agrawal Namkeen",              logo: "/logos/agrawal-namkeen.png", mod: "boost" },
   { name: "Madmix",                       logo: "/logos/fmcg/1.png" },
   { name: "Urban Theka",                  logo: "/logos/hospitality/2.png" },
   // Line 2 starts here:
@@ -80,7 +88,14 @@ function buildRows(brands, pattern) {
   return rows;
 }
 
-export default function Clients() {
+export default function Clients({ brands, heading, eyebrow, cta }) {
+  /* Default to the full roster when no brands prop is passed — keeps
+     the /brands page working without changes. The home page passes a
+     curated subset so the honeycomb shows ~8 main marques.
+     `cta` (optional) renders inside the section header — used on home
+     to inline the "see all brands" link beside the eyebrow instead of
+     putting it in a separate section below. */
+  const data = brands && brands.length > 0 ? brands : FULL_BRANDS;
   const rootRef = useRef(null);
 
   // Mobile uses a narrower 4/3 row pattern so the larger mobile orbs
@@ -98,7 +113,7 @@ export default function Clients() {
   }, []);
 
   const rows = buildRows(
-    BRANDS,
+    data,
     isMobile ? ROW_PATTERN_MOBILE : ROW_PATTERN_DESKTOP
   );
 
@@ -166,9 +181,13 @@ export default function Clients() {
 
       // Mobile narrows the fish-eye scale curve so per-frame visual
       // change is less dramatic — feels less "snappy" during scroll.
-      const minScale = isMobile ? 0.65 : 0.55;
-      const maxScale = isMobile ? 1.05 : 1.1;
-      const minOp    = isMobile ? 0.5  : 0.35;
+      // Bumped floors (was 0.55 desktop / 0.65 mobile) so corner orbs
+      // stay legible on first paint instead of shrinking into tiny
+      // dots — the previous lows read as "the section is small" on
+      // the home page where the honeycomb sits below richer content.
+      const minScale = isMobile ? 0.82 : 0.78;
+      const maxScale = isMobile ? 1.08 : 1.15;
+      const minOp    = isMobile ? 0.7  : 0.6;
       const maxOp    = 1.0;
 
       for (const orb of orbs) {
@@ -230,8 +249,8 @@ export default function Clients() {
     <section className="brands" ref={rootRef}>
       <div className="brands-stage">
         <div className="brands-head">
-          <p>[Brands we've worked with, 40+]</p>
-          <p>Circle ↻ 2018–2026</p>
+          <p>{eyebrow || "[Brands we've worked with, 40+]"}</p>
+          {cta ? cta : <p>{heading || "Circle ↻ 2018–2026"}</p>}
         </div>
 
         <div className="brands-edge brands-edge-top" aria-hidden="true" />
@@ -251,7 +270,7 @@ export default function Clients() {
                   const color = ORB_COLORS[flatIdx % ORB_COLORS.length];
                   return (
                     <div
-                      className="brand-orb"
+                      className={`brand-orb${b.mod ? ` brand-orb--${b.mod}` : ""}`}
                       key={b.name}
                       title={b.name}
                       style={{ "--orb-color": color }}

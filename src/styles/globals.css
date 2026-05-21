@@ -147,20 +147,22 @@ img {
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 500;
-  letter-spacing: -0.02em;
+  /* Pushed looser again — from -0.005em to 0.005em. Combined with the
+     body bump below, display type now reads decidedly airier. */
+  letter-spacing: 0.04em;
   line-height: 1.02;
 }
 
 h1 {
   font-size: clamp(5rem, 17vw, 17rem);
   font-weight: 400;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
 }
 
 h2 {
   font-size: clamp(3.2rem, 7.2vw, 7.2rem);
   font-weight: 400;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.005em;
 }
 
 h3 {
@@ -172,8 +174,11 @@ p, a, span {
   color: var(--text);
   font-size: 0.9rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  line-height: 1.4;
+  /* Pushed from 0.07em → 0.1em. Reads noticeably airier across all
+     body copy / inline tags. Heading tracking was loosened in
+     lockstep so the two scales stay balanced. */
+  letter-spacing: 0.1em;
+  line-height: 1.45;
   text-decoration: none;
   font-family: var(--font-body);
 }

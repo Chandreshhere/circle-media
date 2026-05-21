@@ -6,10 +6,10 @@ import GlobeWebGL from "../fx/GlobeWebGL.jsx";
    on the left. */
 
 const REGIONS = [
-  { flag: "🇮🇳", name: "India",  tag: "Domestic" },
-  { flag: "🇦🇪", name: "Dubai",  tag: "Quick commerce" },
-  { flag: "🇺🇸", name: "USA",    tag: "Quick commerce" },
-  { flag: "🇨🇦", name: "Canada", tag: "Cross-border" },
+  { flag: "🇮🇳", name: "India"  },
+  { flag: "🇦🇪", name: "Dubai"  },
+  { flag: "🇺🇸", name: "USA"    },
+  { flag: "🇨🇦", name: "Canada" },
 ];
 
 export default function Reach() {
@@ -39,7 +39,6 @@ export default function Reach() {
                   </span>
                   <span className="reach-pill-text">
                     <span className="reach-pill-name">{r.name}</span>
-                    <span className="reach-pill-tag">{r.tag}</span>
                   </span>
                 </li>
               ))}

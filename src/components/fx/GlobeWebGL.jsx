@@ -11,11 +11,25 @@ import * as THREE from "three";
 // reads clearly below Dubai; USA is anchored on the east coast (NY) and
 // Canada on the west coast (Vancouver), so the two North-American pins
 // are diagonally across the continent instead of stacked over each other.
+// PINS[0] (India) is the home pin — all connection arcs are drawn from
+// it to PINS[1..N]. Pins after that are decorative "served markets" that
+// fill the otherwise empty regions of the globe (Africa, Oceania, SE
+// Asia, South America, Western Europe) so the planet reads as a live
+// activity map instead of a sparse four-pin scene.
 const PINS = [
-  { lat: 12.97,  lon: 77.59,   label: "India"  },   // Bangalore
-  { lat: 25.20,  lon: 55.27,   label: "Dubai"  },   // Dubai
-  { lat: 40.71,  lon: -74.00,  label: "USA"    },   // New York
-  { lat: 49.28,  lon: -123.12, label: "Canada" },   // Vancouver
+  { lat: 12.97,  lon: 77.59,    label: "India"  },     // Bangalore (home)
+  { lat: 25.20,  lon: 55.27,    label: "Dubai"  },     // UAE
+  { lat: 40.71,  lon: -74.00,   label: "USA"    },     // New York
+  { lat: 49.28,  lon: -123.12,  label: "Canada" },     // Vancouver
+  // Decorative reach points — no connection arcs, just glowing dots so
+  // the globe doesn't have huge empty quadrants when the user rotates it.
+  { lat: 51.51,  lon:  -0.13,   label: "UK",      decorative: true }, // London
+  { lat: 1.35,   lon: 103.82,   label: "Singapore", decorative: true },
+  { lat: -33.87, lon: 151.21,   label: "Australia", decorative: true }, // Sydney
+  { lat: -23.55, lon: -46.63,   label: "Brazil",  decorative: true }, // São Paulo
+  { lat: 35.68,  lon: 139.69,   label: "Japan",   decorative: true }, // Tokyo
+  { lat: -1.29,  lon: 36.82,    label: "Kenya",   decorative: true }, // Nairobi
+  { lat: 52.52,  lon: 13.40,    label: "Germany", decorative: true }, // Berlin
 ];
 
 const latLonToVec3 = (lat, lon, radius) => {
@@ -199,10 +213,42 @@ export default function GlobeWebGL() {
 
     // Country pins — bigger, more saturated pink spheres with two halo
     // rings so each marker reads clearly against the sparser dot grid.
+    // Decorative pins are smaller, less saturated, no animated halo —
+    // they exist to fill empty regions of the globe (Africa, Oceania,
+    // SE Asia, etc.) without competing visually with the 4 real
+    // markets that get full halos + connection arcs.
     const PIN_PINK = 0xff3d7f;
+    const PIN_DOT  = 0xffb8d0; // softer pink for decorative dots
     const pinObjs = [];
     PINS.forEach((p) => {
       const pos = latLonToVec3(p.lat, p.lon, radius * 1.015);
+
+      if (p.decorative) {
+        const dot = new THREE.Mesh(
+          new THREE.SphereGeometry(0.035, 16, 16),
+          new THREE.MeshBasicMaterial({
+            color: PIN_DOT,
+            transparent: true,
+            opacity: 0.85,
+          })
+        );
+        dot.position.copy(pos);
+        group.add(dot);
+
+        const halo = new THREE.Mesh(
+          new THREE.SphereGeometry(0.065, 16, 16),
+          new THREE.MeshBasicMaterial({
+            color: PIN_DOT,
+            transparent: true,
+            opacity: 0.3,
+          })
+        );
+        halo.position.copy(pos);
+        group.add(halo);
+
+        pinObjs.push({ dot, halo, basePos: pos.clone(), decorative: true });
+        return;
+      }
 
       const dot = new THREE.Mesh(
         new THREE.SphereGeometry(0.07, 24, 24),
@@ -239,11 +285,13 @@ export default function GlobeWebGL() {
     });
 
     // Connection arcs — solid pink lines from the home pin (India) to
-    // every other served country. Midpoints are lifted off the surface
-    // so each arc sweeps high above the planet rather than hugging it.
+    // every other real served country (decorative pins are skipped).
+    // Midpoints are lifted off the surface so each arc sweeps high
+    // above the planet rather than hugging it.
     const arcRefs = [];
     const home = pinObjs[0].basePos;
     pinObjs.slice(1).forEach((target) => {
+      if (target.decorative) return;
       const a = home;
       const b = target.basePos;
       const mid = a.clone().add(b).multiplyScalar(0.5);
@@ -357,14 +405,17 @@ export default function GlobeWebGL() {
 
       // Pin halo pulse — gentle scale breathing on the inner halo, plus a
       // wider outward ping on the outer halo so the marker visibly throbs.
+      // Decorative pins only have the inner halo, no animated outer ring.
       const pulse = 1 + Math.sin(t * 0.04) * 0.22;
       const ping = 1 + (Math.sin(t * 0.05) * 0.5 + 0.5) * 0.6;
       pinObjs.forEach((pin, i) => {
         const phase = pulse + (i % 2) * 0.05;
         pin.halo.scale.setScalar(phase);
-        pin.halo2.scale.setScalar(ping + (i % 2) * 0.08);
-        pin.halo2.material.opacity =
-          0.22 - (Math.sin(t * 0.05) * 0.5 + 0.5) * 0.18;
+        if (pin.halo2) {
+          pin.halo2.scale.setScalar(ping + (i % 2) * 0.08);
+          pin.halo2.material.opacity =
+            0.22 - (Math.sin(t * 0.05) * 0.5 + 0.5) * 0.18;
+        }
       });
 
       renderer.render(scene, camera);
@@ -412,8 +463,10 @@ export default function GlobeWebGL() {
         dot.material.dispose();
         halo.geometry.dispose();
         halo.material.dispose();
-        halo2.geometry.dispose();
-        halo2.material.dispose();
+        if (halo2) {
+          halo2.geometry.dispose();
+          halo2.material.dispose();
+        }
       });
       ringRefs.forEach((r) => {
         r.geometry.dispose();

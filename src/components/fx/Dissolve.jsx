@@ -18,7 +18,7 @@ export default function Dissolve({ children, direction = "in", className = "" })
 
     const rect = el.getBoundingClientRect();
     const alreadyInView =
-      direction === "in" && rect.top < window.innerHeight * 0.95;
+      direction === "in" && rect.top < window.innerHeight * 1.05;
 
     // Above-the-fold path: leave the element in its natural rendered state.
     // Avoids any chance of getting stuck at opacity:0 on route change.
@@ -38,14 +38,21 @@ export default function Dissolve({ children, direction = "in", className = "" })
         opacity: 1,
         filter: "blur(0px) saturate(1)",
         scale: 1,
-        duration: 0.65,
+        // Faster reveal so cards aren't holding back the section reading
+        // pace — previous 0.65s read as "waiting on the animation" when
+        // skimming a list of services.
+        duration: 0.4,
         ease: "power3.out",
       });
     };
 
     const trig = ScrollTrigger.create({
       trigger: el,
-      start: "top 85%",
+      // Earlier trigger — `top 95%` fires the moment the top edge enters
+      // the viewport instead of after the card is already a fifth onto
+      // the page. Pairs with the shorter duration for a much snappier
+      // feel on long lists.
+      start: "top 95%",
       end: "bottom 15%",
       onEnter: playIn,
       onLeaveBack: () => {

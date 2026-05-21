@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getLenis } from "../../App.jsx";
@@ -8,33 +8,27 @@ gsap.registerPlugin(ScrollTrigger);
 /* Each card is drawn in a 160×100 "core" viewBox, then inflated to 186×126 so
    tab bumps (extending 13 units past the core edge) stay inside the SVG. The
    shape spec for each piece is [top, right, bottom, left] — each side is one
-   of "flat", "tab" (bulges out), or "slot" (cuts in). The 4×2 layout is laid
+   of "flat", "tab" (bulges out), or "slot" (cuts in). The 3×2 layout is laid
    out so every shared edge has one tab + matching slot, so the pieces
    interlock cleanly when spread. */
 const SHAPES = [
   ["flat", "tab",  "tab",  "flat"], // 0 — TL corner
-  ["flat", "slot", "slot", "slot"], // 1
-  ["flat", "tab",  "tab",  "tab" ], // 2
-  ["flat", "flat", "slot", "slot"], // 3 — TR corner
-  ["slot", "slot", "flat", "flat"], // 4 — BL corner
-  ["tab",  "tab",  "flat", "tab" ], // 5
-  ["slot", "slot", "flat", "slot"], // 6
-  ["tab",  "flat", "flat", "tab" ], // 7 — BR corner
+  ["flat", "slot", "slot", "slot"], // 1 — top middle
+  ["flat", "flat", "tab",  "tab" ], // 2 — TR corner
+  ["slot", "tab",  "flat", "flat"], // 3 — BL corner
+  ["tab",  "slot", "flat", "slot"], // 4 — bottom middle
+  ["slot", "flat", "flat", "tab" ], // 5 — BR corner
 ];
 
-/* Mobile shapes — carved for the 2×4 layout (2 cols, 4 rows). Every shared
-   edge has a tab on one side and a matching slot on the other, so the
-   pieces interlock cleanly when the spread lands. Rows = pairs (0-1),
-   (2-3), (4-5), (6-7); columns = even indices left, odd indices right. */
+/* Mobile shapes — carved for the 2×3 layout (2 cols, 3 rows). Every shared
+   edge has a tab on one side and a matching slot on the other. */
 const SHAPES_MOBILE = [
   ["flat", "tab",  "tab",  "flat"], // 0 — TL corner
-  ["flat", "flat", "tab",  "slot"], // 1 — TR corner
-  ["slot", "tab",  "slot", "flat"], // 2 — row 1 left
-  ["slot", "flat", "slot", "slot"], // 3 — row 1 right
-  ["tab",  "tab",  "tab",  "flat"], // 4 — row 2 left
-  ["tab",  "flat", "tab",  "slot"], // 5 — row 2 right
-  ["slot", "tab",  "flat", "flat"], // 6 — BL corner
-  ["slot", "flat", "flat", "slot"], // 7 — BR corner
+  ["flat", "flat", "slot", "slot"], // 1 — TR corner
+  ["slot", "tab",  "tab",  "flat"], // 2 — row 1 left
+  ["tab",  "flat", "slot", "slot"], // 3 — row 1 right
+  ["slot", "tab",  "flat", "flat"], // 4 — BL corner
+  ["tab",  "flat", "flat", "slot"], // 5 — BR corner
 ];
 
 /* Puzzle path with a parametric corner radius. Stack phase renders with R=5
@@ -60,51 +54,39 @@ const buildPath = ([t, r, b, l], R = 5) => {
 const CARDS = [
   {
     id: "01",
-    title: "Brand Consultation",
-    color: "var(--c-red)",
-    desc: "Strategy sessions that uncover your story, sharpen your positioning, and shape a brand built to outlast trends.",
-  },
-  {
-    id: "02",
-    title: "Influencer Marketing",
-    color: "var(--c-blue)",
-    desc: "Creators matched to the right audience, briefed for the right message, measured against real outcomes, not vanity metrics.",
-  },
-  {
-    id: "03",
     title: "Branding & Content Planning",
     color: "var(--c-yellow)",
     desc: "Identity systems and editorial calendars that turn your voice into a steady publishing rhythm across every channel.",
   },
   {
-    id: "04",
-    title: "Social Media Marketing",
+    id: "02",
+    title: "Social Media & Performance Marketing",
     color: "var(--c-mint)",
-    desc: "A daily presence with a point of view: content, community, and conversion, all moving in the same direction.",
+    desc: "Content, community, and paid media run as one engine — daily presence on socials with campaigns built around CAC, ROAS and the funnel.",
   },
   {
-    id: "05",
+    id: "03",
     title: "Website Development",
     color: "var(--c-pink)",
     desc: "Fast, accessible, considered websites, built to convert today and crafted to scale as your business grows.",
   },
   {
-    id: "06",
+    id: "04",
     title: "E-Commerce Listings & Optimisation",
-    color: "var(--c-yellow)",
+    color: "var(--c-blue)",
     desc: "Catalogue copy, imagery, and storefront tuning that lifts discoverability, add-to-cart, and lifetime value.",
   },
   {
-    id: "07",
-    title: "Performance Marketing",
-    color: "var(--c-blue)",
-    desc: "Paid media built around CAC, ROAS, and the funnel: campaigns that earn you growth, not just impressions.",
+    id: "05",
+    title: "SEO / SEM",
+    color: "var(--c-red)",
+    desc: "Organic visibility paired with paid search: the long game and the short game, working as one engine.",
   },
   {
-    id: "08",
-    title: "SEO / SEM",
-    color: "var(--c-mint)",
-    desc: "Organic visibility paired with paid search: the long game and the short game, working as one engine.",
+    id: "06",
+    title: "Production Shoot",
+    color: "var(--c-yellow)",
+    desc: "On-location and studio shoots, briefed to the channel, captured for the brief and edited for performance.",
   },
 ].map((c, i) => ({ ...c, shape: SHAPES[i], path: buildPath(SHAPES[i], 5) }));
 
@@ -119,53 +101,39 @@ const RESTING = [
   { rot:  2, x:  2, y:  0 },
   { rot: -3, x:  4, y: -2 },
   { rot:  4, x: -3, y:  1 },
-  { rot: -1, x:  2, y: -3 },
-  { rot:  3, x: -1, y:  2 },
 ];
 
 /* Final spread positions in xPercent / yPercent (of card's own size). The
-   4×2 grid is offset from stage centre. Column step = 86% of card width
+   3×2 grid is offset from stage centre. Column step = 86% of card width
    (160/186 — neighbours' cores touch, with 13/186 of overlap on each side
    so tabs and slots interpenetrate). Row step = 79.4% of card height. */
 const COL_STEP = 86;
 const ROW_STEP = 79.4;
 const SPREAD = [
-  { x: -50 - 1.5 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
-  { x: -50 - 0.5 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
-  { x: -50 + 0.5 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
-  { x: -50 + 1.5 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
-  { x: -50 - 1.5 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
-  { x: -50 - 0.5 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
-  { x: -50 + 0.5 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
-  { x: -50 + 1.5 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
+  { x: -50 - 1.0 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
+  { x: -50 + 0.0 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
+  { x: -50 + 1.0 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
+  { x: -50 - 1.0 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
+  { x: -50 + 0.0 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
+  { x: -50 + 1.0 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
 ];
 
-/* Mobile spread — re-flow the 4×2 layout into a 2×4 grid (2 wide, 4 tall)
-   so the assembled puzzle fits the narrower viewport. Card index ↔ slot
-   stays in reading order:
-     desktop row 0 (0,1,2,3) → mobile rows 0+1 left/right
-     desktop row 1 (4,5,6,7) → mobile rows 2+3 left/right
-   The interlocking tabs/slots no longer line up perfectly (the puzzle was
-   carved for a 4-wide layout) but the silhouettes still read as a clean
-   stacked grid on phones. */
+/* Mobile spread — re-flow the 3×2 layout into a 2×3 grid (2 wide, 3 tall)
+   so the assembled puzzle fits the narrower viewport. */
 const SPREAD_MOBILE = [
-  { x: -50 - 0.5 * COL_STEP, y: -50 - 1.5 * ROW_STEP },
-  { x: -50 + 0.5 * COL_STEP, y: -50 - 1.5 * ROW_STEP },
-  { x: -50 - 0.5 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
-  { x: -50 + 0.5 * COL_STEP, y: -50 - 0.5 * ROW_STEP },
-  { x: -50 - 0.5 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
-  { x: -50 + 0.5 * COL_STEP, y: -50 + 0.5 * ROW_STEP },
-  { x: -50 - 0.5 * COL_STEP, y: -50 + 1.5 * ROW_STEP },
-  { x: -50 + 0.5 * COL_STEP, y: -50 + 1.5 * ROW_STEP },
+  { x: -50 - 0.5 * COL_STEP, y: -50 - 1.0 * ROW_STEP },
+  { x: -50 + 0.5 * COL_STEP, y: -50 - 1.0 * ROW_STEP },
+  { x: -50 - 0.5 * COL_STEP, y: -50 + 0.0 * ROW_STEP },
+  { x: -50 + 0.5 * COL_STEP, y: -50 + 0.0 * ROW_STEP },
+  { x: -50 - 0.5 * COL_STEP, y: -50 + 1.0 * ROW_STEP },
+  { x: -50 + 0.5 * COL_STEP, y: -50 + 1.0 * ROW_STEP },
 ];
 
 /* The stage shrinks while the cards spread so the assembled puzzle stays
-   inside the viewport. Scaling the parent shrinks every card AND their
-   relative spacing in lockstep, so neighbours still interlock. The 2×4
-   mobile grid is taller and narrower, so it gets a different scale that
-   keeps the entire stack inside one viewport. */
-const STAGE_SCALE_SPREAD = 0.78;
-const STAGE_SCALE_SPREAD_MOBILE = 0.55;
+   inside the viewport. The narrower 3×2 grid lets us keep cards a bit
+   larger than the previous 4×2; mobile 2×3 still needs a heavy shrink. */
+const STAGE_SCALE_SPREAD = 0.88;
+const STAGE_SCALE_SPREAD_MOBILE = 0.62;
 const isMobileWWD = () =>
   typeof window !== "undefined" && window.innerWidth <= 900;
 
@@ -173,6 +141,24 @@ export default function WhatWeDo() {
   const rootRef = useRef(null);
   const stageRef = useRef(null);
   const cardRefs = useRef([]);
+
+  /* See the long comment on the matching useLayoutEffect in Reveal.jsx.
+     Same fix here — WhatWeDo also pins with pinSpacing:true, which
+     wraps its trigger in a pin-spacer div. Killing the ScrollTriggers
+     BEFORE React removes the trigger DOM prevents the cross-page
+     "Failed to execute removeChild" crash that left /brands blank
+     after navigating away from home. */
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    return () => {
+      if (!root) return;
+      ScrollTrigger.getAll().forEach((t) => {
+        if (t.trigger && (t.trigger === root || root.contains(t.trigger))) {
+          t.kill(true);
+        }
+      });
+    };
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;

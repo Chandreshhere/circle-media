@@ -51,6 +51,7 @@ import WorkPage from "./pages/WorkPage.jsx";
 import WorkDetailPage from "./pages/WorkDetailPage.jsx";
 import AboutPage from "./pages/AboutPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
+import BrandsPage from "./pages/BrandsPage.jsx";
 
 let lenisInstance = null;
 export const getLenis = () => lenisInstance;
@@ -162,21 +163,56 @@ export default function App() {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
     if (lenisInstance) {
+      // Hero stops Lenis during its entrance animation. If the user
+      // clicks an in-app <Link> before Hero's unlock() fires (its 6s
+      // safety net hasn't expired yet), Lenis stays stopped and the
+      // NEXT page renders but can't scroll — looks like a blank screen
+      // because content below the fold is unreachable. Force-start
+      // Lenis on every route change so this can't happen.
+      lenisInstance.start();
       lenisInstance.scrollTo(0, { immediate: true, force: true });
     }
+    // Same belt-and-suspenders for any leftover body locks (mobile menu
+    // close races, page-loader cleanup races, etc.) — clear them so
+    // the new page is always interactive on first paint.
+    document.body.classList.remove("chrome-hidden");
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.documentElement.style.overflow = "";
   }, [location.pathname]);
 
   useEffect(() => {
-    // After paint: let Lenis recompute bounds for the new page, then refresh
-    // ScrollTriggers so any newly-mounted ones evaluate against scroll=0.
-    const id = requestAnimationFrame(() => {
+    // After paint: let Lenis recompute bounds for the new page, then
+    // refresh ScrollTriggers so any newly-mounted ones evaluate against
+    // scroll=0.
+    //
+    // Refresh runs in TWO passes (rAF + 60ms timeout). On first SPA
+    // navigation to a route with sticky / pinned children (/brands had
+    // the Clients honeycomb's sticky stage; old pages had pin spacers)
+    // the single-rAF refresh could fire before the new page's children
+    // had committed their useEffects, leaving the page rendered but
+    // invisible until the next user-driven scroll forced a refresh —
+    // the "blank until reload" symptom the user hit. The deferred
+    // second refresh catches that case.
+    const raf = requestAnimationFrame(() => {
       if (lenisInstance) {
         lenisInstance.resize();
         lenisInstance.scrollTo(0, { immediate: true, force: true });
       }
       ScrollTrigger.refresh();
     });
-    return () => cancelAnimationFrame(id);
+    const t = setTimeout(() => {
+      if (lenisInstance) lenisInstance.resize();
+      ScrollTrigger.refresh();
+      // Also force a layout read so any sub-pixel scroll snapping
+      // applied by ScrollTrigger.normalizeScroll commits before the
+      // user's first interaction.
+      void document.body.offsetHeight;
+    }, 60);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(t);
+    };
   }, [location.pathname]);
 
   return (
@@ -191,6 +227,7 @@ export default function App() {
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/work" element={<WorkPage />} />
           <Route path="/work/:slug" element={<WorkDetailPage />} />
+          <Route path="/brands" element={<BrandsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
         </Routes>

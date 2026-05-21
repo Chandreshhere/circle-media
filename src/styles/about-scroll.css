@@ -190,7 +190,7 @@
   line-height: 1.55;
   color: var(--text-dim);
   text-transform: none;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.045em;
   max-width: 30rem;
   margin-top: auto;
 }

@@ -10,7 +10,13 @@ const PLATFORMS = [
   {
     id: "amazon",
     name: "Amazon Ads",
-    logo: "/assets/socials/amazon-ads-verified.png",
+    /* `logo` is the clean wordmark used on the home-page card (small,
+       neutral, fits the card grid). `modalLogo` is the full
+       "Verified Partner" badge — the real Amazon-issued artwork —
+       shown inside the modal where there's enough room for it to read
+       at full size. */
+    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+    modalLogo: "/assets/socials/amazon-ads-verified.png",
     role: "Verified Advertising Partner",
     blurb:
       "Sponsored Products, Sponsored Brands, Sponsored Display and DSP campaigns built around ROAS, ACOS and new-to-brand growth.",
@@ -39,7 +45,10 @@ const PLATFORMS = [
   {
     id: "meta",
     name: "Meta Business Partner",
-    logo: "https://images.seeklogo.com/logo-png/46/1/meta-business-partner-logo-png_seeklogo-466474.png",
+    /* Clean Meta wordmark on the card; the real Meta-issued
+       "Business Partner" badge is shown only inside the modal. */
+    logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg",
+    modalLogo: "https://images.seeklogo.com/logo-png/46/1/meta-business-partner-logo-png_seeklogo-466474.png",
     role: "Verified Creative Agency",
     blurb:
       "Facebook, Instagram, Reels and Audience Network. Full-funnel creative and media buying with weekly performance read-outs.",
@@ -184,7 +193,10 @@ function PlatformModal({ platform, onClose }) {
 
         <div className="pww-modal-head">
           <div className="pww-modal-logo">
-            <img src={platform.logo} alt={`${platform.name} logo`} />
+            <img
+              src={platform.modalLogo || platform.logo}
+              alt={`${platform.name} logo`}
+            />
           </div>
           <span className="pww-modal-badge">
             <span className="pww-modal-dot" />

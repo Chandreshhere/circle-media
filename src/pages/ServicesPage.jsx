@@ -70,6 +70,20 @@ export default function ServicesPage() {
                 <p className="svc-card-tag">{s.tagline}</p>
                 <h3 className="svc-card-title">{s.title}</h3>
                 <p className="svc-card-copy">{s.copy}</p>
+                {s.platform && (
+                  <div className="svc-card-platform" aria-label={`Runs on ${s.platform.name}`}>
+                    <span className="svc-card-platform-label">Runs on</span>
+                    <span className="svc-card-platform-chip">
+                      <img
+                        src={s.platform.logo}
+                        alt={s.platform.name}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <span>{s.platform.name}</span>
+                    </span>
+                  </div>
+                )}
               </div>
               <span className="svc-card-arrow" aria-hidden="true">↗</span>
             </article>

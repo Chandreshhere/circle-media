@@ -10,17 +10,6 @@
   overflow: hidden;
 }
 
-.pww::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(60% 50% at 20% 0%, rgba(96, 165, 250, 0.08), transparent 60%),
-    radial-gradient(50% 50% at 90% 100%, rgba(255, 197, 92, 0.08), transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
-
 .pww-inner {
   position: relative;
   max-width: 1320px;
@@ -135,22 +124,31 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: clamp(160px, 20vw, 240px);
-  padding: clamp(0.85rem, 1.4vw, 1.4rem);
-  /* White plate at the top of the dark card, holding the transparent
-     badge image so the logo reads on a clean white background. */
-  background: #fff;
+  /* Was a tall white plate (160-240px + #fff bg). The huge white box
+     dominated each card and the "verified partner / business partner"
+     badges baked into the source PNGs read as cluttered. Now: no plate,
+     transparent background, fixed equal logo size so both marks render
+     at the same scale across the two cards. */
+  height: clamp(110px, 14vw, 160px);
+  padding: clamp(0.5rem, 1vw, 1rem);
+  background: transparent;
   border-radius: 14px;
   overflow: hidden;
 }
 
 .pww-card-mark img {
   display: block;
-  max-width: 100%;
-  max-height: 100%;
+  /* Both logos render at the same constrained size — wider than tall,
+     centred, with object-fit:contain so neither distorts. The fixed
+     height also makes Amazon's longer wordmark and Meta's compact "M"
+     read at visually equivalent weight. */
   width: auto;
-  height: auto;
+  height: 100%;
+  max-width: 78%;
+  max-height: 78%;
   object-fit: contain;
+  filter: none;
+  border-radius: 8px;
 }
 
 .pww-card-body {
@@ -265,26 +263,15 @@
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   padding: clamp(1.75rem, 3.2vw, 3rem);
-  background: linear-gradient(160deg,
-    rgba(20, 20, 22, 0.98) 0%,
-    rgba(10, 10, 12, 0.98) 100%);
+  /* Flat dark panel — the previous yellow-accent inset shadow + diagonal
+     gradient + accent top stripe made every Meta modal look yellow and
+     every Amazon modal look orange. Now: one neutral dark surface so
+     the verified-partner badge is the only branded thing on the panel. */
+  background: #0c0c0e;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 22px;
-  box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(var(--pww-accent-rgb, 255, 197, 92), 0.18) inset;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
   color: var(--text);
-}
-
-.pww-modal::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--pww-accent);
-  border-radius: 22px 22px 0 0;
 }
 
 .pww-modal-close {
@@ -333,10 +320,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(120px, 16vw, 180px);
-  height: clamp(50px, 6vw, 70px);
-  padding: 0.75rem 1.25rem;
-  background: #fff;
+  /* Real "Verified Partner" / "Meta Business Partner" badge — the
+     source PNGs are already designed with their own white plate baked
+     in, so the modal renders them at their natural size with no extra
+     framing. The container just constrains the badge box. */
+  width: clamp(140px, 18vw, 200px);
+  height: clamp(60px, 7vw, 80px);
+  padding: 0;
+  background: transparent;
   border-radius: 12px;
 }
 
@@ -344,6 +335,7 @@
   max-height: 100%;
   max-width: 100%;
   object-fit: contain;
+  border-radius: 10px;
 }
 
 .pww-modal-badge {
@@ -522,7 +514,7 @@
        both cards line up identically regardless of blurb length. */
     justify-content: flex-start;
   }
-  .pww-card-mark { height: clamp(95px, 24vw, 140px); padding: 0.4rem; border-radius: 10px; }
+  .pww-card-mark { height: clamp(75px, 20vw, 110px); padding: 0.4rem; border-radius: 10px; }
   .pww-card-body { gap: 0.5rem; }
   .pww-card-name { font-size: 0.88rem; }
   .pww-card-blurb { font-size: 0.62rem; line-height: 1.35; }
@@ -559,7 +551,7 @@
   /* Keep cards side-by-side on the smallest screens too. Tighter still. */
   .pww-grid { gap: 0.5rem; }
   .pww-card { padding: 0.75rem 0.45rem; gap: 0.55rem; min-height: clamp(220px, 60vw, 290px); }
-  .pww-card-mark { height: clamp(80px, 28vw, 120px); padding: 0.3rem; }
+  .pww-card-mark { height: clamp(64px, 22vw, 96px); padding: 0.3rem; }
   .pww-card-name { font-size: 0.78rem; }
   .pww-card-blurb { font-size: 0.58rem; line-height: 1.35; }
   .pww-card-badge { font-size: 0.4rem; padding: 0.22rem 0.4rem; letter-spacing: 0.04em; }

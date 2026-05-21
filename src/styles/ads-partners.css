@@ -35,9 +35,10 @@
   font-weight: 400;
   font-size: 1.5rem;
   max-width: 38ch;
-  color: var(--text-dim);
+  color: var(--text);
   letter-spacing: -0.01em;
   line-height: 1.3;
+  opacity: 0.92;
 }
 
 /* Stacked dashboard cards ----------------------------------------- */
@@ -110,7 +111,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-mute);
+  color: var(--text-dim);
 }
 
 /* Badge ------------------------------------------------------------ */
@@ -141,7 +142,7 @@
 .ap-badge-line {
   font-size: 0.78rem;
   color: #4a4a52;
-  letter-spacing: 0.005em;
+  letter-spacing: 0.04em;
 }
 
 .ap-badge-line strong {
@@ -184,7 +185,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-mute);
+  color: var(--text-dim);
 }
 
 .ap-metric-value {
@@ -220,7 +221,7 @@
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.65rem;
   letter-spacing: 0.05em;
-  color: var(--text-mute);
+  color: var(--text-dim);
 }
 
 /* Responsive ------------------------------------------------------ */
@@ -242,7 +243,15 @@
     margin-bottom: 1.75rem;
     gap: 0.85rem;
   }
-  .ap-head h3 { font-size: 1.15rem; max-width: 100%; }
+  .ap-head h3 { font-size: 1.15rem; max-width: 100%; opacity: 1; }
+  /* On phone, the desktop dim greys (text-dim/text-mute) wash out
+     against the dark card background. Lift the secondary labels closer
+     to text so chips and axis ticks stay legible. */
+  .ap-platform-tag,
+  .ap-metric-label,
+  .ap-dash-axis {
+    color: color-mix(in srgb, var(--text) 78%, transparent);
+  }
 
   .ap-stack { gap: 1rem; }
 

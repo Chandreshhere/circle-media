@@ -37,7 +37,7 @@
   font-family: var(--font-body);
   font-size: clamp(1rem, 1.3vw, 1.2rem);
   line-height: 1.55;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.045em;
   color: var(--text-dim);
   text-transform: none;
   max-width: 56ch;
@@ -149,7 +149,7 @@
   padding: 4cqh 6cqw 1cqh;
   font-size: 3.5cqh;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.055em;
   color: #fff;
 }
 .w-rp-status-icons { display: flex; align-items: center; gap: 1.5cqw; }
@@ -174,7 +174,7 @@
   font-family: var(--font-body);
   font-size: 3.4cqh;
   font-weight: 700;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
   color: #fff;
   text-transform: none;
 }
@@ -243,7 +243,7 @@
   font-size: 3.2cqh;
   font-weight: 700;
   color: #fff;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 .w-rp-pf-stats span {
   font-family: var(--font-body);
@@ -251,7 +251,7 @@
   font-weight: 400;
   color: rgba(255, 255, 255, 0.85);
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 
 /* Bio */
@@ -263,7 +263,7 @@
   color: #fff;
   margin: 0 0 0.3cqh;
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 .w-rp-bio-tag {
   font-family: var(--font-body);
@@ -271,7 +271,7 @@
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 
 /* Action buttons */
@@ -290,7 +290,7 @@
   background: #2a2a2c;
   border-radius: 1.6cqh;
   padding: 1cqh 0;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
   text-transform: none;
 }
 
@@ -536,7 +536,7 @@
   left: 1rem;
   font-family: var(--font-display);
   font-size: clamp(0.95rem, 1.4vw, 1.3rem);
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   font-weight: 700;
   color: var(--text);
@@ -598,7 +598,7 @@
   font-size: 0.7rem;
   font-weight: 600;
   color: #fff;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.055em;
   text-transform: none;
 }
 .w-insight-status-icons { display: flex; gap: 0.25rem; align-items: center; }
@@ -632,7 +632,7 @@
   font-weight: 600;
   color: #fff;
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
   display: flex;
   flex-direction: column;
 }
@@ -674,13 +674,13 @@
   font-size: 0.85rem;
   font-weight: 700;
   color: #fff;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 .w-insight-sub {
   font-size: 0.65rem;
   color: rgba(255, 255, 255, 0.5);
   margin: 0;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
   text-transform: none;
 }
 
@@ -695,7 +695,7 @@
   border-radius: 999px;
   background: #1a1a1c;
   color: rgba(255, 255, 255, 0.6);
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
   text-transform: none;
   font-weight: 500;
 }
@@ -725,7 +725,7 @@
   font-size: 0.65rem;
   color: rgba(255, 255, 255, 0.7);
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 .w-insight-legend b { color: #fff; font-weight: 700; margin-left: 0.25rem; }
 .w-insight-legend .dot,
@@ -775,7 +775,7 @@
   font-size: 0.78rem;
   font-weight: 700;
   color: #fff;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 .w-insight-donut-legend {
   flex: 1;
@@ -785,7 +785,7 @@
   font-size: 0.65rem;
   color: rgba(255, 255, 255, 0.7);
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 .w-insight-donut-legend b { color: #fff; font-weight: 700; margin-left: 0.25rem; }
 
@@ -805,7 +805,7 @@
   font-size: 0.7rem;
   font-weight: 600;
   color: #fff;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
   text-transform: none;
 }
 .w-insight-actions i {
@@ -832,14 +832,14 @@
   font-size: 0.72rem;
   color: rgba(255, 255, 255, 0.7);
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 .w-insight-list b {
   font-family: var(--font-body);
   font-size: 0.78rem;
   font-weight: 700;
   color: #fff;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 
 @media (max-width: 700px) {
@@ -1155,7 +1155,7 @@
   padding: 0.5rem 0.85rem 0.3rem;
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.055em;
   text-transform: none;
 }
 .w-seo-status-icons { display: flex; gap: 0.25rem; align-items: center; }
@@ -1182,7 +1182,7 @@
   font-size: 0.72rem;
   color: rgba(255, 255, 255, 0.85);
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 .w-seo-search-icon {
   display: inline-block;
@@ -1330,7 +1330,7 @@
   font-weight: 700;
   color: #fff;
   margin: 0;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
   text-transform: none;
 }
 .w-seo-card-share {
@@ -1357,7 +1357,7 @@
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 .w-seo-card-meta b { color: #fff; font-weight: 700; }
 .w-seo-stars {
@@ -1377,7 +1377,7 @@
   color: rgba(255, 255, 255, 0.6);
   margin: 0;
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 .w-seo-closed { color: var(--c-red); font-weight: 700; }
 .w-seo-open   { color: var(--c-mint); font-weight: 700; }
@@ -1391,7 +1391,7 @@
   color: rgba(255, 255, 255, 0.65);
   margin: 0;
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 .w-seo-verified {
   display: inline-block;
@@ -1439,7 +1439,7 @@
   font-weight: 600;
   color: #fff;
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
 .w-seo-cta.primary {
   background: var(--c-blue);
@@ -1497,7 +1497,7 @@
   font-size: 0.7rem;
   font-weight: 700;
   color: #fff;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
   text-transform: none;
   flex: 1;
 }
@@ -1511,7 +1511,7 @@
   font-size: 0.68rem;
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.78);
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
   text-transform: none;
 }
 
@@ -1522,7 +1522,7 @@
   max-width: 560px;
   font-family: var(--font-body);
   font-size: clamp(0.95rem, 1.1vw, 1.05rem);
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
   color: var(--text-dim);
   text-transform: none;
   line-height: 1.55;
@@ -1656,7 +1656,7 @@
   font-family: var(--font-body);
   font-size: clamp(1.1rem, 1.6vw, 1.4rem);
   text-transform: none;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.045em;
   color: var(--text);
   padding: 0.85rem 1.6rem;
   border: 1px solid var(--text-mute);
