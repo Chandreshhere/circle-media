@@ -48,7 +48,7 @@
 .cw-eyebrow {
   font-family: var(--font-body);
   font-size: 0.78rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 2rem;
@@ -76,7 +76,7 @@
   line-height: 1.5;
   color: #ffffff;
   text-transform: none;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   max-width: 60ch;
   margin: -1.5rem 0 3rem;
   opacity: 0.85;
@@ -111,7 +111,7 @@
   font-family: var(--font-body);
   font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent);
 }
@@ -224,7 +224,7 @@
 .cw-check-label {
   font-family: var(--font-body);
   font-size: 1rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: none;
   color: #ffffff;
 }
@@ -246,7 +246,7 @@
 .cw-pill span {
   font-family: var(--font-body);
   font-size: 0.95rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: none;
   color: #ffffff;
 }
@@ -275,7 +275,7 @@
   font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   cursor: pointer;
   text-align: left;
@@ -321,7 +321,7 @@
   font-family: var(--font-body);
   font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.45);
   cursor: pointer;
@@ -338,7 +338,7 @@
   top: 6rem;
   font-family: var(--font-body);
   font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent);
   z-index: 2;
@@ -368,7 +368,7 @@
   font-family: var(--font-body);
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent);
 }
@@ -399,7 +399,7 @@
 .cw-thanks-eyebrow {
   font-family: var(--font-body);
   font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent);
 }
@@ -419,7 +419,7 @@
   line-height: 1.55;
   color: #ffffff;
   text-transform: none;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   opacity: 0.85;
   max-width: 50ch;
 }
@@ -440,7 +440,7 @@
   font-family: var(--font-body);
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent);
 }
@@ -471,7 +471,7 @@ a.cw-direct-v:hover { color: var(--accent); }
 .cw-social-k {
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   color: var(--accent);
   width: 1.8rem;
   flex-shrink: 0;
@@ -480,7 +480,7 @@ a.cw-direct-v:hover { color: var(--accent); }
 .cw-social-h {
   font-size: 0.95rem;
   color: #ffffff;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: none;
   word-break: break-word;
 }
@@ -521,23 +521,23 @@ a.cw-direct-v:hover { color: var(--accent); }
   .cw-stage { padding: 6rem 0.75rem 8rem; }
   .cw-corner-tr { right: 1rem; font-size: 0.65rem; }
   .cw-stage-title { font-size: clamp(2rem, 12vw, 3.4rem); }
-  .cw-stage-sub { font-size: 0.95rem; margin-bottom: 1.5rem; }
+  .cw-stage-sub { font-size: 1.08rem; margin-bottom: 1.5rem; }
   .cw-field { padding: 1rem 1rem 0.85rem; gap: 0.4rem; }
-  .cw-input, .cw-select, .cw-textarea { font-size: 1.05rem; }
-  .cw-textarea { min-height: 90px; font-size: 1rem; }
-  .cw-label { font-size: 0.7rem; letter-spacing: 0.14em; }
-  .cw-btn { padding: 1.1rem 1.25rem; font-size: 0.78rem; letter-spacing: 0.16em; }
+  .cw-input, .cw-select, .cw-textarea { font-size: 1.15rem; }
+  .cw-textarea { min-height: 90px; font-size: 1.1rem; }
+  .cw-label { font-size: 0.7rem; letter-spacing: 0.16em; }
+  .cw-btn { padding: 1.1rem 1.25rem; font-size: 0.78rem; letter-spacing: 0.18em; }
   .cw-acts {
     width: calc(100vw - 1rem);
     overflow-x: auto;
   }
-  .cw-act { padding: 0.6rem 0.55rem; font-size: 0.6rem; letter-spacing: 0.12em; }
+  .cw-act { padding: 0.6rem 0.55rem; font-size: 0.6rem; letter-spacing: 0.14em; }
   .cw-pill { padding: 0.5rem 0.85rem; }
-  .cw-pill span { font-size: 0.85rem; }
+  .cw-pill span { font-size: 1.02rem; }
   .cw-direct { grid-template-columns: 1fr; gap: 1rem; }
-  .cw-direct-v { font-size: 0.95rem; }
-  .cw-social-h { font-size: 0.88rem; }
+  .cw-direct-v { font-size: 1.08rem; }
+  .cw-social-h { font-size: 1.15rem; }
   .cw-thanks { padding: 1.5rem 1.25rem; }
   .cw-thanks-title { font-size: clamp(1.6rem, 9vw, 2.4rem); }
-  .cw-thanks-copy { font-size: 0.92rem; }
+  .cw-thanks-copy { font-size: 1.15rem; }
 }

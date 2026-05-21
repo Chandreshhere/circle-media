@@ -5,8 +5,14 @@
 .reach {
   position: relative;
   width: 100%;
-  padding: 0 1.5rem 4rem;
+  /* Bottom padding removed entirely so the section ends right at
+     the bottom of the grid (globe + pills row) and the Footer that
+     follows sits flush against it. */
+  padding: 0 1.5rem 0;
   margin-top: -2rem;
+  /* Pull the footer up so the gap between this section and the
+     Footer collapses to nothing. */
+  margin-bottom: -3rem;
   background: var(--bg);
   color: var(--text);
   /* No overflow clip on the section so the globe canvas can extend past
@@ -34,7 +40,7 @@
 .reach-eyebrow {
   font-family: var(--font-body);
   font-size: 0.8rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   color: var(--text-dim);
   margin: 0 0 1.25rem;
 }
@@ -69,7 +75,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(2rem, 5vw, 5rem);
-  align-items: center;
+  /* Was `align-items: center` — the right column (the globe) is
+     taller-than-square, so centring vertically left a huge dead band
+     above the country pills. Top-align so pills sit right under the
+     headline copy on desktop. */
+  align-items: start;
 }
 
 /* === Left column === */
@@ -77,7 +87,10 @@
 .reach-left {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 1.5rem;
+  /* Small top margin keeps the pills slightly below the heading
+     baseline without sitting flush against it. */
+  margin-top: 0.5rem;
 }
 
 .reach-pills {
@@ -164,7 +177,7 @@
   font-size: clamp(0.78rem, 0.95vw, 0.95rem);
   line-height: 1.35;
   color: var(--text-dim);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -176,22 +189,17 @@
   align-items: center;
   justify-content: center;
   align-self: start;
-  /* Lift the globe so it sits aligned with the top of the left column
-     (header / pills) instead of centred against the left column's full
-     height. The taller canvas now reaches above the section's top edge,
-     so the arcs visibly arc into the previous section. z-index keeps the
-     canvas painting over that section's content. */
+  /* Globe lifted up to overlap the previous section — same visual
+     position as the original design. The bottom dead band that the
+     lift used to create is killed by .reach's `margin-bottom: -3rem`
+     above, which pulls the Footer up flush against the section. */
   margin-top: -16rem;
   z-index: 5;
   pointer-events: none;
 }
 
-/* WebGL canvas mount — taller-than-square so the lifted arcs at the top
-   of the scene aren't cropped at the canvas edge. The aspect ratio change
-   widens the camera frustum vertically, giving the flight paths room to
-   sweep up. The pointer-events override on the canvas restores drag
-   interactivity that the parent disabled to let clicks pass through to
-   the section above. */
+/* WebGL canvas mount — taller-than-square so the lifted arcs at the
+   top of the scene aren't cropped at the canvas edge. */
 .reach-globe-3d {
   position: relative;
   width: 100%;
@@ -225,7 +233,7 @@
 
   .reach-head { margin-bottom: 1.5rem; max-width: 100%; }
   .reach-title { font-size: clamp(1.4rem, 5vw, 2rem); }
-  .reach-sub   { font-size: 0.9rem; }
+  .reach-sub   { font-size: 1.15rem; }
 
   .reach-grid {
     grid-template-columns: 1fr 1fr;
@@ -245,14 +253,24 @@
     border-radius: 10px;
   }
   .reach-pill-flag { font-size: 1.1rem; }
-  .reach-pill-name { font-size: 0.9rem; }
+  .reach-pill-name { font-size: 0.95rem; }
 
   .reach-stats { gap: 1.1rem 1.25rem; padding-top: 0.85rem; }
   .reach-stat { gap: 0.3rem; }
   .reach-stat-num   { font-size: clamp(1.9rem, 7vw, 2.6rem); }
-  .reach-stat-label { font-size: 0.66rem; letter-spacing: 0.05em; }
+  .reach-stat-label { font-size: 0.66rem; letter-spacing: 0.07em; }
 
-  .reach-right { order: 0; margin-top: 0; }
+  /* Restore in-flow positioning on mobile — desktop's absolute
+     placement would float the globe out of the 2-column phone grid. */
+  .reach-right {
+    position: static;
+    order: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    top: auto;
+    right: auto;
+    width: auto;
+  }
   .reach-globe-3d { max-width: 100%; }
 }
 
@@ -261,7 +279,7 @@
   .reach-inner { padding-left: clamp(0.25rem, 1.5vw, 0.75rem); }
 
   .reach-title { font-size: clamp(1.15rem, 5.5vw, 1.5rem); }
-  .reach-sub   { font-size: 0.78rem; line-height: 1.45; }
+  .reach-sub   { font-size: 0.95rem; line-height: 1.45; }
 
   .reach-grid { gap: 0.85rem; }
   .reach-left { gap: 1rem; }
@@ -272,7 +290,7 @@
     gap: 0.4rem;
     border-radius: 8px;
   }
-  .reach-pill-flag { font-size: 0.95rem; }
+  .reach-pill-flag { font-size: 1.08rem; }
   .reach-pill-name { font-size: 0.78rem; }
 
   .reach-stats { gap: 0.85rem 0.9rem; padding-top: 0.65rem; }

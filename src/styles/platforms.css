@@ -30,7 +30,7 @@
 .pww-eyebrow {
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.78rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-dim);
   margin: 0;
@@ -147,7 +147,18 @@
   max-width: 78%;
   max-height: 78%;
   object-fit: contain;
-  filter: none;
+  /* The Amazon ("amazon" wordmark) and Meta ("Meta" wordmark) source
+     SVGs are designed for LIGHT backgrounds — the wordmark text is
+     dark/black, which disappears entirely on this dark card. The
+     `invert + hue-rotate(180deg)` pair is the classic dark-mode trick:
+     1. invert(1) flips lightness — black text becomes white text, dark
+        elements light up.
+     2. hue-rotate(180deg) rotates colours 180°, which on top of the
+        invert returns coloured artwork to its original hue. So the
+        Amazon orange smile and Meta blue ribbon read in their brand
+        colours, while the previously-invisible text now reads clearly
+        in white. */
+  filter: invert(1) hue-rotate(180deg);
   border-radius: 8px;
 }
 
@@ -173,7 +184,7 @@
   border-radius: 999px;
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
@@ -215,7 +226,7 @@
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-mute);
   /* Pushed to the absolute bottom of the card so VIEW GROWTH ANALYTICS
@@ -348,7 +359,7 @@
   border-radius: 999px;
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
@@ -412,7 +423,7 @@
 .pww-modal-stat-k {
   font-family: var(--font-body);
   font-size: 0.78rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text);
   font-weight: 500;
@@ -442,7 +453,7 @@
   margin: 0 0 0.85rem;
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
@@ -465,7 +476,7 @@
   margin: 0 0 0.85rem;
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
@@ -496,7 +507,7 @@
   .pww-head { gap: 0.85rem; margin-bottom: 2.25rem; }
   .pww-eyebrow { font-size: 0.7rem; }
   .pww-title { font-size: clamp(2rem, 8vw, 3rem); }
-  .pww-sub { font-size: 0.92rem; }
+  .pww-sub { font-size: 1.15rem; }
 
   /* Both cards side-by-side on mobile (single horizontal row) instead
      of stacking vertically. Cards get tighter padding so two narrow
@@ -516,10 +527,10 @@
   }
   .pww-card-mark { height: clamp(75px, 20vw, 110px); padding: 0.4rem; border-radius: 10px; }
   .pww-card-body { gap: 0.5rem; }
-  .pww-card-name { font-size: 0.88rem; }
+  .pww-card-name { font-size: 1.15rem; }
   .pww-card-blurb { font-size: 0.62rem; line-height: 1.35; }
-  .pww-card-badge { font-size: 0.42rem; padding: 0.2rem 0.45rem; gap: 0.3rem; letter-spacing: 0.05em; }
-  .pww-card-foot { font-size: 0.42rem; gap: 0.3rem; padding-top: 0.5rem; letter-spacing: 0.05em; margin-top: auto; }
+  .pww-card-badge { font-size: 0.42rem; padding: 0.2rem 0.45rem; gap: 0.3rem; letter-spacing: 0.07em; }
+  .pww-card-foot { font-size: 0.42rem; gap: 0.3rem; padding-top: 0.5rem; letter-spacing: 0.07em; margin-top: auto; }
 
   .pww-modal-overlay { padding: 0.75rem; }
   .pww-modal {
@@ -530,7 +541,7 @@
   .pww-modal-head { gap: 0.85rem; margin-bottom: 1.1rem; }
   .pww-modal-logo { width: 100px; height: 44px; padding: 0.5rem 0.85rem; }
   .pww-modal-title { font-size: 1.55rem; }
-  .pww-modal-lead { font-size: 0.92rem; margin-bottom: 1.4rem; }
+  .pww-modal-lead { font-size: 1.15rem; margin-bottom: 1.4rem; }
 
   .pww-modal-stats {
     grid-template-columns: 1fr 1fr;
@@ -554,8 +565,8 @@
   .pww-card-mark { height: clamp(64px, 22vw, 96px); padding: 0.3rem; }
   .pww-card-name { font-size: 0.78rem; }
   .pww-card-blurb { font-size: 0.58rem; line-height: 1.35; }
-  .pww-card-badge { font-size: 0.4rem; padding: 0.22rem 0.4rem; letter-spacing: 0.04em; }
-  .pww-card-foot { font-size: 0.4rem; letter-spacing: 0.04em; padding-top: 0.5rem; }
+  .pww-card-badge { font-size: 0.4rem; padding: 0.22rem 0.4rem; letter-spacing: 0.06em; }
+  .pww-card-foot { font-size: 0.4rem; letter-spacing: 0.06em; padding-top: 0.5rem; }
 
   .pww-modal-stats { grid-template-columns: 1fr; }
   .pww-modal-close { top: 0.75rem; right: 0.75rem; width: 32px; height: 32px; }

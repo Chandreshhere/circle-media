@@ -37,7 +37,7 @@
 
 .clients-strip-eyebrow {
   color: var(--text-dim);
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   font-size: 0.85rem;
   text-transform: uppercase;
 }
@@ -67,7 +67,7 @@
   font-size: clamp(0.95rem, 1.1vw, 1.1rem);
   line-height: 1.55;
   color: var(--text-dim);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: none;
 }
 
@@ -134,7 +134,7 @@
   border-radius: 999px;
   font-family: var(--font-body);
   font-size: 0.95rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text);
   background: transparent;
@@ -156,7 +156,7 @@
 .clients-strip-cta span {
   transition: transform 0.3s ease;
   color: inherit;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
 }
 
 .clients-strip-cta:hover span { transform: translate(3px, -3px); }
@@ -170,7 +170,7 @@
 @media (max-width: 520px) {
   .clients-strip-grid { grid-template-columns: repeat(2, 1fr); }
   .clients-strip-cell { aspect-ratio: 5 / 4; border-radius: 12px; }
-  .clients-strip-cta { padding: 0.75rem 1.1rem; font-size: 0.82rem; }
+  .clients-strip-cta { padding: 0.75rem 1.1rem; font-size: 1.1rem; }
 }
 
 /* ----------------------------------------------------------------------
@@ -207,7 +207,7 @@
 
 .clients-grid-eyebrow {
   color: var(--text-dim);
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   font-size: 0.85rem;
   text-transform: uppercase;
 }
@@ -238,7 +238,7 @@
   font-size: clamp(0.95rem, 1.1vw, 1.1rem);
   line-height: 1.55;
   color: var(--text-dim);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: none;
 }
 
@@ -294,7 +294,7 @@
 .clients-grid-name {
   font-family: var(--font-body);
   font-size: 0.72rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-dim);
   text-align: center;
@@ -316,7 +316,7 @@
   .clients-grid-title { font-size: clamp(1.8rem, 8vw, 2.6rem); }
   .clients-grid { grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
   .clients-grid-cell { gap: 0.5rem; }
-  .clients-grid-name { font-size: 0.62rem; letter-spacing: 0.04em; }
+  .clients-grid-name { font-size: 0.62rem; letter-spacing: 0.06em; }
 }
 
 @media (max-width: 520px) {
@@ -337,7 +337,7 @@
   border-radius: 999px;
   font-family: var(--font-body);
   font-size: 0.78rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text);
   background: rgba(255, 255, 255, 0.03);
@@ -364,13 +364,13 @@
 .brands-head-cta span {
   transition: transform 0.3s ease;
   color: inherit;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
 }
 
 .brands-head-cta:hover span { transform: translate(3px, -3px); }
 
 @media (max-width: 600px) {
-  .brands-head-cta { padding: 0.5rem 0.9rem; font-size: 0.7rem; letter-spacing: 0.1em; }
+  .brands-head-cta { padding: 0.5rem 0.9rem; font-size: 0.7rem; letter-spacing: 0.12em; }
 }
 
 
@@ -455,7 +455,7 @@
   justify-content: space-between;
   color: var(--text-dim);
   font-size: 0.8rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   z-index: 5;
 }
 

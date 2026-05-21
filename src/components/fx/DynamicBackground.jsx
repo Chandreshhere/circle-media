@@ -445,6 +445,35 @@ const DynamicBackground = ({ logoPath = "/newlogo.png", bgColor = "#050506" }) =
     );
     observer.observe(canvas);
 
+    /* PARENT-SIZE observer.
+       The canvas's internal width/height come from its PARENT's
+       clientWidth/clientHeight. On iOS Safari, the address bar
+       grows and shrinks as the user scrolls — that changes
+       `100vh / 55vh` values without firing a window `resize`
+       event. The parent (`.hero-split-particles`) silently
+       changes height; the canvas's CSS size follows (it's
+       width/height:100%), but its internal buffer doesn't. Result:
+       the canvas internal aspect ratio drifts from its CSS aspect
+       ratio and the rendered particles look squished. A
+       ResizeObserver on the parent re-runs sizeCanvas + loadLogo
+       whenever its box actually changes size, regardless of what
+       triggered it. */
+    let resizeObsRaf = 0;
+    const parent = canvas.parentElement;
+    let resizeObs;
+    if (parent && typeof ResizeObserver !== "undefined") {
+      resizeObs = new ResizeObserver(() => {
+        if (isCleanedUpRef.current) return;
+        if (resizeObsRaf) cancelAnimationFrame(resizeObsRaf);
+        resizeObsRaf = requestAnimationFrame(() => {
+          if (isCleanedUpRef.current) return;
+          sizeCanvas();
+          loadLogo();
+        });
+      });
+      resizeObs.observe(parent);
+    }
+
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("touchmove", handleTouchMove, { passive: true });
     window.addEventListener("resize", handleResize);
@@ -455,7 +484,9 @@ const DynamicBackground = ({ logoPath = "/newlogo.png", bgColor = "#050506" }) =
       isCleanedUpRef.current = true;
       if (formationTweenRef.current) formationTweenRef.current.kill();
       observer.disconnect();
+      if (resizeObs) resizeObs.disconnect();
       if (resizeRaf) cancelAnimationFrame(resizeRaf);
+      if (resizeObsRaf) cancelAnimationFrame(resizeObsRaf);
 
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);

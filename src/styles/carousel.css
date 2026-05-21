@@ -74,7 +74,7 @@
   color: var(--text-dim);
   margin-bottom: 1rem;
   font-size: 0.8rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
@@ -97,7 +97,7 @@
   color: var(--text);
   opacity: 0.82;
   text-transform: none;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   font-weight: 400;
 }
 
@@ -138,7 +138,7 @@
 
 .project-stat-k {
   font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent);
   opacity: 0.85;
@@ -196,7 +196,7 @@
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   font-size: 0.78rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -206,7 +206,7 @@
   border: 1px solid var(--accent);
   border-radius: 999px;
   font-size: 0.8rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
@@ -223,7 +223,7 @@
   }
   .project-header { max-width: 100%; }
   .project-header h2 { font-size: clamp(2.4rem, 10vw, 4rem); }
-  .project-tagline { margin-top: 0.75rem; font-size: 0.95rem; max-width: 30ch; }
+  .project-tagline { margin-top: 0.75rem; font-size: 1.08rem; max-width: 30ch; }
   .project-body {
     position: static;
     align-items: flex-start;
@@ -237,11 +237,11 @@
   .project-services,
   .project-clients { text-align: left; }
   .project-services li,
-  .project-clients li { font-size: 0.92rem; }
+  .project-clients li { font-size: 1.15rem; }
   .project-stat { align-items: flex-start; }
   .project-stats { gap: 1.25rem; flex-wrap: wrap; }
   .project-stat-v { font-size: clamp(2.2rem, 10vw, 3.6rem); }
-  .project-stat-k { font-size: 0.62rem; letter-spacing: 0.18em; }
+  .project-stat-k { font-size: 0.62rem; letter-spacing: 0.2em; }
   .project-info {
     position: static;
     flex-direction: column;
@@ -249,17 +249,17 @@
     gap: 0.9rem;
     margin-top: auto;
   }
-  .project-tags p { font-size: 0.66rem; padding: 0.3rem 0.75rem; letter-spacing: 0.08em; }
-  .project-url span { padding: 0.55rem 0.95rem; font-size: 0.7rem; letter-spacing: 0.1em; }
+  .project-tags p { font-size: 0.66rem; padding: 0.3rem 0.75rem; letter-spacing: 0.1em; }
+  .project-url span { padding: 0.55rem 0.95rem; font-size: 0.7rem; letter-spacing: 0.12em; }
 }
 
 @media (max-width: 480px) {
   .project-inner { padding: 4vh 1rem 3vh; gap: 1.1rem; }
   .project-header h2 { font-size: clamp(2rem, 11vw, 3rem); line-height: 0.98; }
-  .project-tagline { font-size: 0.88rem; line-height: 1.4; }
+  .project-tagline { font-size: 1.15rem; line-height: 1.4; }
   .project-stat-v { font-size: clamp(1.9rem, 11vw, 3rem); }
   .project-stats { gap: 0.85rem; }
   .project-services li,
-  .project-clients li { font-size: 0.85rem; }
+  .project-clients li { font-size: 1.02rem; }
   .project-tags { gap: 0.4rem; }
 }

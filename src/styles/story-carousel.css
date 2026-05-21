@@ -12,7 +12,9 @@
   perspective-origin: 50% 50%;
   cursor: grab;
   user-select: none;
-  touch-action: pan-y;
+  /* `manipulation` instead of `pan-y` so pinch-zoom (both directions)
+     still works when the user happens to be over this carousel. */
+  touch-action: manipulation;
   overflow: hidden;
 }
 
@@ -93,7 +95,7 @@
   margin-top: 1.5rem;
   font-family: var(--font-body);
   font-size: 0.78rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-dim);
 }

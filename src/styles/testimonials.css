@@ -124,7 +124,7 @@
   right: 1.75rem;
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.8rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: var(--text-mute);
 }
 
@@ -206,7 +206,7 @@
   border-radius: 999px;
   font-family: var(--font-display);
   font-size: 0.95rem;
-  letter-spacing: 0.055em;
+  letter-spacing: 0.075em;
   color: var(--text);
   background: rgba(255, 255, 255, 0.03);
 }
@@ -248,10 +248,10 @@
   .t-card--featured { padding: 1.6rem 1.25rem; gap: 1.5rem; }
   .t-card--featured blockquote { font-size: clamp(1.25rem, 6.5vw, 1.7rem); line-height: 1.25; }
   .t-card--mini { padding: 1.25rem 1.1rem; gap: 1rem; }
-  .t-card--mini blockquote { font-size: 1rem; }
+  .t-card--mini blockquote { font-size: 1.1rem; }
   .t-glyph { font-size: 5rem; top: 0.3rem; left: 0.55rem; }
-  .t-avatar { width: 38px; height: 38px; font-size: 0.85rem; }
+  .t-avatar { width: 38px; height: 38px; font-size: 1.02rem; }
   .t-avatar--sm { width: 32px; height: 32px; font-size: 0.72rem; }
-  .t-author { font-size: 0.88rem; }
+  .t-author { font-size: 1.15rem; }
   .t-role { font-size: 0.72rem; }
 }

@@ -57,7 +57,7 @@
 
 .about-stamp {
   font-size: 0.8rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   opacity: 0.6;
   font-variant-numeric: tabular-nums;
@@ -134,7 +134,7 @@
   margin: 0;
   font-weight: 400;
   text-transform: none;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.015em;
   color: var(--text);
   z-index: 3;
 }
@@ -149,7 +149,7 @@
 
 .about-stat-k {
   font-size: 0.72rem;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   opacity: 0.55;
   font-weight: 500;
@@ -174,15 +174,22 @@
 @media (max-width: 900px) {
   .about-panel-intro { flex-basis: 100vw; }
   .about-title { top: 14vh; left: 6vw; max-width: 90vw; }
-  /* Pull the body copy up to sit right under the title — bottom-anchored
-     positioning left a huge dead band between heading and subtext on
-     phones (felt like a layout bug). Top-anchored is tighter and still
-     never collides with the title. */
+  /* Sits in the lower-right of the panel, right-aligned, opposite
+     the rainbow heading. `bottom: 22vh` keeps the para clearly inside
+     the visible viewport (was 8vh which was pinned too low). */
   .about-body  {
-    top: 44vh;
-    bottom: auto;
-    left: 6vw;
+    top: auto;
+    bottom: 22vh;
+    left: auto;
+    right: 6vw;
     max-width: 34ch;
+    text-align: right;
+    /* Bumped from the desktop fluid clamp — at mobile sizes the
+       1.05rem fluid floor read as small body copy; lift to ~1.15rem
+       so the supporting note carries the same weight as other
+       paragraph text across the site. */
+    font-size: 1.15rem;
+    line-height: 1.55;
   }
 }
 
@@ -250,7 +257,7 @@
 
 .reveal-stat-k {
   font-size: 0.95rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-dim);
   font-weight: 500;
@@ -276,7 +283,7 @@
 @media (max-width: 900px) {
   .reveal-stat { width: 42vw; }
   .reveal-stat-v { font-size: clamp(3.2rem, 14vw, 5.5rem); }
-  .reveal-stat-k { font-size: 0.85rem; }
+  .reveal-stat-k { font-size: 1.02rem; }
   .reveal-stat-1 { top: 22vh; left: 5vw; }
   .reveal-stat-2 {
     top: 22.5vh;
@@ -349,7 +356,7 @@
 
 .process-float-num {
   font-size: 0.75rem;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   opacity: 0.55;
   font-variant-numeric: tabular-nums;
@@ -380,7 +387,9 @@
 }
 
 .process-float figcaption h3 {
-  font-size: clamp(1.4rem, 1.9vw, 2.1rem);
+  /* Was clamp(1.4rem, 1.9vw, 2.1rem) — felt small next to the big
+     ghost "Process" word behind. Bumped one step. */
+  font-size: clamp(1.7rem, 2.4vw, 2.7rem);
   font-weight: 700;
   font-style: normal;
   line-height: 1.05;
@@ -390,7 +399,10 @@
 }
 
 .process-float figcaption p {
-  font-size: clamp(0.95rem, 1.05vw, 1.1rem);
+  /* Bumped from clamp(0.95rem, 1.05vw, 1.1rem). The body copy under
+     each step (Audit / Implement / Track / Adapt) reads as the
+     supporting note, so it sizes up in lockstep with the title. */
+  font-size: clamp(1.1rem, 1.25vw, 1.3rem);
   line-height: 1.5;
   /* Was 0.72 — too dim to read against the dark backdrop while the panel
      is mid-scroll on phones; lift to a near-text contrast so each step
@@ -399,22 +411,25 @@
   margin: 0;
   max-width: 36ch;
   text-transform: none;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.07em;
   font-weight: 400;
   color: var(--text);
 }
 
 /* Scattered placements — irregular positions, no tilt.
    High cards anchor from top, low cards anchor from bottom so they
-   never clip regardless of viewport height. */
+   never clip regardless of viewport height. All four cards were
+   lifted ~4vh on this pass — the bigger title/body type was sitting
+   too close to the bottom edge, and the scene reads better when
+   the cards float higher inside the pinned panel. */
 .process-float-1 {
-  top: 12vh;
+  top: 8vh;
   left: -2vw;
   width: clamp(20rem, 24vw, 26rem);
 }
 
 .process-float-2 {
-  bottom: 4vh;
+  bottom: 10vh;
   left: 26vw;
   width: clamp(20rem, 24vw, 26rem);
 }
@@ -424,13 +439,13 @@
 }
 
 .process-float-3 {
-  top: 8vh;
+  top: 4vh;
   left: 54vw;
   width: clamp(20rem, 24vw, 26rem);
 }
 
 .process-float-4 {
-  bottom: 8vh;
+  bottom: 14vh;
   left: 82vw;
   width: clamp(20rem, 24vw, 26rem);
 }
@@ -447,10 +462,12 @@
 @media (max-width: 900px) {
   .about-panel-process { flex-basis: 230vw; }
   .process-float { width: 52vw; }
-  .process-float-1 { top: 10vh;    left: 5vw;   }
-  .process-float-2 { top: auto; bottom: 6vh; left: 60vw;  }
-  .process-float-3 { top: 8vh;     left: 115vw; }
-  .process-float-4 { top: auto; bottom: 6vh; left: 165vw; }
+  /* Lifted each card ~4vh so the bigger title/body text has clear
+     vertical room and the scene reads higher up the pinned panel. */
+  .process-float-1 { top: 6vh;     left: 5vw;   }
+  .process-float-2 { top: auto; bottom: 12vh; left: 60vw;  }
+  .process-float-3 { top: 4vh;     left: 115vw; }
+  .process-float-4 { top: auto; bottom: 12vh; left: 165vw; }
   .process-ghost-a { font-size: 44vw; top: 35vh; left: 40vw; }
 }
 
@@ -526,7 +543,7 @@
   opacity: 0.78;
   margin: 0;
   text-transform: none;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   font-weight: 500;
   font-style: normal;
   line-height: 1.45;
@@ -596,34 +613,39 @@
   .about-stat-clients { bottom: 22vh; left: 78vw; }
   .about-stat-focus   { top: 10vh;    left: 100vw; }
   .about-stat-v { font-size: clamp(2.4rem, 12vw, 4rem); }
-  .about-stat-k { font-size: 0.62rem; letter-spacing: 0.18em; }
+  .about-stat-k { font-size: 0.62rem; letter-spacing: 0.2em; }
   .about-banner-stack { height: 32vh; }
 
   .about-title { top: 12vh; font-size: clamp(2.4rem, 12vw, 4rem); }
   .about-body {
-    top: 42vh;
-    bottom: auto;
-    font-size: 0.95rem;
+    top: auto;
+    bottom: 18vh;
+    left: auto;
+    right: 6vw;
+    /* Bumped from 0.95rem to match the wider mobile body size used
+       in other paragraphs across the site. */
+    font-size: 1.15rem;
     max-width: 32ch;
     line-height: 1.5;
+    text-align: right;
   }
-  .about-stamp { font-size: 0.7rem; letter-spacing: 0.14em; }
+  .about-stamp { font-size: 0.7rem; letter-spacing: 0.16em; }
 
   .reveal-stat { width: 46vw; gap: 0.5rem; }
   .reveal-stat-v { font-size: clamp(2.6rem, 14vw, 4.2rem); }
-  .reveal-stat-k { font-size: 0.74rem; letter-spacing: 0.14em; max-width: 18ch; }
-  .reveal-stats-kicker { font-size: 0.72rem; letter-spacing: 0.22em; left: 5vw; }
+  .reveal-stat-k { font-size: 0.74rem; letter-spacing: 0.16em; max-width: 18ch; }
+  .reveal-stats-kicker { font-size: 0.72rem; letter-spacing: 0.2em; left: 5vw; }
 
-  .process-float figcaption h3 { font-size: 1.2rem; }
+  .process-float figcaption h3 { font-size: 1.5rem; }
   .process-float figcaption p {
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     line-height: 1.45;
     opacity: 0.95;
   }
-  .process-float-num { font-size: 0.66rem; letter-spacing: 0.2em; }
+  .process-float-num { font-size: 0.66rem; letter-spacing: 0.22em; }
 
   .quote-line { font-size: clamp(2.4rem, 16vw, 5rem); }
-  .about-quote-sub { font-size: 0.92rem; line-height: 1.45; }
+  .about-quote-sub { font-size: 1.15rem; line-height: 1.45; }
 
   .about-banner-caption h3 { font-size: clamp(1.4rem, 7vw, 2rem); }
   .about-banner-caption { gap: 1rem; }

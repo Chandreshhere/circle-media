@@ -163,38 +163,85 @@ export default function GlobeWebGL() {
       meridianRefs.push(meridian);
     }
 
-    // Dot grid covering the globe. Resolution dropped much further so
-    // each white dot sits clearly apart from its neighbours — the
-    // planet reads as a sparse constellation of points rather than a
-    // textured surface. Each dot is also a touch larger and brighter to
-    // compensate for the lower density.
+    // Dot grid covering the globe.
+    // Two passes, both rendered as a single THREE.Points cloud with
+    // per-vertex colour:
+    //   PASS A — dense low-density grid in white (the planet's
+    //   "surface" — keeps the recognisable globe-of-dots silhouette).
+    //   PASS B — a sparser overlay of accent-coloured points scattered
+    //   across the same sphere using deterministic Fibonacci sampling,
+    //   so every render gets the same layout. The accent colours cycle
+    //   through the site's brand palette (blue / pink / yellow / mint /
+    //   red) — each accent point sits slightly proud of the white grid
+    //   so it reads as a "lit data point" instead of a colour swap.
+    // The result is roughly 3-4x more dots than before AND each one
+    // carries a colour cue, giving the globe a richer "live network"
+    // feel without changing geometry density on either axis alone.
+    const PALETTE = [
+      [0.30, 0.42, 0.70], // c-blue   #4D6CB3
+      [0.93, 0.34, 0.54], // c-pink   #EE5789
+      [0.96, 0.69, 0.18], // c-yellow #F6AF2D
+      [0.35, 0.74, 0.47], // c-mint   #5ABE79
+      [0.95, 0.40, 0.33], // c-red    #F16754
+    ];
     const dotPositions = [];
-    const N_LAT = 16;
+    const dotColors = [];
+
+    // --- Pass A: white grid (denser than before: 28 lat bands × ~9
+    // lon-per-radian = ~700 points after pole drop). ---
+    const N_LAT = 28;
     for (let i = 1; i < N_LAT; i++) {
       const lat = -90 + (180 * i) / N_LAT;
       const numLon = Math.max(
-        3,
-        Math.round(2 * Math.PI * Math.cos((lat * Math.PI) / 180) * 5)
+        4,
+        Math.round(2 * Math.PI * Math.cos((lat * Math.PI) / 180) * 9)
       );
       for (let j = 0; j < numLon; j++) {
         const lon = -180 + (360 * j) / numLon;
         const v = latLonToVec3(lat, lon, radius * 1.005);
         dotPositions.push(v.x, v.y, v.z);
+        // Slight per-point alpha variation so the surface reads as a
+        // real constellation rather than a perfect mesh. Encoded as
+        // colour value with 1.0 white scaled by a noise factor.
+        const tint = 0.65 + 0.35 * Math.abs(Math.sin(i * 1.7 + j * 2.3));
+        dotColors.push(tint, tint, tint);
       }
     }
+
+    // --- Pass B: ~240 accent points scattered evenly via Fibonacci
+    // sphere sampling. Each point gets one of the 5 palette colours,
+    // cycling deterministically. ---
+    const ACCENT_COUNT = 240;
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+    for (let n = 0; n < ACCENT_COUNT; n++) {
+      const y = 1 - (n / (ACCENT_COUNT - 1)) * 2; // -1..1
+      const r = Math.sqrt(1 - y * y);
+      const theta = goldenAngle * n;
+      const x = Math.cos(theta) * r;
+      const z = Math.sin(theta) * r;
+      const surf = radius * 1.012;
+      dotPositions.push(x * surf, y * surf, z * surf);
+      const [pr, pg, pb] = PALETTE[n % PALETTE.length];
+      dotColors.push(pr, pg, pb);
+    }
+
     const dotsGeo = new THREE.BufferGeometry();
     dotsGeo.setAttribute(
       "position",
       new THREE.Float32BufferAttribute(dotPositions, 3)
     );
+    dotsGeo.setAttribute(
+      "color",
+      new THREE.Float32BufferAttribute(dotColors, 3)
+    );
     const dots = new THREE.Points(
       dotsGeo,
       new THREE.PointsMaterial({
-        color: 0xffffff,
-        size: 0.04,
+        vertexColors: true,
+        size: 0.035,
         sizeAttenuation: true,
         transparent: true,
-        opacity: 0.7,
+        opacity: 0.85,
       })
     );
     group.add(dots);
@@ -211,105 +258,184 @@ export default function GlobeWebGL() {
     );
     group.add(atmosphere);
 
-    // Country pins — bigger, more saturated pink spheres with two halo
-    // rings so each marker reads clearly against the sparser dot grid.
-    // Decorative pins are smaller, less saturated, no animated halo —
-    // they exist to fill empty regions of the globe (Africa, Oceania,
-    // SE Asia, etc.) without competing visually with the 4 real
-    // markets that get full halos + connection arcs.
-    const PIN_PINK = 0xff3d7f;
-    const PIN_DOT  = 0xffb8d0; // softer pink for decorative dots
+    // Country pins — each marker now gets its OWN brand-palette colour
+    // so the globe reads as a network of multi-hued nodes instead of
+    // an all-pink scene. Real (non-decorative) pins keep two halo
+    // rings + the pulse animation; decorative pins are smaller and
+    // calmer (single dot + soft halo, no animated outer ring) but
+    // still pick a distinct colour from the palette.
+    const PIN_HEX = [
+      0xff3d7f, // hot pink   (kept as the default "primary" hue)
+      0x60a5fa, // sky blue
+      0xf6af2d, // golden yellow
+      0x5abe79, // mint
+      0xf16754, // coral red
+      0xa78bfa, // violet
+      0x60d4cb, // teal
+    ];
+    const colorFor = (i) => PIN_HEX[i % PIN_HEX.length];
+    const PIN_PINK = PIN_HEX[0]; // kept for legacy references (kill-disposal)
+    // Helper that promotes a pin mesh to always-on-top so it stays
+    // visible even when the planet hemisphere it sits on rotates to
+    // the back of the camera — same overlay rule as the connection
+    // arcs below.
+    const promoteOverlay = (mesh) => {
+      mesh.material.depthTest = false;
+      mesh.material.depthWrite = false;
+      mesh.renderOrder = 11;
+    };
     const pinObjs = [];
-    PINS.forEach((p) => {
+    PINS.forEach((p, idx) => {
       const pos = latLonToVec3(p.lat, p.lon, radius * 1.015);
+      const c = colorFor(idx);
 
       if (p.decorative) {
         const dot = new THREE.Mesh(
-          new THREE.SphereGeometry(0.035, 16, 16),
+          new THREE.SphereGeometry(0.045, 16, 16),
           new THREE.MeshBasicMaterial({
-            color: PIN_DOT,
+            color: c,
             transparent: true,
-            opacity: 0.85,
+            opacity: 0.95,
           })
         );
         dot.position.copy(pos);
+        promoteOverlay(dot);
         group.add(dot);
 
         const halo = new THREE.Mesh(
-          new THREE.SphereGeometry(0.065, 16, 16),
+          new THREE.SphereGeometry(0.085, 16, 16),
           new THREE.MeshBasicMaterial({
-            color: PIN_DOT,
+            color: c,
             transparent: true,
-            opacity: 0.3,
+            opacity: 0.35,
           })
         );
         halo.position.copy(pos);
+        promoteOverlay(halo);
         group.add(halo);
 
-        pinObjs.push({ dot, halo, basePos: pos.clone(), decorative: true });
+        pinObjs.push({ dot, halo, basePos: pos.clone(), decorative: true, color: c });
         return;
       }
 
       const dot = new THREE.Mesh(
-        new THREE.SphereGeometry(0.07, 24, 24),
-        new THREE.MeshBasicMaterial({ color: PIN_PINK })
+        new THREE.SphereGeometry(0.075, 24, 24),
+        new THREE.MeshBasicMaterial({ color: c })
       );
       dot.position.copy(pos);
+      promoteOverlay(dot);
       group.add(dot);
 
       const halo = new THREE.Mesh(
-        new THREE.SphereGeometry(0.13, 24, 24),
+        new THREE.SphereGeometry(0.14, 24, 24),
         new THREE.MeshBasicMaterial({
-          color: PIN_PINK,
+          color: c,
           transparent: true,
-          opacity: 0.4,
+          opacity: 0.42,
         })
       );
       halo.position.copy(pos);
+      promoteOverlay(halo);
       group.add(halo);
 
       // Outer ring picks up the pulse animation in the render loop and
       // gives the marker an actively-pinging look.
       const halo2 = new THREE.Mesh(
-        new THREE.SphereGeometry(0.2, 20, 20),
+        new THREE.SphereGeometry(0.21, 20, 20),
         new THREE.MeshBasicMaterial({
-          color: PIN_PINK,
+          color: c,
           transparent: true,
-          opacity: 0.18,
+          opacity: 0.2,
         })
       );
       halo2.position.copy(pos);
+      promoteOverlay(halo2);
       group.add(halo2);
 
-      pinObjs.push({ dot, halo, halo2, basePos: pos.clone() });
+      pinObjs.push({ dot, halo, halo2, basePos: pos.clone(), color: c });
     });
 
-    // Connection arcs — solid pink lines from the home pin (India) to
-    // every other real served country (decorative pins are skipped).
-    // Midpoints are lifted off the surface so each arc sweeps high
-    // above the planet rather than hugging it.
+    // Connection arcs — two layers:
+    //
+    //   PRIMARY (pink, bright, lifted high) — every PAIR of real served
+    //   pins connects to every other real served pin (full mesh) so the
+    //   network reads as "we run between these places", not just "from
+    //   home to spokes". With 4 real pins (India, Dubai, US, Canada)
+    //   that's C(4,2) = 6 primary arcs.
+    //
+    //   SECONDARY (soft pink, lower, thinner) — each decorative pin
+    //   connects to its nearest real pin. Looks like a quieter
+    //   regional sub-network feeding into the primary arcs.
     const arcRefs = [];
-    const home = pinObjs[0].basePos;
-    pinObjs.slice(1).forEach((target) => {
-      if (target.decorative) return;
-      const a = home;
-      const b = target.basePos;
+
+    const buildArc = (a, b, opts = {}) => {
+      const lift = opts.lift ?? 1.55;
+      const liftBoost = opts.liftBoost ?? 0.7;
+      const segs = opts.segments ?? 64;
       const mid = a.clone().add(b).multiplyScalar(0.5);
-      const liftFactor = 1.55 + 0.7 * (a.distanceTo(b) / (radius * 2));
+      const liftFactor = lift + liftBoost * (a.distanceTo(b) / (radius * 2));
       mid.normalize().multiplyScalar(radius * liftFactor);
       const curve = new THREE.QuadraticBezierCurve3(a, mid, b);
-      const points = curve.getPoints(64);
+      const points = curve.getPoints(segs);
       const arcGeo = new THREE.BufferGeometry().setFromPoints(points);
       const arc = new THREE.Line(
         arcGeo,
         new THREE.LineBasicMaterial({
-          color: PIN_PINK,
+          color: opts.color ?? PIN_PINK,
           transparent: true,
-          opacity: 0.95,
+          opacity: opts.opacity ?? 0.95,
+          /* Always render arcs as an OVERLAY on top of the planet so
+             rotating the globe never hides the connection network
+             behind the back hemisphere. depthTest:false makes the
+             material ignore the depth buffer; depthWrite:false keeps
+             it from occluding other transparent layers. Combined
+             with renderOrder=10 below, every arc paints last and
+             stays visible regardless of its world-space Z. */
+          depthTest: false,
+          depthWrite: false,
         })
       );
+      arc.renderOrder = 10;
       group.add(arc);
       arcRefs.push(arc);
+    };
+
+    // PRIMARY: full mesh between all real (non-decorative) pins.
+    // Each arc takes the colour of the first endpoint pin so the
+    // network reads as multi-hued rather than all-pink.
+    const realPins = pinObjs.filter((p) => !p.decorative);
+    for (let i = 0; i < realPins.length; i++) {
+      for (let j = i + 1; j < realPins.length; j++) {
+        buildArc(realPins[i].basePos, realPins[j].basePos, {
+          color: realPins[i].color,
+          opacity: 0.92,
+          lift: 1.55,
+          liftBoost: 0.7,
+          segments: 64,
+        });
+      }
+    }
+
+    // SECONDARY: every decorative pin → nearest real pin. The arc
+    // takes the DECORATIVE pin's own colour (each decorative pin
+    // already has one assigned from PIN_HEX), so each feeder line
+    // matches its source pin instead of all being one washed-out hue.
+    pinObjs.filter((p) => p.decorative).forEach((dec) => {
+      let nearest = realPins[0];
+      let bestD = Infinity;
+      for (const r of realPins) {
+        const d = dec.basePos.distanceTo(r.basePos);
+        if (d < bestD) { bestD = d; nearest = r; }
+      }
+      buildArc(dec.basePos, nearest.basePos, {
+        color: dec.color,
+        opacity: 0.55,
+        // Lower trajectory than the primary arcs so they read as
+        // local feeder lines, not hero connections.
+        lift: 1.25,
+        liftBoost: 0.4,
+        segments: 40,
+      });
     });
 
     // ---- Interaction: drag rotates the group, idle spin always present ----

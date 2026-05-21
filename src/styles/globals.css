@@ -67,10 +67,65 @@ body {
   overflow-x: clip;
 }
 
-/* Belt-and-suspenders: explicitly allow vertical pan on phones so no
-   in-page touch handler can accidentally swallow the scroll gesture. */
+/* `touch-action: manipulation` — allows panning in all directions AND
+   pinch-zoom in BOTH directions (pinch-out to zoom in, pinch-in to
+   zoom out), and disables the legacy 300ms double-tap-zoom delay.
+   The earlier `pan-y` was blocking pinch-zoom entirely; `pan-y
+   pinch-zoom` allowed zooming in but on some browsers the
+   spread-vs-pinch direction was being clamped, so the user could
+   zoom in but not back out. `manipulation` is the standard mobile
+   setting and behaves correctly in both directions. */
 @media (max-width: 900px) {
-  html, body { touch-action: pan-y; }
+  html, body { touch-action: manipulation; }
+}
+
+/* =====================================================================
+   Desktop side-padding normaliser.
+   Every top-level section and page-level wrapper sat at a slightly
+   different horizontal inset (some used `clamp(1.5rem, 5vw, 5rem)`,
+   others `7vw`, others a flat `2.5rem`). On desktop (>=901px) we want
+   ONE consistent 20px gutter on every section so the whole site reads
+   as a single unified grid. The selector list below overrides only the
+   horizontal padding; existing vertical padding is preserved. Phones
+   (<901px) keep their hand-tuned smaller padding from each section's
+   own mobile rules. */
+@media (min-width: 901px) {
+  .services-page,
+  .about-page,
+  .work-page,
+  .brands-page,
+  .services-hero,
+  .about-hero,
+  .work-hero,
+  .brands-page-hero,
+  .hero-split-content,
+  .process,
+  .tagline,
+  .reveal-hero,
+  .ads-partners,
+  .pww,
+  .testimonials,
+  .brands,
+  .reach,
+  .clients-strip,
+  .clients-grid-section,
+  .wwd,
+  .services-body,
+  .services-flight,
+  .about-stats,
+  .about-origin,
+  .about-principles,
+  .about-marquee,
+  .work-cards,
+  .work-detail-hero,
+  .work-detail-gallery,
+  .bsx,
+  .footer,
+  .contact,
+  .w-sec {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
 }
 
 body {
@@ -147,38 +202,40 @@ img {
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 500;
-  /* Pushed looser again — from -0.005em to 0.005em. Combined with the
-     body bump below, display type now reads decidedly airier. */
-  letter-spacing: 0.04em;
-  line-height: 1.02;
+  /* Eased back from the previous 0.1em bump — that read as visibly
+     over-tracked on display headings. 0.06em keeps the airier feel
+     without looking like the heading is falling apart. */
+  letter-spacing: 0.06em;
+  line-height: 1.05;
 }
 
 h1 {
   font-size: clamp(5rem, 17vw, 17rem);
   font-weight: 400;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.005em;
 }
 
 h2 {
   font-size: clamp(3.2rem, 7.2vw, 7.2rem);
   font-weight: 400;
-  letter-spacing: -0.005em;
+  letter-spacing: 0.005em;
 }
 
 h3 {
   font-size: 1.85rem;
   font-weight: 500;
+  letter-spacing: 0.015em;
 }
 
 p, a, span {
   color: var(--text);
   font-size: 0.9rem;
   text-transform: uppercase;
-  /* Pushed from 0.07em → 0.1em. Reads noticeably airier across all
-     body copy / inline tags. Heading tracking was loosened in
-     lockstep so the two scales stay balanced. */
-  letter-spacing: 0.1em;
-  line-height: 1.45;
+  /* Eased back from the 0.18em bump — that was visibly over-spaced
+     on inline labels. 0.12em keeps a generous gap but the words
+     still read as words. */
+  letter-spacing: 0.12em;
+  line-height: 1.5;
   text-decoration: none;
   font-family: var(--font-body);
 }
@@ -241,13 +298,19 @@ html.lenis, html.lenis body { height: auto; }
   section { min-height: auto; }
   h1 { font-size: clamp(3rem, 14vw, 6rem); }
   h2 { font-size: clamp(2.2rem, 9vw, 4rem); }
-  h3 { font-size: 1.35rem; }
-  p, a, span { font-size: 0.92rem; line-height: 1.5; }
+  h3 { font-size: 1.5rem; }
+  /* Body / inline tag size lifted from 0.92rem → 1.08rem so all the
+     small paragraphs across the site (about-body, testimonials head,
+     reach-sub, ads-partner head, pww-sub, brand notes, etc.) read at
+     a comfortable mobile size by default. Line-height nudged for the
+     larger size. */
+  p, a, span { font-size: 1.08rem; line-height: 1.55; }
   img { max-width: 100%; }
 }
 
 @media (max-width: 480px) {
   h1 { font-size: clamp(2.6rem, 13vw, 4.5rem); }
   h2 { font-size: clamp(1.9rem, 9vw, 3.2rem); }
-  h3 { font-size: 1.2rem; }
+  h3 { font-size: 1.3rem; }
+  p, a, span { font-size: 1.02rem; line-height: 1.55; }
 }

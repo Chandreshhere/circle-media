@@ -49,7 +49,7 @@ export const services = [
     tagline: "On-location and studio shoots briefed to the channel, captured for performance.",
     image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=900&q=80",
     copy: "Studio and on-location shoots — products, lifestyle, brand films — briefed to the channel, captured for the brief, and edited so every frame earns its place.",
-    platform: { name: "Adobe Premiere", logo: "https://upload.wikimedia.org/wikipedia/commons/2/22/Adobe_Premiere_Pro_CC_icon.svg" }
+    platform: { name: "Adobe Premiere", logo: "https://upload.wikimedia.org/wikipedia/commons/f/f2/Adobe_Premiere_Pro_Logo.svg" }
   }
 ];
 
