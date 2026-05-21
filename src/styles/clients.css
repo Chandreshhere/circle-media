@@ -602,10 +602,10 @@
        under the sticky edge-fade gradient AND right against the
        section bound, which read as the row being clipped. Bumped to
        3rem top so the honeycomb has clear space above row 1.
-       Bottom padding bumped to 4rem so the last orb row has clear
-       space above the next section instead of running right into
-       it on mobile. */
-    padding: 3rem 0 4rem;
+       Bottom padding now 5.5rem — slightly more breathing room than
+       4rem so the last orb row has a comfortable buffer above the
+       next section on mobile. */
+    padding: 3rem 0 5.5rem;
     /* Belt-and-suspenders: clip horizontal overflow on mobile so the
        JS fish-eye's per-orb transform:scale can't paint an orb
        outside the viewport even on a borderline-narrow phone. */
@@ -678,7 +678,7 @@
 }
 
 @media (max-width: 480px) {
-  .brands { padding: 2.5rem 0 3.5rem; }
+  .brands { padding: 2.5rem 0 4.5rem; }
   /* Tighter section + honeycomb side padding so the 4-orb row gets
      every available pixel. 0.25rem padding × 2 sides + 0.4rem row
      gap × 3 + orb-size × 4 = comfortably under 100vw at 360-480px. */

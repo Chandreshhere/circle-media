@@ -125,8 +125,11 @@
   position: absolute;
   bottom: 14vh;
   left: 4vw;
-  max-width: 38ch;
-  font-size: clamp(1.05rem, 1.2vw, 1.2rem);
+  max-width: 42ch;
+  /* Bumped from clamp(1.05rem, 1.2vw, 1.2rem) so the "Specializing
+     in social-media-first campaigns" body copy reads at proper
+     supporting-paragraph scale on desktop, not as small caption. */
+  font-size: clamp(1.35rem, 1.6vw, 1.65rem);
   line-height: 1.55;
   /* Bumped from 0.82 — at the previous value, the dim greys lost
      definition on phones during the horizontal pan. */
@@ -173,7 +176,16 @@
 
 @media (max-width: 900px) {
   .about-panel-intro { flex-basis: 100vw; }
-  .about-title { top: 14vh; left: 6vw; max-width: 90vw; }
+  .about-title {
+    top: 14vh;
+    left: 6vw;
+    max-width: 90vw;
+    /* Bumped from the desktop fluid clamp (which produced ~50px
+       on a 600px phone). Explicit 12vw–7rem clamp gives the
+       rainbow heading proper hero scale on mobile. */
+    font-size: clamp(3.4rem, 12vw, 7rem);
+    line-height: 0.95;
+  }
   /* Sits in the lower-right of the panel, right-aligned, opposite
      the rainbow heading. `bottom: 22vh` keeps the para clearly inside
      the visible viewport (was 8vh which was pinned too low). */
@@ -184,12 +196,10 @@
     right: 6vw;
     max-width: 34ch;
     text-align: right;
-    /* Bumped from the desktop fluid clamp — at mobile sizes the
-       1.05rem fluid floor read as small body copy; lift to ~1.15rem
-       so the supporting note carries the same weight as other
-       paragraph text across the site. */
-    font-size: 1.15rem;
-    line-height: 1.55;
+    /* Bumped to 1.4rem on mobile — paragraph reads as a properly
+       weighted supporting note, not a caption. */
+    font-size: 1.4rem;
+    line-height: 1.5;
   }
 }
 
@@ -504,7 +514,11 @@
   --fill: 0%;
   display: inline-block;
   font-family: var(--font-display);
-  font-size: clamp(4rem, 14vw, 14rem);
+  /* Eased back from clamp(4rem, 14vw, 14rem) — that read as huge on
+     a 1440+ monitor. The new desktop cap of 10rem keeps it as a
+     hero line without overwhelming the panel. Mobile still scales
+     up via the 14vw factor inside the larger override below. */
+  font-size: clamp(3.5rem, 10vw, 10rem);
   font-weight: 700;
   font-style: normal;
   text-transform: none;
@@ -531,16 +545,25 @@
 .quote-sub-wrap {
   position: absolute;
   bottom: 12vh;
-  left: 4vw;
+  /* Aligned to the right side of the panel — was left:4vw which
+     stacked the cycling line directly under the rainbow heading.
+     Now it sits on the right so the panel reads as heading-left +
+     cycler-right, balanced across the panel width. */
+  right: 4vw;
+  left: auto;
   overflow: hidden;
   max-width: 52ch;
+  text-align: right;
   z-index: 3;
 }
 
 .about-quote-sub {
   display: block;
-  font-size: clamp(1rem, 1.25vw, 1.25rem);
-  opacity: 0.78;
+  /* Bumped from clamp(1rem, 1.25vw, 1.25rem). The cycling caption
+     below the rainbow heading now reads as a substantial line at
+     desktop too, not a small footer. */
+  font-size: clamp(1.4rem, 1.8vw, 1.8rem);
+  opacity: 0.85;
   margin: 0;
   text-transform: none;
   letter-spacing: 0.06em;
@@ -565,11 +588,12 @@
   .quote-line { font-size: clamp(3.6rem, 22vw, 8rem); }
   /* Moved the sub-line up from bottom:8vh to bottom:30vh so the
      huge dead band between the heading and the "Measured.
-     Accountable. Relentless." cycler closes up. Bumped its font
-     size at the same time so it reads as a substantial caption,
-     not a small footnote. */
-  .quote-sub-wrap { bottom: 30vh; left: 6vw; }
-  .about-quote-sub { font-size: 1.5rem; line-height: 1.4; }
+     Accountable. Relentless." cycler closes up. Right-aligned to
+     match desktop. */
+  .quote-sub-wrap { bottom: 30vh; right: 6vw; left: auto; }
+  /* Bumped from 1.5rem → 1.75rem so the caption holds its weight
+     under the now-bigger rainbow heading on mobile. */
+  .about-quote-sub { font-size: 1.75rem; line-height: 1.4; }
 }
 
 /* ——— Panel 4: Banner ——— */
@@ -625,15 +649,19 @@
   .about-stat-k { font-size: 0.62rem; letter-spacing: 0.2em; }
   .about-banner-stack { height: 32vh; }
 
-  .about-title { top: 12vh; font-size: clamp(2.4rem, 12vw, 4rem); }
+  /* Bumped from clamp(2.4rem, 12vw, 4rem) — was capping at ~64px
+     on small phones, now scales bigger via 14vw and a 5rem cap so
+     the heading still feels hero-scale below 480px. */
+  .about-title { top: 12vh; font-size: clamp(3rem, 14vw, 5rem); }
   .about-body {
     top: auto;
     bottom: 18vh;
     left: auto;
     right: 6vw;
-    /* Bumped from 0.95rem to match the wider mobile body size used
-       in other paragraphs across the site. */
-    font-size: 1.15rem;
+    /* Bumped to 1.3rem on very small phones so the paragraph still
+       reads at supporting-note weight, matching the larger 1.4rem
+       at the 900px breakpoint. */
+    font-size: 1.3rem;
     max-width: 32ch;
     line-height: 1.5;
     text-align: right;
@@ -653,8 +681,9 @@
   }
   .process-float-num { font-size: 0.66rem; letter-spacing: 0.22em; }
 
-  .quote-line { font-size: clamp(2.4rem, 16vw, 5rem); }
-  .about-quote-sub { font-size: 1.15rem; line-height: 1.45; }
+  /* Slightly larger heading and caption on very small phones too. */
+  .quote-line { font-size: clamp(2.8rem, 18vw, 5.5rem); }
+  .about-quote-sub { font-size: 1.45rem; line-height: 1.4; }
 
   .about-banner-caption h3 { font-size: clamp(1.4rem, 7vw, 2rem); }
   .about-banner-caption { gap: 1rem; }

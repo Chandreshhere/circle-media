@@ -93,17 +93,15 @@ export default function GlobeWebGL() {
     );
     group.add(planet);
 
-    // Wireframe — latitude / longitude grid. Coloured red to match
-    // the rest of the surface (rings, meridians, dot grid). Opacity
-    // bumped slightly so the red lines still read clearly against
-    // the dark planet body.
-    const SURFACE_RED = 0xff3d3d;
+    // Wireframe — latitude / longitude grid. White, slightly
+    // brighter than the dot base so the grid lines read as the
+    // planet's structure underneath the data points.
     const wire = new THREE.LineSegments(
       new THREE.WireframeGeometry(new THREE.SphereGeometry(radius, 36, 24)),
       new THREE.LineBasicMaterial({
-        color: SURFACE_RED,
+        color: 0xffffff,
         transparent: true,
-        opacity: 0.28,
+        opacity: 0.22,
       })
     );
     group.add(wire);
@@ -138,9 +136,9 @@ export default function GlobeWebGL() {
       group.add(ring);
       ringRefs.push(ring);
     };
-    addRing(0,    0.6,  SURFACE_RED); // equator
-    addRing(23,   0.35, SURFACE_RED); // tropic of cancer
-    addRing(-23,  0.35, SURFACE_RED); // tropic of capricorn
+    addRing(0,    0.55, 0xffffff); // equator
+    addRing(23,   0.30, 0xffffff); // tropic of cancer
+    addRing(-23,  0.30, 0xffffff); // tropic of capricorn
 
     // Vertical meridians (every 30°) — visible longitude lines.
     const meridianRefs = [];
@@ -157,32 +155,29 @@ export default function GlobeWebGL() {
       const meridian = new THREE.Line(
         meridianGeo,
         new THREE.LineBasicMaterial({
-          color: SURFACE_RED,
+          color: 0xffffff,
           transparent: true,
-          opacity: 0.22,
+          opacity: 0.18,
         })
       );
       group.add(meridian);
       meridianRefs.push(meridian);
     }
 
-    // Dot grid covering the globe — all surface dots render in red
-    // (matching the wireframe / rings / meridians). Two passes:
-    //   PASS A — dense base grid (28 lat × ~9 lon-per-radian), each
-    //   dot getting a slight tonal variation so the surface reads
-    //   as a real constellation rather than a perfect mesh.
-    //   PASS B — ~240 brighter "lit" points scattered evenly via
-    //   Fibonacci sphere sampling, sitting slightly proud of the
-    //   base grid so they pop as data nodes.
-    // Encoded as a single THREE.Points cloud with per-vertex colour
-    // (still uses vertexColors:true so each point can carry its own
-    // red intensity, even though the base hue is shared).
-    const RED_BASE = [1.0, 0.24, 0.24];   // matches SURFACE_RED (#ff3d3d)
-    const RED_LIT  = [1.0, 0.45, 0.35];   // warmer, brighter accent
+    // Dot grid covering the globe.
+    //   PASS A — dense base grid in WHITE with slight tonal variation,
+    //   so the planet's surface reads as a real constellation rather
+    //   than a flat mesh. The white grid is the "planet body".
+    //   PASS B — ~240 RED "lit" points scattered evenly via Fibonacci
+    //   sphere sampling, sitting slightly proud of the base grid so
+    //   they pop as bright red data nodes against the white surface.
+    // Single THREE.Points cloud with per-vertex colour so the two
+    // passes can render in the same draw call.
+    const ACCENT_RED = [1.0, 0.32, 0.32];
     const dotPositions = [];
     const dotColors = [];
 
-    // --- Pass A: base red grid. ---
+    // --- Pass A: white base grid (28 lat bands × ~9 lon-per-radian). ---
     const N_LAT = 28;
     for (let i = 1; i < N_LAT; i++) {
       const lat = -90 + (180 * i) / N_LAT;
@@ -194,14 +189,12 @@ export default function GlobeWebGL() {
         const lon = -180 + (360 * j) / numLon;
         const v = latLonToVec3(lat, lon, radius * 1.005);
         dotPositions.push(v.x, v.y, v.z);
-        // Tonal variation: scale each dot's red by 0.65–1.0 so the
-        // surface looks like a real constellation, not a flat mesh.
         const tint = 0.65 + 0.35 * Math.abs(Math.sin(i * 1.7 + j * 2.3));
-        dotColors.push(RED_BASE[0] * tint, RED_BASE[1] * tint, RED_BASE[2] * tint);
+        dotColors.push(tint, tint, tint);
       }
     }
 
-    // --- Pass B: brighter "lit" red accent points scattered evenly. ---
+    // --- Pass B: red accent points scattered evenly. ---
     const ACCENT_COUNT = 240;
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
     for (let n = 0; n < ACCENT_COUNT; n++) {
@@ -212,7 +205,7 @@ export default function GlobeWebGL() {
       const z = Math.sin(theta) * r;
       const surf = radius * 1.012;
       dotPositions.push(x * surf, y * surf, z * surf);
-      dotColors.push(RED_LIT[0], RED_LIT[1], RED_LIT[2]);
+      dotColors.push(ACCENT_RED[0], ACCENT_RED[1], ACCENT_RED[2]);
     }
 
     const dotsGeo = new THREE.BufferGeometry();
@@ -248,23 +241,15 @@ export default function GlobeWebGL() {
     );
     group.add(atmosphere);
 
-    // Country pins — each marker now gets its OWN brand-palette colour
-    // so the globe reads as a network of multi-hued nodes instead of
-    // an all-pink scene. Real (non-decorative) pins keep two halo
-    // rings + the pulse animation; decorative pins are smaller and
-    // calmer (single dot + soft halo, no animated outer ring) but
-    // still pick a distinct colour from the palette.
-    const PIN_HEX = [
-      0xff3d7f, // hot pink   (kept as the default "primary" hue)
-      0x60a5fa, // sky blue
-      0xf6af2d, // golden yellow
-      0x5abe79, // mint
-      0xf16754, // coral red
-      0xa78bfa, // violet
-      0x60d4cb, // teal
-    ];
-    const colorFor = (i) => PIN_HEX[i % PIN_HEX.length];
-    const PIN_PINK = PIN_HEX[0]; // kept for legacy references (kill-disposal)
+    // Country pins — every marker now renders in a single red tone
+    // (matching the accent dot grid and the connection lines), so the
+    // globe reads as a coherent red network instead of a multi-hued
+    // scene. Real (non-decorative) pins keep two halo rings + the
+    // pulse animation; decorative pins are smaller and calmer
+    // (single dot + soft halo, no animated outer ring).
+    const PIN_RED = 0xff3d3d;
+    const colorFor = () => PIN_RED;
+    const PIN_PINK = PIN_RED; // legacy alias retained for kill-disposal refs
     // Helper that promotes a pin mesh to always-on-top so it stays
     // visible even when the planet hemisphere it sits on rotates to
     // the back of the camera — same overlay rule as the connection
@@ -390,14 +375,13 @@ export default function GlobeWebGL() {
       arcRefs.push(arc);
     };
 
-    // PRIMARY: full mesh between all real (non-decorative) pins.
-    // Each arc takes the colour of the first endpoint pin so the
-    // network reads as multi-hued rather than all-pink.
+    // PRIMARY: full mesh between all real (non-decorative) pins —
+    // every arc renders red to match the unified colour system.
     const realPins = pinObjs.filter((p) => !p.decorative);
     for (let i = 0; i < realPins.length; i++) {
       for (let j = i + 1; j < realPins.length; j++) {
         buildArc(realPins[i].basePos, realPins[j].basePos, {
-          color: realPins[i].color,
+          color: PIN_RED,
           opacity: 0.92,
           lift: 1.55,
           liftBoost: 0.7,
@@ -406,10 +390,9 @@ export default function GlobeWebGL() {
       }
     }
 
-    // SECONDARY: every decorative pin → nearest real pin. The arc
-    // takes the DECORATIVE pin's own colour (each decorative pin
-    // already has one assigned from PIN_HEX), so each feeder line
-    // matches its source pin instead of all being one washed-out hue.
+    // SECONDARY: every decorative pin → nearest real pin. Same red
+    // as the primary arcs, just lower opacity + flatter trajectory
+    // so they read as quieter feeder lines.
     pinObjs.filter((p) => p.decorative).forEach((dec) => {
       let nearest = realPins[0];
       let bestD = Infinity;
@@ -418,10 +401,8 @@ export default function GlobeWebGL() {
         if (d < bestD) { bestD = d; nearest = r; }
       }
       buildArc(dec.basePos, nearest.basePos, {
-        color: dec.color,
+        color: PIN_RED,
         opacity: 0.55,
-        // Lower trajectory than the primary arcs so they read as
-        // local feeder lines, not hero connections.
         lift: 1.25,
         liftBoost: 0.4,
         segments: 40,
