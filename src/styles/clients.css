@@ -647,12 +647,24 @@
   }
   .brands-head {
     position: relative;
+    /* Reset the absolute-positioning offsets from the desktop rule
+       so the head sits flush-centred under the section padding,
+       not shifted right by the leftover `left:` clamp. */
     top: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-align: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem 1rem;
+  }
+  .brands-head > p {
+    margin: 0;
+    width: 100%;
+    text-align: center;
   }
   .brands-honeycomb {
     position: relative;
@@ -667,23 +679,19 @@
     gap: 0.7rem;
     will-change: auto;
   }
-  /* The honeycomb has a 4/3 row pattern on mobile, so the 4-orb row
-     is the constraint. With 4 × ~24vw + 3 × ~15px gaps + ~16px
-     padding, the row was ~530px wide on a 480px screen — pushing
-     the outer orbs off-screen. Pulled the orb-size formula down to
-     ~19vw so 4 + 3 gaps + side padding stays under 100vw on every
-     phone width down to ~340px. */
+  /* 4-orb row is the constraint. 4 × 23vw + 3 × 0.35rem gaps + side
+     padding stays comfortably inside 100vw down to ~340px screens. */
   .brand-orb {
-    --orb-size: clamp(85px, 19vw, 124px);
+    --orb-size: clamp(110px, 23vw, 160px);
     transition: opacity 0.18s linear;
   }
-  .brands-honeycomb-row { gap: 0.55rem; }
-  /* Tight padding so the mobile orb mirrors the desktop fill ratio
-     (logos fill most of the smaller circle). Most brand artwork is
-     wider-than-tall or roundish, so corners clipping the orb's
-     `border-radius:50% + overflow:hidden` isn't a concern at this
-     value. */
-  .brand-orb-inner { padding: 5%; }
+  .brands-honeycomb { padding: 0.2rem; }
+  .brands-honeycomb-row { gap: 0.35rem; }
+  /* Mobile: drop the inner padding hard so the logo art fills almost
+     the entire orb circle. The orb circle stays the same size — only
+     the logo image inside scales up. The white-plate knockout via
+     mix-blend-mode handles any artwork that bleeds to the edge. */
+  .brand-orb-inner { padding: 1%; }
   .brand-orb:hover .brand-orb-inner { transform: scale(1.22); }
 }
 
@@ -692,16 +700,16 @@
   /* Tighter section + honeycomb side padding so the 4-orb row gets
      every available pixel. 0.25rem padding × 2 sides + 0.4rem row
      gap × 3 + orb-size × 4 = comfortably under 100vw at 360-480px. */
-  .brands-honeycomb { gap: 0.55rem; padding: 0.25rem; }
-  .brands-honeycomb-row { gap: 0.4rem; }
+  .brands-honeycomb { gap: 0.45rem; padding: 0.15rem; }
+  .brands-honeycomb-row { gap: 0.3rem; }
   .brands-edge { height: clamp(22px, 4svh, 44px); }
   .brands-edge-top { margin-bottom: calc(-1 * clamp(22px, 4svh, 44px)); }
   .brands-edge-bottom { margin-top: calc(-1 * clamp(22px, 4svh, 44px)); }
-  /* Was clamp(96px, 26vw, 132px) — 26vw × 4 + gaps overshot every
-     phone width. 20vw × 4 = 80vw, plus gaps + side padding stays
-     well inside 100vw. */
-  .brand-orb { --orb-size: clamp(54px, 16vw, 80px); }
-  .brand-orb-inner { padding: 3%; }
+  /* Push the orb up to 22vw on small phones — 4 × 22vw = 88vw still
+     leaves room for the tight gaps + minimal side padding inside
+     100vw. Same 4-orb-row constraint as larger mobile tier. */
+  .brand-orb { --orb-size: clamp(76px, 22vw, 112px); }
+  .brand-orb-inner { padding: 1%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

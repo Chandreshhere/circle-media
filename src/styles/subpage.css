@@ -901,17 +901,13 @@
     padding: 0;
   }
   /* Keep the same 3x2 layout as desktop so the preview reads the
-     same way. Tiles flex to use the full card width. */
+     same way. */
   .svc-card-platforms-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 0.7rem;
     width: 100%;
   }
-  .svc-card-platform-item {
-    width: clamp(48px, 16vw, 64px);
-    height: clamp(48px, 16vw, 64px);
-    border-radius: 14px;
-  }
+  .svc-card-platform-item { width: 46px; height: 46px; }
 }
 
 @media (max-width: 480px) {
@@ -2426,7 +2422,7 @@
   .bsx-stat-k { font-size: 0.7rem; letter-spacing: 0.17em; }
   .bsx-cards { grid-template-columns: 1fr; gap: 0.85rem; }
   .bsx-card { padding: 1.25rem 1.1rem; gap: 1rem; border-radius: 14px; }
-  .bsx-card-mark { width: 48px; height: 48px; }
+  .bsx-card-mark { width: 76px; height: 76px; padding: 4px; border-radius: 14px; }
   .bsx-card-name { font-size: 1.15rem; }
   .bsx-card-stat-v { font-size: clamp(1.8rem, 9vw, 2.4rem); }
 }

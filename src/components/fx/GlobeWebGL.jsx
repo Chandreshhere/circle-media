@@ -392,35 +392,41 @@ export default function GlobeWebGL() {
       arcRefs.push(arc);
     };
 
-    // FULL MESH: every red pin (real + decorative) connects to every
-    // other red pin with a lifted arc. 11 pins → C(11,2) = 55 arcs
-    // covering every quadrant of the globe. Real-pin pairs get the
-    // brightest opacity + highest lift so the India / Dubai / US /
-    // Canada network still reads as the headline layer; arcs that
-    // include a decorative pin sit slightly softer underneath.
+    // HUB-AND-SPOKE NETWORK: full mesh between the 4 real served-
+    // markets (India / Dubai / USA / Canada) = C(4,2) = 6 bright
+    // primary arcs, plus one softer arc from each decorative reach
+    // point back to the India home pin = 7 secondary arcs. Total 13
+    // arcs instead of the previous full-mesh 55 — the globe still
+    // reads as a connected world network but with far less red
+    // weight cluttering every rotation angle.
     //
-    // Mobile: the same network topology is preserved (every pin still
-    // links to every other pin), but the curve segment count is
-    // dropped from 64/44 → 28/20 so we upload <40% of the vertices
-    // to the GPU. The arcs still read as smooth bezier curves at
-    // canvas-display size — extra segments only matter when zoomed.
+    // Mobile keeps the same topology with lower curve segment counts.
     const PRIMARY_SEG  = isMobile ? 28 : 64;
     const SECONDARY_SEG = isMobile ? 20 : 44;
     const realPins = pinObjs.filter((p) => !p.decorative);
-    const realSet = new Set(realPins);
-    for (let i = 0; i < pinObjs.length; i++) {
-      for (let j = i + 1; j < pinObjs.length; j++) {
-        const a = pinObjs[i];
-        const b = pinObjs[j];
-        const bothReal = realSet.has(a) && realSet.has(b);
-        buildArc(a.basePos, b.basePos, {
+    const homePin = realPins[0]; // India — anchors the spoke arcs
+    // 1. Real-to-real full mesh (bright, lifted).
+    for (let i = 0; i < realPins.length; i++) {
+      for (let j = i + 1; j < realPins.length; j++) {
+        buildArc(realPins[i].basePos, realPins[j].basePos, {
           color: PIN_RED,
-          opacity: bothReal ? 0.92 : 0.55,
-          lift: bothReal ? 1.55 : 1.32,
-          liftBoost: bothReal ? 0.7 : 0.5,
-          segments: bothReal ? PRIMARY_SEG : SECONDARY_SEG,
+          opacity: 0.92,
+          lift: 1.55,
+          liftBoost: 0.7,
+          segments: PRIMARY_SEG,
         });
       }
+    }
+    // 2. Each decorative reach point connects only to the home pin.
+    for (const p of pinObjs) {
+      if (!p.decorative) continue;
+      buildArc(homePin.basePos, p.basePos, {
+        color: PIN_RED,
+        opacity: 0.55,
+        lift: 1.32,
+        liftBoost: 0.5,
+        segments: SECONDARY_SEG,
+      });
     }
 
     // ---- Interaction: drag rotates the group, idle spin always present ----

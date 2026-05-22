@@ -34,10 +34,12 @@ export default function LogoGlobe({ items, radius: radiusProp, tileSize: tileSiz
     // Responsive sizing — when no explicit props are passed, scale the
     // sphere radius and tile size off the container width so the globe
     // fills the available room on both desktop and mobile rather than
-    // shrinking to a thumbnail on small screens.
+    // shrinking to a thumbnail on small screens. On compact viewports
+    // we use a larger tile-to-sphere ratio so the logos read at a
+    // comfortable thumb-tap size on a phone.
     const baseDim = Math.min(width, height);
     const radius = radiusProp ?? Math.round(baseDim * 0.36);
-    const tileSize = tileSizeProp ?? Math.round(baseDim * 0.13);
+    const tileSize = tileSizeProp ?? Math.round(baseDim * 0.14);
 
     // ---- Three.js scene + renderer ------------------------------------
     const scene = new THREE.Scene();
