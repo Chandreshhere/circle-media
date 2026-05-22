@@ -320,7 +320,10 @@
   }
   .hero-split-eyebrow-mobile {
     display: inline-flex;
-    margin: clamp(2rem, 5.5vh, 3.5rem) 0 0;
+    /* Top margin must clear the fixed top nav (height 58px + top
+       offset 1rem = ~74px). Smaller margins were letting the
+       eyebrow render behind the floating nav bar on mobile. */
+    margin: clamp(5.5rem, 12vh, 7.5rem) 0 0;
     padding: 0 clamp(1rem, 4vw, 1.5rem);
     width: 100%;
     justify-content: flex-start;
