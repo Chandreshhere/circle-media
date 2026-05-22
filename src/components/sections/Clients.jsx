@@ -129,55 +129,31 @@ export default function Clients({ brands, heading, eyebrow, cta }) {
     const root = rootRef.current;
     if (!root) return;
 
-    const stage = root.querySelector(".brands-stage");
-    const honey = root.querySelector(".brands-honeycomb");
     const orbs = Array.from(root.querySelectorAll(".brand-orb"));
-    if (orbs.length === 0 || !honey || !stage) return;
+    if (orbs.length === 0) return;
 
     let raf = 0;
     let inView = false;
 
-    /* No lerp — every frame writes the exact target. Motion is
-       bound 1:1 to scroll position. When the page scroll stops
-       (finger lifts AND iOS momentum fades), the orbs stop
-       immediately. The long runway in CSS keeps per-pixel motion
-       small so motion is naturally slow. */
-    const SMOOTH = 1;
-    let smoothOffset = null;
+    /* Lerp-smoothed per-orb scale + opacity. Each orb's render
+       value eases toward its target by SMOOTH per frame. */
+    const SMOOTH = 0.12;
     const orbScale = new WeakMap();
     const orbOp = new WeakMap();
 
     const update = () => {
       const vh = window.innerHeight;
-      const stageRect = stage.getBoundingClientRect();
-      const stageH = stageRect.height || vh;
 
-      /* Mobile uses VIEWPORT centre (section flows in normal scroll,
-         no sticky stage). Each orb scales as it physically passes
-         through the middle of the screen. Desktop uses sticky-stage
-         centre (existing behaviour). */
-      const centre = isMobile ? vh / 2 : stageRect.top + stageH / 2;
-      const range  = isMobile ? vh * 0.55 : stageH * 0.55;
-      const cullTop    = isMobile ? -200 : stageRect.top - 200;
-      const cullBottom = isMobile ? vh + 200 : stageRect.bottom + 200;
-
-      /* Honey translate is desktop-only. On mobile the honeycomb is
-         a regular block in flow — it scrolls up with the page, which
-         is exactly what the user wants: small finger scroll = small
-         movement, no momentum-driven internal animation. */
-      if (!isMobile) {
-        const rootRect = root.getBoundingClientRect();
-        const runway = Math.max(1, rootRect.height - stageH);
-        const scrolled = -rootRect.top;
-        const p = Math.max(0, Math.min(1, scrolled / runway));
-        const honeyH = honey.scrollHeight;
-        const startY = stageH * 0.3;
-        const endY = -honeyH + stageH * 0.7;
-        const targetOffset = startY + p * (endY - startY);
-        if (smoothOffset === null) smoothOffset = targetOffset;
-        smoothOffset += (targetOffset - smoothOffset) * SMOOTH;
-        honey.style.transform = `translate3d(0, ${smoothOffset.toFixed(1)}px, 0)`;
-      }
+      /* Both desktop and mobile now flow the section as a normal
+         block — no sticky-stage translation. Per-orb fish-eye
+         scale anchors to the VIEWPORT centre, so every row pops
+         smoothly as it passes through the middle of the screen
+         while staying in its natural-flow position. All rows
+         remain visible together while the user scrolls past. */
+      const centre = vh / 2;
+      const range  = vh * 0.55;
+      const cullTop    = -200;
+      const cullBottom = vh + 200;
 
       // Mobile narrows the fish-eye scale curve so per-frame visual
       // change is less dramatic — feels less "snappy" during scroll.

@@ -265,7 +265,7 @@ export const clients = [
 export const homeClients = [
   // Row 1 (5 orbs) — flagship names a first-time visitor recognises.
   { name: "Park Avenue",                  logo: "/logos/park-avenue.png" },
-  { name: "SRF",                          logo: "/logos/srf.png", mod: "white" },
+  { name: "SRF",                          logo: "/logos/srf.png" },
   { name: "FICCI Flo",                    logo: "/logos/management/5.png" },
   { name: "Round Table India",            logo: "/logos/management/1.png" },
   { name: "Conscious Food",               logo: "/logos/fmcg/2.png" },

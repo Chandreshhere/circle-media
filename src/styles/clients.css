@@ -379,17 +379,45 @@
 .brands {
   position: relative;
   width: 100%;
-  /* Was 150vh — gave only ~50vh of scroll runway after the sticky
-     stage, so the honeycomb's full ~2000px translation completed
-     in roughly half a screen of scroll (felt frantic). Bumped to
-     300vh = 200vh runway, so the same translation now spreads
-     across 4× the scroll distance — comfortably slow. */
-  min-height: 300vh;
+  /* Section sized to its content — every row of the honeycomb is
+     visible as the user scrolls past (top rows never disappear off
+     the top of a sticky stage). Per-orb fish-eye scale fires on
+     each orb as it crosses the viewport centre. No empty space
+     below the last row. */
+  min-height: auto;
+  padding: clamp(3.5rem, 8vh, 6.5rem) 0;
   background: #000;
   color: #eaeae6;
   border-top: 1px solid var(--border);
 }
 
+/* Override the sticky-stage base rules below — honeycomb flows
+   as a normal-flow block on all desktop widths. */
+.brands-stage {
+  position: static !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+.brands-head {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
+}
+.brands-honeycomb {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+}
+.brands-edge { display: none !important; }
+
+/* Below this point the original sticky-stage rules from the prior
+   layout are still declared; the !important overrides above
+   neutralise them on desktop. Mobile media queries beyond are
+   unchanged. */
 .brands-stage {
   position: sticky;
   top: 0;
@@ -569,20 +597,6 @@
   filter: saturate(1.05) contrast(1.1) brightness(1.05);
 }
 
-/* `mod: "white"` — for wordmark logos shipped as dark-on-white PNGs
-   (e.g. SRF). The combo below recolours the whole image to pure
-   white and drops the white plate behind it:
-     1. `grayscale + invert` flips dark text → light and white plate → black.
-     2. `brightness/contrast` push the inverted text to pure white.
-     3. `mix-blend-mode: screen` blends the now-black plate into the
-        dark orb background so it disappears, while the white text
-        stays bright. The result is a clean white wordmark floating
-        on the coloured orb — matching the visual weight of the
-        full-colour brand marks around it. */
-.brand-orb--white .brand-orb-inner img {
-  filter: grayscale(1) invert(1) brightness(1.7) contrast(1.5);
-  mix-blend-mode: screen;
-}
 
 /* `mod: "boost"` — shrinks the orb's inner padding for logos whose
    supplied artwork is naturally smaller / has tight internal padding
