@@ -341,15 +341,17 @@
     min-height: 280px;
     max-height: 460px;
     margin-top: clamp(0.5rem, 2vh, 1.25rem);
+    /* Mobile: transparent container so the logo / WebGL particles
+       sit as a free-floating overlay on the section background
+       rather than appearing inside a visible "square" box while the
+       canvas is still painting its first frame. */
+    background: transparent;
   }
-  .hero-split-particles::after {
-    background: linear-gradient(
-      180deg,
-      transparent 65%,
-      rgba(5, 5, 6, 0.85) 92%,
-      var(--bg) 100%
-    );
-  }
+  /* Drop the edge-fade gradient on mobile — it was making the box
+     edges of the particle canvas visible during load. The logo and
+     particles should look like they're floating on the section
+     background, no rectangular frame. */
+  .hero-split-particles::after { display: none; }
   .hero-split-content {
     padding: clamp(1.25rem, 3.5vh, 2.5rem) clamp(1rem, 4vw, 1.5rem) 0;
     margin-top: 0;
@@ -380,30 +382,32 @@
     text-align: left;
     margin-bottom: 0;
   }
+  /* "Your Growth Partner for" — hidden on mobile per request. The
+     nowrap on this line was also a horizontal-overflow risk on
+     narrow phones, so removing it kills both the duplication of
+     the brand line and the off-screen scroll. */
   .hero-split-prelude-line:last-child {
-    font-size: clamp(1.95rem, 8.2vw, 3rem);
-    line-height: 1;
-    letter-spacing: 0em;
-    white-space: nowrap;
-    text-align: left;
+    display: none;
   }
   .hero-split-accent {
     font-size: clamp(2.2rem, 9vw, 3.4rem);
     line-height: 1;
     min-height: calc(1em * 2);
-    margin-top: 0;
-    text-align: left;
+    margin-top: 0.4rem;
+    text-align: left !important;
   }
   .hero-split-prelude { margin-bottom: 0; }
   .hero-split-sub {
     font-size: clamp(0.95rem, 0.6vw + 0.85rem, 1.15rem);
     max-width: 100%;
-    text-align: left;
+    text-align: left !important;
+    text-wrap: pretty;
     align-self: stretch;
   }
   .hero-split-scroll {
-    text-align: left;
+    text-align: left !important;
     align-self: stretch;
+    width: 100%;
   }
   .hero-split-meta {
     gap: clamp(0.9rem, 2vh, 1.25rem) clamp(1.25rem, 4vw, 2rem);
@@ -449,9 +453,8 @@
   .hero-split-prelude-line:first-child {
     font-size: clamp(3.3rem, 17vw, 4.6rem);
   }
-  .hero-split-prelude-line:last-child {
-    font-size: clamp(1.7rem, 7.8vw, 2.4rem);
-  }
+  /* Stays hidden at the tiny-screen tier too. */
+  .hero-split-prelude-line:last-child { display: none; }
   .hero-split-accent {
     font-size: clamp(1.9rem, 8.4vw, 2.7rem);
   }

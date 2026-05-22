@@ -292,8 +292,15 @@ html.lenis, html.lenis body { height: auto; }
    Tightens base typography, prevents horizontal scroll, and tones down
    overflow used by full-bleed scattered scenes.
    ========================================================== */
+/* Site-wide horizontal scroll lock — applied at every viewport,
+   not just mobile, so a single overflowing element can't trigger
+   horizontal scroll past the section bounds anywhere. */
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 @media (max-width: 900px) {
-  html, body { max-width: 100vw; overflow-x: hidden; }
   section { min-height: auto; }
   h1 { font-size: clamp(3rem, 14vw, 6rem); }
   h2 { font-size: clamp(2.2rem, 9vw, 4rem); }
