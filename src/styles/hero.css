@@ -346,26 +346,12 @@
        rather than appearing inside a visible "square" box while the
        canvas is still painting its first frame. */
     background: transparent;
-    /* Float the logo above everything else in the hero. Removing
-       `overflow: hidden` lets the canvas extend past the container
-       bounds without being clipped — so nothing behind the logo
-       gets cut off either. */
-    overflow: visible;
-    z-index: 50;
-  }
-  /* Boost the fallback img too so it isn't masked by sibling
-     elements that have their own stacking contexts. */
-  .hero-split-particles-fallback {
-    z-index: 50;
   }
   /* Drop the edge-fade gradient on mobile — it was making the box
      edges of the particle canvas visible during load. The logo and
      particles should look like they're floating on the section
      background, no rectangular frame. */
   .hero-split-particles::after { display: none; }
-  /* Allow the section itself to show overflow on mobile so the
-     bumped-up logo isn't cropped at the section edge. */
-  .hero-split { overflow: visible; }
   .hero-split-content {
     padding: clamp(1.25rem, 3.5vh, 2.5rem) clamp(1rem, 4vw, 1.5rem) 0;
     margin-top: 0;
@@ -396,12 +382,18 @@
     text-align: left;
     margin-bottom: 0;
   }
-  /* "Your Growth Partner for" — hidden on mobile per request. The
-     nowrap on this line was also a horizontal-overflow risk on
-     narrow phones, so removing it kills both the duplication of
-     the brand line and the off-screen scroll. */
+  /* "Your Growth Partner for" — restored on mobile. The horizontal-
+     overflow protection now lives at the body level (`overflow-x:
+     hidden` in globals.css), so this line can render without
+     dragging the page off-screen even if it's longer than the
+     viewport. Normal wrapping so it can break naturally if needed. */
   .hero-split-prelude-line:last-child {
-    display: none;
+    display: block;
+    font-size: clamp(1.85rem, 7.6vw, 2.8rem);
+    line-height: 1.05;
+    letter-spacing: 0em;
+    white-space: normal;
+    text-align: left;
   }
   .hero-split-accent {
     font-size: clamp(2.2rem, 9vw, 3.4rem);
@@ -468,7 +460,10 @@
     font-size: clamp(3.3rem, 17vw, 4.6rem);
   }
   /* Stays hidden at the tiny-screen tier too. */
-  .hero-split-prelude-line:last-child { display: none; }
+  .hero-split-prelude-line:last-child {
+    display: block;
+    font-size: clamp(1.55rem, 6.9vw, 2.1rem);
+  }
   .hero-split-accent {
     font-size: clamp(1.9rem, 8.4vw, 2.7rem);
   }
