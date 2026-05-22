@@ -353,6 +353,9 @@
 .reveal-stat-4 .reveal-stat-v sup { color: var(--c-mint); }
 
 @media (max-width: 900px) {
+  /* "Growing with You" kicker removed across all mobile widths per
+     request — duplicated the stats heading on phones. */
+  .reveal-stats-kicker { display: none; }
   .reveal-stat { width: 42vw; }
   .reveal-stat-v { font-size: clamp(3.2rem, 14vw, 5.5rem); }
   .reveal-stat-k { font-size: 1.02rem; }
@@ -666,11 +669,12 @@
      with a higher cap so "Expand Your Radius with Circle" feels
      properly hero-scale on a phone. */
   .quote-line { font-size: clamp(3.6rem, 22vw, 8rem); }
-  /* Moved the sub-line up from bottom:8vh to bottom:30vh so the
-     huge dead band between the heading and the "Measured.
-     Accountable. Relentless." cycler closes up. Right-aligned to
-     match desktop. */
-  .quote-sub-wrap { bottom: 30vh; right: 6vw; left: auto; }
+  /* Pushed the rotating caption further DOWN on the last horizontal
+     slide — `bottom: 30vh` was sitting too close to the heading and
+     felt crowded; `bottom: 10vh` parks it near the bottom of the
+     slide so the rotating phrase has room to breathe under "Expand
+     Your Radius with Circle". */
+  .quote-sub-wrap { bottom: 10vh; right: 6vw; left: auto; }
   /* Bumped from 1.5rem → 1.75rem so the caption holds its weight
      under the now-bigger rainbow heading on mobile. */
   .about-quote-sub { font-size: 1.75rem; line-height: 1.4; }
@@ -751,7 +755,9 @@
   .reveal-stat { width: 46vw; gap: 0.5rem; }
   .reveal-stat-v { font-size: clamp(2.6rem, 14vw, 4.2rem); }
   .reveal-stat-k { font-size: 0.74rem; letter-spacing: 0.17em; max-width: 18ch; }
-  .reveal-stats-kicker { font-size: 0.72rem; letter-spacing: 0.21em; left: 5vw; }
+  /* "Growing with You" kicker removed from mobile per request — it
+     duplicated the stats heading and crowded the small-phone view. */
+  .reveal-stats-kicker { display: none; }
 
   .process-float figcaption h3 { font-size: 1.5rem; }
   .process-float figcaption p {
