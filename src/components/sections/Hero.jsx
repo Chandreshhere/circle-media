@@ -134,6 +134,17 @@ export default function Hero() {
 
   return (
     <section className="hero-split">
+      {/* Mobile-only eyebrow that sits above the particle logo. Hidden
+          on desktop via CSS, where the eyebrow lives inside the right
+          column instead. */}
+      <p
+        className="hero-split-eyebrow hero-split-eyebrow-mobile"
+        data-hero-reveal
+        aria-hidden="true"
+      >
+        <span>Circle, Est. 2019</span>
+      </p>
+
       <div className="hero-split-particles" aria-hidden="true">
         {/* Static fallback logo behind the WebGL canvas. If WebGL fails
             (older phones, low-power mode, GPU blacklist) or the canvas

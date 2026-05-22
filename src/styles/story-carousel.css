@@ -96,7 +96,6 @@
   font-family: var(--font-body);
   font-size: 0.78rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 

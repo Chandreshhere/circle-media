@@ -53,7 +53,6 @@
   font-family: var(--font-body);
   font-size: 0.78rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 2rem;
 }
@@ -64,7 +63,6 @@
   font-size: clamp(2.4rem, 7vw, 7.5rem);
   line-height: 0.95;
   letter-spacing: -0.01em;
-  text-transform: uppercase;
   color: #ffffff;
   margin: 0 0 3.5rem;
   max-width: 22ch;
@@ -116,7 +114,6 @@
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--accent);
 }
 
@@ -280,7 +277,6 @@
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.23em;
-  text-transform: uppercase;
   cursor: pointer;
   text-align: left;
   transition: background 0.25s ease, color 0.25s ease;
@@ -326,7 +322,6 @@
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.23em;
-  text-transform: uppercase;
   color: rgba(255, 255, 255, 0.45);
   cursor: pointer;
   transition: color 0.25s ease;
@@ -343,7 +338,6 @@
   font-family: var(--font-body);
   font-size: 0.72rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--accent);
   z-index: 2;
 }
@@ -373,7 +367,6 @@
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--accent);
 }
 
@@ -404,7 +397,6 @@
   font-family: var(--font-body);
   font-size: 0.72rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--accent);
 }
 
@@ -445,7 +437,6 @@
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--accent);
 }
 

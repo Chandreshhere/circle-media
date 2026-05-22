@@ -31,7 +31,6 @@
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.78rem;
   letter-spacing: 0.19em;
-  text-transform: uppercase;
   color: var(--text-dim);
   margin: 0;
 }
@@ -178,7 +177,6 @@
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.72rem;
   letter-spacing: 0.11em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 
@@ -220,7 +218,6 @@
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.72rem;
   letter-spacing: 0.11em;
-  text-transform: uppercase;
   color: var(--text-mute);
   /* Pushed to the absolute bottom of the card so VIEW GROWTH ANALYTICS
      lines up at the same Y on both cards regardless of blurb length. */
@@ -367,7 +364,6 @@
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.7rem;
   letter-spacing: 0.11em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 
@@ -431,7 +427,6 @@
   font-family: var(--font-body);
   font-size: 0.78rem;
   letter-spacing: 0.09em;
-  text-transform: uppercase;
   color: var(--text);
   font-weight: 500;
 }
@@ -461,7 +456,6 @@
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.72rem;
   letter-spacing: 0.11em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 
@@ -484,7 +478,6 @@
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.72rem;
   letter-spacing: 0.11em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 

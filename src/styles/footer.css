@@ -23,7 +23,6 @@
   font-family: var(--font-body);
   font-size: 0.85rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--c-pink);
   margin: 0;
 }
@@ -146,7 +145,6 @@
   font-family: var(--font-body);
   font-size: 0.78rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--c-pink);
   margin: 0 0 0.6rem;
 }
@@ -222,7 +220,6 @@
 .f-bottom-addr {
   color: var(--text-mute);
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   font-size: 0.78rem;
 }
 

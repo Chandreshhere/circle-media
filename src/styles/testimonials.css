@@ -290,7 +290,17 @@
   .testimonials-bento { grid-template-columns: 1fr; gap: 1.1rem; }
   .t-stack { gap: 1.1rem; }
   .t-card { padding: 1.75rem 1.5rem; }
-  .t-card--featured { min-height: unset; transform: none; padding: 2rem 1.5rem; }
+  /* Hold a fixed minimum height on mobile so the card doesn't
+     shrink/grow as the rotating testimonial swaps between short
+     and long quotes — `min-height: unset` was letting every
+     testimonial reflow the section beneath. */
+  .t-card--featured {
+    min-height: clamp(420px, 90vw, 540px);
+    transform: none;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
   .t-card--featured blockquote { font-size: clamp(1.4rem, 6vw, 2rem); }
   .t-card--mini { padding: 1.5rem 1.25rem; }
   .t-card--mini:nth-child(1),
@@ -303,7 +313,13 @@
   .testimonials { padding: 3.5rem 1rem; }
   .testimonials-title { font-size: clamp(1.6rem, 9vw, 2.2rem); }
   .t-card { padding: 1.4rem 1.2rem; border-radius: 12px; }
-  .t-card--featured { padding: 1.6rem 1.25rem; gap: 1.5rem; }
+  .t-card--featured {
+    padding: 1.6rem 1.25rem;
+    gap: 1.5rem;
+    /* Slightly tighter min-height than the larger mobile tier
+       since 480px-and-below has less viewport to spare. */
+    min-height: clamp(380px, 105vw, 480px);
+  }
   .t-card--featured blockquote { font-size: clamp(1.25rem, 6.5vw, 1.7rem); line-height: 1.25; }
   .t-card--mini { padding: 1.25rem 1.1rem; gap: 1rem; }
   .t-card--mini blockquote { font-size: 1.1rem; }

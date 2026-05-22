@@ -73,6 +73,10 @@
   z-index: 1;
 }
 
+/* Mini puzzle is mobile-only — hide it on desktop where there's
+   already room for the full-size puzzle on its own. */
+.process .process-puzzle.process-puzzle-mini { display: none; }
+
 .process .process-puzzle .pp {
   position: absolute;
   width: 50%;
@@ -258,7 +262,10 @@
      below the heading — that's why padding-bottom is small here. */
   .process .process-puzzle {
     position: absolute;
-    top: clamp(7.5rem, 19vw, 12rem);
+    /* Was top: clamp(7.5rem, 19vw, 12rem) — bumped down so the
+       puzzle sits clearly below the "measured system" heading
+       instead of crowding the line of text. */
+    top: clamp(10rem, 25vw, 15rem);
     right: clamp(3rem, 7vw, 5rem);
     left: auto;
     width: clamp(120px, 27vw, 170px);
@@ -270,6 +277,20 @@
     z-index: 0;
   }
   .process .process-puzzle .pp { filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3)); }
+
+  /* Mini puzzle — mobile-only, anchored to the LEFT side and sitting
+     well below the main puzzle. Same animation, smaller footprint,
+     so the section reads as a balanced two-puzzle motif. */
+  .process .process-puzzle.process-puzzle-mini {
+    display: block;
+    top: clamp(17rem, 44vw, 24rem);
+    right: auto;
+    left: clamp(1.5rem, 5vw, 4rem);
+    width: clamp(78px, 18vw, 110px);
+    height: clamp(78px, 18vw, 110px);
+    transform: scale(0.85);
+    opacity: 0.85;
+  }
   /* 2x2 grid — left column left-aligned, right column right-aligned. */
   .process-grid { grid-template-columns: 1fr 1fr; }
   .process-step { min-height: 220px; padding: 1.75rem 1.1rem; gap: 1rem; }
@@ -294,9 +315,17 @@
   .process .process-puzzle {
     width: clamp(95px, 28vw, 130px);
     height: clamp(95px, 28vw, 130px);
-    top: clamp(11rem, 30vw, 16rem);
+    /* Pushed down on small phones too so the puzzle sits well
+       under the heading line. */
+    top: clamp(13.5rem, 36vw, 18rem);
     right: clamp(2.5rem, 6vw, 4rem);
     margin: 0;
+  }
+  .process .process-puzzle.process-puzzle-mini {
+    width: clamp(58px, 18vw, 90px);
+    height: clamp(58px, 18vw, 90px);
+    top: clamp(20rem, 54vw, 26rem);
+    left: clamp(1rem, 4vw, 3rem);
     transform: scale(0.9);
     transform-origin: center top;
   }

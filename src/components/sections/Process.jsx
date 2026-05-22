@@ -110,6 +110,32 @@ export default function Process() {
             </span>
           ))}
         </div>
+
+        {/* Second smaller puzzle, mobile-only — sits on the LEFT side
+            below the main puzzle. Hidden on desktop via CSS. */}
+        <div className="process-puzzle process-puzzle-mini" aria-hidden="true">
+          {PUZZLE_PIECES.map((p) => (
+            <span key={p.className} className={p.className}>
+              <svg
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ overflow: "visible" }}
+              >
+                <path d={p.path} fill={p.color}>
+                  <animate
+                    attributeName="d"
+                    dur="20s"
+                    repeatCount="indefinite"
+                    calcMode="spline"
+                    values={p.morphValues}
+                    keyTimes={p.morphTimes}
+                    keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
+                  />
+                </path>
+              </svg>
+            </span>
+          ))}
+        </div>
       </div>
     </section>
   );

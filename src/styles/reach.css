@@ -57,9 +57,20 @@
 
 .reach-accent {
   color: var(--accent);
-  /* nowrap forced "in X countries" onto a single line at every zoom
-     level, which overflowed the heading container at 175%+ zoom.
-     Allow natural wrap — the accent colour still cues the phrase. */
+  /* Force the accent phrase onto its own line below the main copy
+     across every breakpoint — "Domestic and international clients,"
+     stays on top, "working in 4+ countries." sits below it. The
+     phrase still wraps internally if a single line is wider than
+     the container, but the line break before it is guaranteed. */
+  display: block;
+  white-space: nowrap;
+}
+
+/* If the accent phrase is forced onto one line via `nowrap` but
+   the container is too narrow to fit it (≤480px or heavy zoom),
+   allow internal wrapping so it doesn't overflow horizontally. */
+@media (max-width: 480px) {
+  .reach-accent { white-space: normal; }
 }
 
 .reach-sub {
@@ -113,6 +124,11 @@
   border: 1px solid var(--border);
   border-radius: 14px;
   transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  /* Lock every pill to the same intrinsic height regardless of which
+     flag emoji it carries — `🇨🇦` and `🇺🇸` have slightly different
+     drawn heights on some platforms, which used to push Canada's
+     text down relative to its row neighbours. */
+  min-height: 3rem;
 }
 
 .reach-pill:hover {
@@ -122,15 +138,33 @@
 }
 
 .reach-pill-flag {
+  position: relative;
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 1.6em;
+  height: 1.6em;
   font-size: 1.5rem;
-  line-height: 1;
+  line-height: 1.6em;
+  text-align: center;
+  align-self: center;
+  /* `overflow: hidden` clips any extra descender on `🇨🇦` so a
+     taller-than-average flag emoji can't push the pill's text down
+     relative to its row neighbours — every pill now shares the same
+     fixed flag footprint regardless of platform emoji metrics. */
+  overflow: hidden;
 }
 
 .reach-pill-text {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 0.15rem;
   min-width: 0;
+  /* Lock the line-box so the country name renders at the same
+     baseline in every pill regardless of the neighbouring flag's
+     intrinsic glyph metrics. */
+  line-height: 1.2;
+  align-self: center;
 }
 
 .reach-pill-name {
@@ -139,6 +173,12 @@
   font-weight: 500;
   letter-spacing: 0em;
   color: var(--text);
+  /* "Canada" was breaking to two lines inside the narrow mobile
+     pill ("Canad" / "a"), which read as the text dropping below
+     the row baseline. Force the name onto a single line. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* === Stats grid === */
@@ -180,7 +220,6 @@
   line-height: 1.35;
   color: var(--text-dim);
   letter-spacing: 0.07em;
-  text-transform: uppercase;
 }
 
 /* === Right column — globe === */
@@ -246,16 +285,25 @@
   .reach-left { gap: 1.5rem; }
 
   .reach-pills {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
+    /* Stack the 4 country pills vertically on mobile so each one
+       has the full row width — Canada was wrapping ("Canad / a") at
+       the 2-column width. Single column also makes the pills feel
+       like proper buttons rather than tiny tags. */
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
   }
   .reach-pill {
-    padding: 0.55rem 0.65rem;
-    gap: 0.55rem;
-    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    gap: 0.85rem;
+    border-radius: 12px;
   }
-  .reach-pill-flag { font-size: 1.1rem; }
-  .reach-pill-name { font-size: 0.95rem; }
+  .reach-pill-flag {
+    font-size: 1.4rem;
+    width: 1.6em;
+    height: 1.6em;
+    line-height: 1.6em;
+  }
+  .reach-pill-name { font-size: 1.1rem; }
 
   .reach-stats { gap: 1.1rem 1.25rem; padding-top: 0.85rem; }
   .reach-stat { gap: 0.3rem; }
@@ -286,14 +334,19 @@
   .reach-grid { gap: 0.85rem; }
   .reach-left { gap: 1rem; }
 
-  .reach-pills { gap: 0.4rem; }
+  .reach-pills { gap: 0.45rem; }
   .reach-pill {
-    padding: 0.4rem 0.5rem;
-    gap: 0.4rem;
-    border-radius: 8px;
+    padding: 0.7rem 0.85rem;
+    gap: 0.7rem;
+    border-radius: 10px;
   }
-  .reach-pill-flag { font-size: 1.08rem; }
-  .reach-pill-name { font-size: 0.78rem; }
+  .reach-pill-flag {
+    font-size: 1.25rem;
+    width: 1.6em;
+    height: 1.6em;
+    line-height: 1.6em;
+  }
+  .reach-pill-name { font-size: 1rem; }
 
   .reach-stats { gap: 0.85rem 0.9rem; padding-top: 0.65rem; }
   .reach-stat { gap: 0.25rem; }

@@ -30,7 +30,6 @@
   font-family: var(--font-body);
   font-size: 0.85rem;
   letter-spacing: 0.17em;
-  text-transform: uppercase;
   color: var(--text-mute);
   font-variant-numeric: tabular-nums;
 }
@@ -47,7 +46,6 @@
   font-size: 8px !important;
   letter-spacing: 0.09em !important;
   line-height: 1.2 !important;
-  text-transform: uppercase !important;
   color: var(--text-mute);
   opacity: 0.55;
   display: inline-flex;
@@ -143,7 +141,6 @@
   font-family: var(--font-body);
   font-size: 0.8rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--text-mute);
   font-variant-numeric: tabular-nums;
 }

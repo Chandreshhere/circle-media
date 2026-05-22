@@ -58,7 +58,6 @@
 .reveal-hero-footer .mn {
   font-size: 0.9rem;
   letter-spacing: 0.11em;
-  text-transform: uppercase;
   opacity: 0.7;
 }
 
@@ -124,7 +123,6 @@
   font-family: var(--font-body);
   font-size: 8px;
   letter-spacing: 0.11em;
-  text-transform: uppercase;
   color: var(--text-mute);
   opacity: 0.55;
   animation: reveal-hint-bob 1.6s ease-in-out infinite;

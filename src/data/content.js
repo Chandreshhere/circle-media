@@ -253,28 +253,37 @@ export const clients = [
    so the section feels like a real "trusted by" wall, but still short
    of the full 40+ list so the CTA into /brands has a reason to exist.
    18 entries fills four staggered rows (5+4+5+4) at the desktop row
-   pattern. */
+   pattern.
+
+   Order matters: the first 9 entries occupy the top two rows (5+4),
+   so they're the most-visible "trusted by" position. We lead with the
+   highest-profile, most-recognised names — Park Avenue (Raymond), SRF
+   (public conglomerate), FICCI FLO, Round Table India, Conscious Food
+   (oldest organic brand in India), Park Avenue Beer Shampoo, Agrawal
+   Namkeen and CamPure. Smaller regional brands follow in the lower
+   rows. */
 export const homeClients = [
+  // Row 1 (5 orbs) — flagship names a first-time visitor recognises.
   { name: "Park Avenue",                  logo: "/logos/park-avenue.png" },
-  { name: "Adam's Ale",                   logo: "/logos/hospitality/1.png" },
-  { name: "Agrawal Namkeen",              logo: "/logos/agrawal-namkeen.png", mod: "boost" },
-  { name: "Madmix",                       logo: "/logos/fmcg/1.png" },
-  { name: "DNS Hospitals",                logo: "/logos/healthcare/2.png" },
-  // Row 2
-  { name: "CamPure",                      logo: "/logos/home-kitchen/1.png" },
-  { name: "Investitute",                  logo: "/logos/education/2.png" },
-  { name: "Pro Brew Republic",            logo: "/logos/hospitality/3.png" },
-  { name: "Urban Theka",                  logo: "/logos/hospitality/2.png" },
-  // Row 3
-  { name: "Zawaa",                        logo: "/logos/fmcg/3.png" },
+  { name: "SRF",                          logo: "/logos/srf.png" },
+  { name: "FICCI Flo",                    logo: "/logos/management/5.png" },
   { name: "Round Table India",            logo: "/logos/management/1.png" },
   { name: "Conscious Food",               logo: "/logos/fmcg/2.png" },
-  { name: "Swastik Habitates",            logo: "/logos/real-estate/2.png" },
-  { name: "Currygram",                    logo: "/logos/fmcg/5.png" },
-  // Row 4
-  { name: "Eduvest Connect",              logo: "/logos/education/1.png" },
-  { name: "FICCI Flo",                    logo: "/logos/management/5.png" },
+  // Row 2 (4 orbs) — rest of the top tier.
   { name: "Park Avenue Beer Shampoo",     logo: "/logos/personal-care/2.png" },
+  { name: "Agrawal Namkeen",              logo: "/logos/agrawal-namkeen.png", mod: "boost" },
+  { name: "CamPure",                      logo: "/logos/home-kitchen/1.png" },
+  { name: "DNS Hospitals",                logo: "/logos/healthcare/2.png" },
+  // Row 3 (5 orbs) — strong regional / category brands.
+  { name: "Adam's Ale",                   logo: "/logos/hospitality/1.png" },
+  { name: "Pro Brew Republic",            logo: "/logos/hospitality/3.png" },
+  { name: "Madmix",                       logo: "/logos/fmcg/1.png" },
+  { name: "Urban Theka",                  logo: "/logos/hospitality/2.png" },
+  { name: "Zawaa",                        logo: "/logos/fmcg/3.png" },
+  // Row 4 (4 orbs) — emerging / niche partners.
+  { name: "Swastik Habitates",            logo: "/logos/real-estate/2.png" },
+  { name: "Investitute",                  logo: "/logos/education/2.png" },
+  { name: "Eduvest Connect",              logo: "/logos/education/1.png" },
   { name: "The Coffee Clique",            logo: "/logos/fmcg/7.png" },
 ];
 

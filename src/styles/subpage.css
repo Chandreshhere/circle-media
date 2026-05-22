@@ -56,7 +56,6 @@
   color: var(--text-dim);
   letter-spacing: 0.21em;
   font-size: 1rem;
-  text-transform: uppercase;
 }
 
 .two-col h3 {
@@ -127,7 +126,6 @@
   letter-spacing: 0.21em;
   font-size: 1rem;
   margin-bottom: 2.5rem;
-  text-transform: uppercase;
 }
 
 .work-hero-title {
@@ -140,7 +138,6 @@
   line-height: 0.9;
   letter-spacing: -0.015em;
   color: var(--text);
-  text-transform: uppercase;
   margin: 0;
 }
 
@@ -208,7 +205,6 @@
   color: var(--text-mute);
   letter-spacing: 0.21em;
   font-size: 0.95rem;
-  text-transform: uppercase;
 }
 
 .work-hero-shape {
@@ -317,7 +313,6 @@
   color: var(--accent);
   font-size: 0.85rem;
   letter-spacing: 0.23em;
-  text-transform: uppercase;
   margin: 0;
 }
 
@@ -421,7 +416,6 @@
   letter-spacing: 0.21em;
   font-size: 1rem;
   margin-bottom: 2.5rem;
-  text-transform: uppercase;
 }
 
 .services-hero-title {
@@ -434,7 +428,6 @@
   line-height: 0.9;
   letter-spacing: -0.015em;
   color: var(--text);
-  text-transform: uppercase;
   margin: 0;
 }
 
@@ -500,7 +493,6 @@
   color: var(--text-mute);
   letter-spacing: 0.21em;
   font-size: 0.95rem;
-  text-transform: uppercase;
 }
 
 .services-hero-shape {
@@ -700,7 +692,6 @@
   font-family: var(--font-body);
   font-size: 0.78rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--c);
   margin: 0;
   font-weight: 600;
@@ -943,7 +934,6 @@
   color: var(--text-dim);
   letter-spacing: 0.21em;
   font-size: 1rem;
-  text-transform: uppercase;
 }
 
 .services-flight-title {
@@ -1146,7 +1136,6 @@
   letter-spacing: 0.21em;
   font-size: 1rem;
   margin-bottom: 2.5rem;
-  text-transform: uppercase;
 }
 
 .about-hero-title {
@@ -1157,7 +1146,6 @@
   line-height: 0.9;
   letter-spacing: -0.015em;
   color: var(--text);
-  text-transform: uppercase;
   margin: 0;
 }
 
@@ -1223,7 +1211,6 @@
   color: var(--text-mute);
   letter-spacing: 0.21em;
   font-size: 0.95rem;
-  text-transform: uppercase;
 }
 
 .about-hero-shape {
@@ -1264,7 +1251,6 @@
   letter-spacing: 0.21em;
   font-size: 1rem;
   margin-bottom: 3.5rem;
-  text-transform: uppercase;
 }
 
 .about-stats-grid {
@@ -1314,7 +1300,6 @@
 .about-stats-grid .k {
   color: var(--text-dim);
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   font-size: 0.95rem;
   font-weight: 500;
 }
@@ -1356,7 +1341,6 @@
   color: var(--text-dim);
   letter-spacing: 0.21em;
   font-size: 1rem;
-  text-transform: uppercase;
 }
 
 .about-origin-title {
@@ -1416,7 +1400,6 @@
   color: var(--text-dim);
   letter-spacing: 0.21em;
   font-size: 1rem;
-  text-transform: uppercase;
 }
 
 .about-principles-title {
@@ -1475,7 +1458,6 @@
   color: var(--accent);
   letter-spacing: 0.21em;
   font-size: 0.95rem;
-  text-transform: uppercase;
 }
 
 .about-principle h3 {
@@ -1562,7 +1544,6 @@
   font-size: clamp(2rem, 5vw, 4.5rem);
   font-weight: 500;
   letter-spacing: 0em;
-  text-transform: uppercase;
   color: var(--text);
   line-height: 1;
 }
@@ -1662,7 +1643,6 @@
   font-family: var(--font-body);
   font-size: 1.05rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--text);
   margin: 0;
 }
@@ -1681,7 +1661,6 @@
   font-family: var(--font-body);
   font-size: 1.05rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
 }
 
 .work-detail-nav a {
@@ -1778,7 +1757,6 @@
   font-family: var(--font-body);
   font-size: 0.85rem;
   letter-spacing: 0.23em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 
@@ -1786,7 +1764,6 @@
   font-family: var(--font-body);
   font-size: 0.85rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--text-dim);
   margin: 0;
   align-self: flex-start;
@@ -1952,7 +1929,6 @@
   letter-spacing: 0.21em;
   font-size: 1rem;
   margin-bottom: 2.5rem;
-  text-transform: uppercase;
 }
 
 .brands-page-title {
@@ -1964,7 +1940,6 @@
   line-height: 0.9;
   letter-spacing: -0.015em;
   color: var(--text);
-  text-transform: uppercase;
   margin: 0;
   max-width: 100%;
 }
@@ -2008,7 +1983,6 @@
   color: var(--text-mute);
   letter-spacing: 0.21em;
   font-size: 0.95rem;
-  text-transform: uppercase;
 }
 
 @media (max-width: 1100px) {
@@ -2088,7 +2062,6 @@
   color: var(--text-dim);
   letter-spacing: 0.21em;
   font-size: 0.85rem;
-  text-transform: uppercase;
 }
 
 .bsx-title {
@@ -2164,7 +2137,6 @@
   font-family: var(--font-body);
   font-size: clamp(0.78rem, 0.9vw, 0.92rem);
   letter-spacing: 0.19em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 
@@ -2185,7 +2157,6 @@
   font-family: var(--font-body);
   font-size: 0.78rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--text-dim);
   margin: 0;
 }
@@ -2329,7 +2300,6 @@
   font-family: var(--font-body);
   font-size: 0.7rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--bsx-accent);
   margin: 0;
 }
@@ -2368,7 +2338,6 @@
   font-family: var(--font-body);
   font-size: 0.72rem;
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 
@@ -2512,7 +2481,6 @@ body.is-globe-open .footer {
   font-family: var(--font-body);
   font-size: 0.72rem;
   letter-spacing: 0.28em;
-  text-transform: uppercase;
   color: var(--c);
   text-align: center;
 }
@@ -2533,7 +2501,6 @@ body.is-globe-open .footer {
   font-family: var(--font-body);
   font-size: 0.74rem;
   letter-spacing: 0.22em;
-  text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
   text-align: center;
 }

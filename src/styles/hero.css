@@ -116,9 +116,14 @@
   font-family: var(--font-body);
   font-size: clamp(0.72rem, 0.9vw + 0.45rem, 0.95rem);
   letter-spacing: 0.17em;
-  text-transform: uppercase;
   color: var(--text-mute);
   font-variant-numeric: tabular-nums;
+}
+
+/* Mobile-only eyebrow sits above the particle logo. Hidden on
+   desktop where the eyebrow inside .hero-split-content is used. */
+.hero-split-eyebrow-mobile {
+  display: none;
 }
 
 /* em-based sizing so the line scales with the eyebrow's font-size
@@ -278,7 +283,6 @@
   font-family: var(--font-body);
   font-size: 0.8rem;
   letter-spacing: 0.13em;
-  text-transform: uppercase;
   color: var(--text-mute);
 }
 
@@ -295,7 +299,6 @@
   margin-top: clamp(0.25rem, 1vh, 0.6rem);
   font-size: clamp(0.7rem, 0.6vw + 0.55rem, 0.88rem);
   letter-spacing: 0.21em;
-  text-transform: uppercase;
   color: var(--text-mute);
 }
 
@@ -305,9 +308,25 @@
     min-height: 100svh;
     padding-top: clamp(1.5rem, 4vh, 3rem);
   }
+  /* Mobile: show the eyebrow above the logo and hide the desktop
+     one inside the content column so it doesn't render twice. */
+  .hero-split-eyebrow-mobile {
+    display: inline-flex;
+    margin: clamp(1.5rem, 4.5vh, 3.25rem) auto clamp(0.75rem, 2.5vh, 2rem);
+    padding: 0 clamp(1rem, 4vw, 1.5rem);
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .hero-split-content > .hero-split-eyebrow {
+    display: none;
+  }
   .hero-split-particles {
-    height: 55vh;
-    height: 55svh;
+    /* Logo sits close to the eyebrow above it. Height bumped so the
+       logo art reads larger on a phone (the canvas + fallback both
+       scale to its size). */
+    height: 58vh;
+    height: 58svh;
+    margin-top: clamp(-1.25rem, -2.5vh, -0.5rem);
   }
   .hero-split-particles::after {
     background: linear-gradient(
@@ -325,7 +344,38 @@
   }
   .hero-split-title {
     font-size: clamp(3rem, 9vw, 5rem);
+    /* Force every line in the headline flush-left on mobile — the
+       inherited `text-wrap: balance` on .hero-split-title was making
+       the three lines feel visually centred. */
+    text-align: left;
+    text-wrap: pretty;
   }
+  /* Mobile: emphasise "Circle Media," over the supporting line and
+     the rotating accent. The brand goes bigger; the prelude tagline
+     stays mid-sized on one row; the accent (orange rotating service)
+     drops below the title size so the eye lands on the brand. */
+  .hero-split-prelude-line:first-child {
+    font-size: clamp(3.7rem, 16vw, 5.6rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-align: left;
+    margin-bottom: 0;
+  }
+  .hero-split-prelude-line:last-child {
+    font-size: clamp(1.95rem, 8.2vw, 3rem);
+    line-height: 1;
+    letter-spacing: 0em;
+    white-space: nowrap;
+    text-align: left;
+  }
+  .hero-split-accent {
+    font-size: clamp(2.2rem, 9vw, 3.4rem);
+    line-height: 1;
+    min-height: calc(1em * 2);
+    margin-top: 0;
+    text-align: left;
+  }
+  .hero-split-prelude { margin-bottom: 0; }
   .hero-split-sub {
     font-size: clamp(0.95rem, 0.6vw + 0.85rem, 1.15rem);
     max-width: 100%;
@@ -340,7 +390,7 @@
 
 @media (max-width: 600px) {
   .hero-split { padding-top: clamp(1rem, 3vh, 1.75rem); }
-  .hero-split-particles { height: 48vh; height: 48svh; }
+  .hero-split-particles { height: 55vh; height: 55svh; }
   .hero-split-content {
     padding: 0 clamp(0.9rem, 4vw, 1.25rem) clamp(2rem, 5vh, 3.5rem);
     margin-top: clamp(-3rem, -3.5vh, -1.75rem);
@@ -358,8 +408,17 @@
 }
 
 @media (max-width: 380px) {
-  .hero-split-particles { height: 42vh; height: 42svh; }
+  .hero-split-particles { height: 50vh; height: 50svh; }
   .hero-split-title { font-size: clamp(2.2rem, 12vw, 3.4rem); }
+  .hero-split-prelude-line:first-child {
+    font-size: clamp(3.3rem, 17vw, 4.6rem);
+  }
+  .hero-split-prelude-line:last-child {
+    font-size: clamp(1.7rem, 7.8vw, 2.4rem);
+  }
+  .hero-split-accent {
+    font-size: clamp(1.9rem, 8.4vw, 2.7rem);
+  }
   .hero-split-content {
     padding: 0 clamp(0.75rem, 3.5vw, 1rem) clamp(1.75rem, 4.5vh, 3rem);
     gap: clamp(0.65rem, 1.4vh, 0.95rem);
