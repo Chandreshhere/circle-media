@@ -346,12 +346,26 @@
        rather than appearing inside a visible "square" box while the
        canvas is still painting its first frame. */
     background: transparent;
+    /* Float the logo above everything else in the hero. Removing
+       `overflow: hidden` lets the canvas extend past the container
+       bounds without being clipped — so nothing behind the logo
+       gets cut off either. */
+    overflow: visible;
+    z-index: 50;
+  }
+  /* Boost the fallback img too so it isn't masked by sibling
+     elements that have their own stacking contexts. */
+  .hero-split-particles-fallback {
+    z-index: 50;
   }
   /* Drop the edge-fade gradient on mobile — it was making the box
      edges of the particle canvas visible during load. The logo and
      particles should look like they're floating on the section
      background, no rectangular frame. */
   .hero-split-particles::after { display: none; }
+  /* Allow the section itself to show overflow on mobile so the
+     bumped-up logo isn't cropped at the section edge. */
+  .hero-split { overflow: visible; }
   .hero-split-content {
     padding: clamp(1.25rem, 3.5vh, 2.5rem) clamp(1rem, 4vw, 1.5rem) 0;
     margin-top: 0;
