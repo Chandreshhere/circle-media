@@ -30,7 +30,7 @@ export default function Home() {
       <Testimonials />
       <Clients
         brands={homeClients}
-        eyebrow="[Selected brands]"
+        eyebrow="[Few brands we have worked with]"
         cta={
           <Link to="/brands" className="brands-head-cta">
             See all brands <span aria-hidden="true">↗</span>

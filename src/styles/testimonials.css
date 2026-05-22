@@ -160,7 +160,11 @@
   top: 0.5rem;
   left: 1rem;
   font-family: var(--font-display);
-  font-size: 10rem;
+  /* Was 10rem hard — at 175%+ zoom this blew past the card border
+     and the surrounding `overflow: hidden` clipped it raggedly. Now
+     scales with the card width via vw, capped to keep the same
+     visual weight on desktop. */
+  font-size: clamp(4rem, 8vw, 8rem);
   line-height: 0.85;
   color: var(--accent);
   opacity: 0.14;

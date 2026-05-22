@@ -108,15 +108,22 @@
 
 .about-title {
   position: absolute;
-  /* Was top:20vh — at 110%+ browser zoom the reported viewport height
-     shrinks and the title pulled close enough to the top that the
-     body paragraph below collided with it. Clamping adds a rem
-     floor (10rem ≈ 160px minimum offset) so the gap survives any
-     zoom level. */
-  top: clamp(10rem, 20vh, 24rem);
+  /* Title top anchored from the top of the panel. Body is anchored
+     from the bottom. At high browser zoom the CSS viewport height
+     shrinks but rem-based fonts don't, so the gap between the two
+     can collapse. Caps below (font-size + body bottom + line-height)
+     keep ~200px of clearance at 150% zoom and avoid the overlap. */
+  top: clamp(7rem, 16vh, 20rem);
   left: 4vw;
-  max-width: min(60vw, 16ch);
-  font-size: clamp(2.8rem, 7.5vw, 7.5rem);
+  /* Widened from min(60vw, 16ch) so "marketing agency." fits on a
+     single line at zoom levels where 60vw became too narrow and
+     forced the title to wrap to 3 lines (which pushed its bottom
+     edge into the body paragraph). */
+  max-width: min(72vw, 18ch);
+  /* Capped tighter so the title can't grow tall enough to swallow
+     the body's headroom at high zoom. Hero scale is preserved at
+     normal viewports via the 5rem max. */
+  font-size: clamp(2.4rem, 5.2vw, 5rem);
   line-height: 0.95;
   letter-spacing: 0em;
   margin: 0;
@@ -128,17 +135,18 @@
 
 .about-body {
   position: absolute;
-  /* Same protection as .about-title — clamp the bottom offset with a
-     rem floor (7rem ≈ 112px) so the body can't climb into the title
-     at high browser zoom. */
-  bottom: clamp(7rem, 14vh, 18rem);
+  /* Was clamp(7rem, 14vh, 18rem). Dropped the floor to 3.5rem so
+     the body sits further from the title at high zoom — combined
+     with the title's smaller cap, this guarantees clearance at
+     150% zoom without changing the natural look at 100%. */
+  bottom: clamp(3.5rem, 10vh, 12rem);
   left: 4vw;
   max-width: 42ch;
-  /* Bumped from clamp(1.05rem, 1.2vw, 1.2rem) so the "Specializing
-     in social-media-first campaigns" body copy reads at proper
-     supporting-paragraph scale on desktop, not as small caption. */
-  font-size: clamp(1.35rem, 1.6vw, 1.65rem);
-  line-height: 1.55;
+  /* Capped from 1.65rem max — body was reading too large at desktop
+     widths and growing the paragraph's total height past what the
+     panel could hold at zoomed viewports. */
+  font-size: clamp(1.15rem, 1.35vw, 1.4rem);
+  line-height: 1.5;
   /* Bumped from 0.82 — at the previous value, the dim greys lost
      definition on phones during the horizontal pan. */
   opacity: 0.95;
@@ -209,6 +217,54 @@
     font-size: 1.4rem;
     line-height: 1.5;
   }
+}
+
+/* ====================================================================
+   HIGH-ZOOM / SHORT-VIEWPORT EMERGENCY FLOW LAYOUT
+   --------------------------------------------------------------------
+   At browser zoom ≥ 150% the CSS viewport height shrinks enough that
+   the absolute-positioned title (top-anchored) and body (bottom-
+   anchored) physically cannot fit in the panel with their natural
+   content heights. Once the viewport drops below 760px tall — which
+   happens at ~140%+ zoom on a 1080-tall monitor and at every zoom
+   level on shorter laptops — we abandon the cinematic absolute layout
+   and stack the title + body in natural flex-column flow. Decorative
+   floating stats are hidden at this zoom level (they're behind the
+   logo anyway and have no informational role).
+   ==================================================================== */
+@media (max-height: 760px) {
+  .about-panel-intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(1.25rem, 3vh, 2.5rem);
+    padding: clamp(2rem, 6vh, 5rem) 6vw;
+    /* Override the desktop flex-start so vertical centring takes effect. */
+    justify-content: center;
+  }
+  .about-panel-intro .about-title,
+  .about-panel-intro .about-body {
+    position: static;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    margin: 0;
+    text-align: left;
+  }
+  .about-panel-intro .about-title {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    max-width: min(90%, 18ch);
+    line-height: 0.95;
+  }
+  .about-panel-intro .about-body {
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
+    max-width: min(90%, 48ch);
+    line-height: 1.5;
+  }
+  /* Hide the scattered stats at high zoom — they're decorative and
+     overlap the now-stacked title/body if left in place. */
+  .about-panel-intro .about-stat { display: none; }
 }
 
 /* ——— Stats scattered behind the dropping logo ——— */

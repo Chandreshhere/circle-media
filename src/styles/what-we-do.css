@@ -1,8 +1,13 @@
 .wwd {
   position: relative;
   width: 100vw;
+  /* Kept as exact height (not min-height) because the puzzle pin
+     animation depends on viewport-height parity. min-height floor
+     below guarantees enough room for puzzle cards + background type
+     at extreme zoom levels where 100vh shrinks under ~600px. */
   height: 100vh;
   height: 100svh;
+  min-height: 600px;
   overflow: hidden;
   background: #000;
   color: #eaeae6;

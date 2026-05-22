@@ -14,7 +14,11 @@
   padding: 9rem 1.5rem 7rem;
   background: #000;
   color: var(--text);
-  overflow: hidden;
+  /* Was overflow: hidden — at high zoom the act labels and form
+     fields could clip silently. clip on the X axis only prevents
+     horizontal scroll from the decorative noise svg without
+     blocking the form from growing tall when zoom enlarges inputs. */
+  overflow-x: clip;
   isolation: isolate;
 }
 

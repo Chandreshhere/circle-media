@@ -59,14 +59,18 @@
   color: inherit;
 }
 
-/* Keeps "account management" on a single line so the phrase never
-   breaks mid-pair. */
+/* Prefers "account management" on a single line so the phrase doesn't
+   break mid-pair, but falls back to wrapping at narrow widths / high
+   zoom rather than overflowing the parallax tiles around the heading. */
 .tagline-nowrap {
   white-space: nowrap;
   color: inherit;
   font: inherit;
   letter-spacing: inherit;
   text-transform: none;
+}
+@media (max-width: 900px), (max-height: 760px) {
+  .tagline-nowrap { white-space: normal; }
 }
 
 /* Parallax images scattered around the heading. Each tile is a rounded

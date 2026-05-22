@@ -314,3 +314,155 @@ html.lenis, html.lenis body { height: auto; }
   h3 { font-size: 1.3rem; }
   p, a, span { font-size: 1.02rem; line-height: 1.55; }
 }
+
+/* =====================================================================
+   ZOOM / RESIZE SAFETY LAYER
+   ---------------------------------------------------------------------
+   Defensive defaults that prevent text + cards from spilling into
+   adjacent sections at high browser zoom (125-200%) or unusually
+   narrow viewports. None of these change layout at 100% zoom on a
+   normal viewport — they kick in only when content would otherwise
+   collide. No visual identity is changed.
+   ===================================================================== */
+
+/* 1. Hero / subpage-hero grid columns default to min-width:0 so a long
+      unbreakable word in copy doesn't blow the column out into the
+      next column. CSS grid items default to `min-width: auto` which
+      = content width, so long words can override the 1fr track. */
+.hero-split,
+.hero-split-content,
+.work-hero-grid,
+.services-hero-grid,
+.about-hero-grid,
+.brands-page-hero-grid {
+  min-width: 0;
+}
+.hero-split-content > *,
+.work-hero-grid > *,
+.services-hero-grid > *,
+.about-hero-grid > *,
+.brands-page-hero-grid > * {
+  min-width: 0;
+}
+
+/* 2. Long words inside copy blocks break at character boundaries
+      instead of overflowing. Only the worst-offending unbreakable
+      strings (URLs, long compounds) wrap — normal text is unaffected. */
+.hero-split-content p,
+.services-hero-copy,
+.work-hero-copy,
+.about-hero-copy,
+.brands-page-copy,
+.about-body,
+.process-float figcaption p,
+.svc-card-copy,
+.wwd-card-copy,
+.testimonials-quote,
+.f-cta-copy,
+.cw-direct-v {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* 3. SVGs that aren't given an explicit size (HandwriteText, decorative
+      shapes) can't exceed their container. Standard `img` already has
+      width/height:100% above; this catches the SVG case. */
+svg:not(:root) {
+  max-width: 100%;
+}
+
+/* 4. Horizontal scrolling about panels hold absolutely-positioned
+      title + body. At very high zoom on a short window the panel
+      could shrink below what its content needs. Desktop-only rem
+      floor guarantees enough room for both anchors to coexist.
+      Mobile is excluded — short phones would overflow this min. */
+@media (min-width: 901px) {
+  .about-panel-intro,
+  .about-panel-process,
+  .about-panel-quote,
+  .about-panel-banner {
+    min-height: 640px;
+  }
+}
+
+/* 5. Browser zoom on iOS and some Android browsers can auto-resize
+      text past CSS values. text-size-adjust pins it to 100% so the
+      rest of this safety layer is the source of truth. */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* 6. Floor on body width — below 320px the design isn't supported
+      and we'd rather show a tiny horizontal scroll than overlap. */
+body {
+  min-width: 320px;
+}
+
+/* 7. Universal media safety. Existing `img { width:100%; height:100% }`
+      above is the cover-style default; this catches videos and canvases
+      that aren't given explicit sizing. Doesn't override `img` because
+      its rule is more specific (declared above with explicit values). */
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 8. Text-level min-width:0 so flex/grid descendants can shrink past
+      their content width when their parent does. Without this, a long
+      unbreakable word inside an h1 inside a flex item refuses to
+      shrink and overflows the row at high zoom. */
+p,
+h1, h2, h3, h4, h5, h6,
+span,
+a,
+button,
+li {
+  min-width: 0;
+}
+
+/* 9. All paragraphs and list items wrap unbreakable strings at
+      character boundaries instead of overflowing siblings. */
+p,
+li {
+  overflow-wrap: break-word;
+}
+
+/* 10. EXTRA-NARROW PORTRAIT PHONES (≤ 375px). The whole site already
+       has mobile rules at 900px and 480px breakpoints; this final
+       guard handles SE-class and small Androids where 12-13vw fonts
+       cap their min and become too tall, and where 1rem-baseline
+       paddings consume too much horizontal space. */
+@media (max-width: 375px) {
+  /* Headings cap mins one notch lower so 320–360px portrait doesn't
+     force titles into 3-line wraps that crowd the rest of the hero. */
+  h1 { font-size: clamp(2.2rem, 11vw, 3.8rem); }
+  h2 { font-size: clamp(1.7rem, 8vw, 2.8rem); }
+  /* Side padding on the global wrapper / page containers tightens so
+     content gets every available pixel of horizontal room. */
+  body { font-size: 0.98rem; }
+}
+
+/* 11. LANDSCAPE MOBILE (short + wide-ish). Phones held in landscape
+       collapse vh-based heights and pinned animations can fall apart.
+       Below 500px tall, allow pinned panels to flow into natural
+       height rather than crashing into each other. */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* Subpage heros already stack vertically below 1100px width via
+     their own media queries — landscape phones at 932×430 etc. hit
+     those. This rule adds a guarantee they don't try to be 100vh
+     tall when there's barely 430px of height to work with. */
+  .services-hero,
+  .work-hero,
+  .about-hero,
+  .brands-page-hero {
+    min-height: auto;
+    padding-block: clamp(2rem, 6vh, 4rem);
+  }
+  /* About-panel intro already swaps to flex flow at max-height 760;
+     landscape phones get that fallback automatically. Tagline
+     parallax tiles can clip into the heading on landscape — let
+     phrase wrap naturally if it doesn't fit. */
+  .tagline-nowrap { white-space: normal; }
+}

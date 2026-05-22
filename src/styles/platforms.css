@@ -261,8 +261,14 @@
 .pww-modal {
   position: relative;
   width: min(900px, 100%);
+  /* Was max-height: 85svh — on landscape phones (e.g., 568×320) this
+     became 272px tall, smaller than the partner badge + headline.
+     The modal would crush into an unreadable strip. Min-height floor
+     keeps the modal usable at any device orientation; the panel still
+     scrolls internally if content exceeds the viewport. */
   max-height: 85vh;
   max-height: 85svh;
+  min-height: min(380px, 100%);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;

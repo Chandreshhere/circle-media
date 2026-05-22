@@ -104,8 +104,16 @@
 .project-body {
   position: absolute;
   right: 7vw;
-  top: 22vh;
-  max-width: 36vw;
+  /* Was top: 22vh. At 150%+ zoom, vh shrinks but the rem-sized stat
+     numbers below grow taller, pushing the body down into the slide's
+     footer area. Clamp with a rem floor + rem cap keeps the body
+     anchored in roughly the same visual band at any zoom level. */
+  top: clamp(8rem, 22vh, 16rem);
+  /* Was max-width: 36vw. At high zoom 36vw shrinks below what the
+     stat numbers need, forcing them to wrap into the left-side
+     project title. Floor at 22rem (~352px) so the body always has
+     room for its content without crowding the heading. */
+  max-width: clamp(22rem, 36vw, 30rem);
   display: flex;
   flex-direction: column;
   gap: 2.5rem;

@@ -205,8 +205,12 @@ body.chrome-hidden .topnav {
 .topnav-cta {
   display: inline-flex;
   align-items: center;
-  gap: 1rem;
-  white-space: nowrap;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  /* nowrap removed — at high zoom the time + pulse + button row was
+     forcing the nav past its container. Children stay on one row at
+     normal sizes; on a too-narrow nav they wrap rather than overflow. */
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .tn-time {

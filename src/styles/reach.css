@@ -57,7 +57,9 @@
 
 .reach-accent {
   color: var(--accent);
-  white-space: nowrap;
+  /* nowrap forced "in X countries" onto a single line at every zoom
+     level, which overflowed the heading container at 175%+ zoom.
+     Allow natural wrap — the accent colour still cues the phrase. */
 }
 
 .reach-sub {
