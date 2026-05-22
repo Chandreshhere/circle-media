@@ -312,7 +312,7 @@
      one inside the content column so it doesn't render twice. */
   .hero-split-eyebrow-mobile {
     display: inline-flex;
-    margin: clamp(1.5rem, 4.5vh, 3.25rem) auto clamp(0.75rem, 2.5vh, 2rem);
+    margin: clamp(3rem, 7vh, 5rem) auto clamp(0.75rem, 2.5vh, 2rem);
     padding: 0 clamp(1rem, 4vw, 1.5rem);
     width: 100%;
     justify-content: flex-start;

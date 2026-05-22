@@ -279,11 +279,11 @@
   .process .process-puzzle .pp { filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3)); }
 
   /* Mini puzzle — mobile-only, anchored to the LEFT side and sitting
-     well below the main puzzle. Same animation, smaller footprint,
+     slightly below the main puzzle. Same animation, smaller footprint,
      so the section reads as a balanced two-puzzle motif. */
   .process .process-puzzle.process-puzzle-mini {
     display: block;
-    top: clamp(17rem, 44vw, 24rem);
+    top: clamp(13rem, 33vw, 19rem);
     right: auto;
     left: clamp(1.5rem, 5vw, 4rem);
     width: clamp(78px, 18vw, 110px);
@@ -324,7 +324,7 @@
   .process .process-puzzle.process-puzzle-mini {
     width: clamp(58px, 18vw, 90px);
     height: clamp(58px, 18vw, 90px);
-    top: clamp(20rem, 54vw, 26rem);
+    top: clamp(15rem, 40vw, 20rem);
     left: clamp(1rem, 4vw, 3rem);
     transform: scale(0.9);
     transform-origin: center top;
