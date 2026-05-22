@@ -569,6 +569,21 @@
   filter: saturate(1.05) contrast(1.1) brightness(1.05);
 }
 
+/* `mod: "white"` — for wordmark logos shipped as dark-on-white PNGs
+   (e.g. SRF). The combo below recolours the whole image to pure
+   white and drops the white plate behind it:
+     1. `grayscale + invert` flips dark text → light and white plate → black.
+     2. `brightness/contrast` push the inverted text to pure white.
+     3. `mix-blend-mode: screen` blends the now-black plate into the
+        dark orb background so it disappears, while the white text
+        stays bright. The result is a clean white wordmark floating
+        on the coloured orb — matching the visual weight of the
+        full-colour brand marks around it. */
+.brand-orb--white .brand-orb-inner img {
+  filter: grayscale(1) invert(1) brightness(1.7) contrast(1.5);
+  mix-blend-mode: screen;
+}
+
 /* `mod: "boost"` — shrinks the orb's inner padding for logos whose
    supplied artwork is naturally smaller / has tight internal padding
    (e.g. Agrawal Namkeen). The brand mark fills more of the orb, while

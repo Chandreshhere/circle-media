@@ -303,30 +303,41 @@
 }
 
 @media (max-width: 1000px) {
+  /* Mobile hero: clean vertical stack — eyebrow, logo, content —
+     with NO negative margins, NO viewport-height locks, and explicit
+     left-alignment everywhere. Devices like iPhone 13, Pixel and
+     Galaxy were rendering the old layout with the title + sub
+     clumped into the bottom-centre because negative margins pulled
+     the content column up into the particle canvas. The new layout
+     just stacks each block with normal flow and a consistent gap,
+     so it can't overlap on any viewport. */
   .hero-split {
     grid-template-columns: 1fr;
-    min-height: 100svh;
-    padding-top: clamp(1.5rem, 4vh, 3rem);
+    min-height: 0;
+    padding-top: 0;
+    padding-bottom: clamp(2rem, 5vh, 3.5rem);
+    align-items: start;
   }
-  /* Mobile: show the eyebrow above the logo and hide the desktop
-     one inside the content column so it doesn't render twice. */
   .hero-split-eyebrow-mobile {
     display: inline-flex;
-    margin: clamp(3rem, 7vh, 5rem) auto clamp(0.75rem, 2.5vh, 2rem);
+    margin: clamp(2rem, 5.5vh, 3.5rem) 0 0;
     padding: 0 clamp(1rem, 4vw, 1.5rem);
     width: 100%;
     justify-content: flex-start;
+    text-align: left;
   }
   .hero-split-content > .hero-split-eyebrow {
     display: none;
   }
   .hero-split-particles {
-    /* Logo sits close to the eyebrow above it. Height bumped so the
-       logo art reads larger on a phone (the canvas + fallback both
-       scale to its size). */
-    height: 58vh;
-    height: 58svh;
-    margin-top: clamp(-1.25rem, -2.5vh, -0.5rem);
+    /* Fixed height that always leaves room for the content below.
+       No negative margins — the canvas is contained inside its own
+       row so it can never crash into the title block. */
+    height: 44vh;
+    height: 44svh;
+    min-height: 280px;
+    max-height: 460px;
+    margin-top: clamp(0.5rem, 2vh, 1.25rem);
   }
   .hero-split-particles::after {
     background: linear-gradient(
@@ -337,18 +348,23 @@
     );
   }
   .hero-split-content {
-    padding: 0 clamp(1rem, 4vw, 1.5rem) clamp(2.5rem, 6vh, 4.5rem);
-    margin-top: clamp(-3.5rem, -4vh, -2rem);
+    padding: clamp(1.25rem, 3.5vh, 2.5rem) clamp(1rem, 4vw, 1.5rem) 0;
+    margin-top: 0;
     max-width: none;
-    gap: clamp(0.9rem, 2vh, 1.4rem);
+    gap: clamp(0.8rem, 2vh, 1.4rem);
+    text-align: left;
+    align-items: flex-start;
+    /* Override the desktop `justify-content: center` so content
+       starts at the top of its row instead of being vertically
+       centred — that was clumping the title + sub + scroll into
+       the middle of the row on phones with shorter content. */
+    justify-content: flex-start;
   }
   .hero-split-title {
     font-size: clamp(3rem, 9vw, 5rem);
-    /* Force every line in the headline flush-left on mobile — the
-       inherited `text-wrap: balance` on .hero-split-title was making
-       the three lines feel visually centred. */
     text-align: left;
     text-wrap: pretty;
+    width: 100%;
   }
   /* Mobile: emphasise "Circle Media," over the supporting line and
      the rotating accent. The brand goes bigger; the prelude tagline
@@ -379,6 +395,12 @@
   .hero-split-sub {
     font-size: clamp(0.95rem, 0.6vw + 0.85rem, 1.15rem);
     max-width: 100%;
+    text-align: left;
+    align-self: stretch;
+  }
+  .hero-split-scroll {
+    text-align: left;
+    align-self: stretch;
   }
   .hero-split-meta {
     gap: clamp(0.9rem, 2vh, 1.25rem) clamp(1.25rem, 4vw, 2rem);
@@ -389,26 +411,37 @@
 }
 
 @media (max-width: 600px) {
-  .hero-split { padding-top: clamp(1rem, 3vh, 1.75rem); }
-  .hero-split-particles { height: 55vh; height: 55svh; }
-  .hero-split-content {
-    padding: 0 clamp(0.9rem, 4vw, 1.25rem) clamp(2rem, 5vh, 3.5rem);
-    margin-top: clamp(-3rem, -3.5vh, -1.75rem);
-    gap: clamp(0.75rem, 1.6vh, 1.1rem);
+  .hero-split { padding-bottom: clamp(1.75rem, 4.5vh, 3rem); }
+  .hero-split-particles {
+    height: 40vh;
+    height: 40svh;
+    min-height: 250px;
+    max-height: 380px;
   }
-  .hero-split-title { font-size: clamp(2.6rem, 11.5vw, 4rem); line-height: 1.05; }
-  .hero-split-sub { font-size: clamp(0.95rem, 0.7vw + 0.85rem, 1.15rem); line-height: 1.5; }
+  .hero-split-content {
+    padding: clamp(1rem, 3vh, 2rem) clamp(0.9rem, 4vw, 1.25rem) 0;
+    gap: clamp(0.75rem, 1.6vh, 1.1rem);
+    text-align: left;
+    align-items: flex-start;
+  }
+  .hero-split-title { font-size: clamp(2.6rem, 11.5vw, 4rem); line-height: 1.05; text-align: left; }
+  .hero-split-sub { font-size: clamp(0.95rem, 0.7vw + 0.85rem, 1.15rem); line-height: 1.5; text-align: left; }
   .hero-split-eyebrow {
     font-size: clamp(0.7rem, 0.4vw + 0.6rem, 0.82rem);
     gap: 0.6em;
     letter-spacing: 0.15em;
   }
   .hero-split-eyebrow-line { width: 3em; }
-  .hero-split-scroll { font-size: clamp(0.7rem, 0.4vw + 0.6rem, 0.82rem); letter-spacing: 0.19em; }
+  .hero-split-scroll { font-size: clamp(0.7rem, 0.4vw + 0.6rem, 0.82rem); letter-spacing: 0.19em; text-align: left; }
 }
 
 @media (max-width: 380px) {
-  .hero-split-particles { height: 50vh; height: 50svh; }
+  .hero-split-particles {
+    height: 36vh;
+    height: 36svh;
+    min-height: 230px;
+    max-height: 340px;
+  }
   .hero-split-title { font-size: clamp(2.2rem, 12vw, 3.4rem); }
   .hero-split-prelude-line:first-child {
     font-size: clamp(3.3rem, 17vw, 4.6rem);
@@ -420,7 +453,7 @@
     font-size: clamp(1.9rem, 8.4vw, 2.7rem);
   }
   .hero-split-content {
-    padding: 0 clamp(0.75rem, 3.5vw, 1rem) clamp(1.75rem, 4.5vh, 3rem);
+    padding: clamp(0.85rem, 2.5vh, 1.5rem) clamp(0.75rem, 3.5vw, 1rem) 0;
     gap: clamp(0.65rem, 1.4vh, 0.95rem);
   }
 }
