@@ -558,10 +558,11 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  /* Tight inner padding so the logo fills the smaller orb — the
-     white-plate halos behind the brand artwork are knocked out by
-     mix-blend-mode on the img, so this can sit close to the edge. */
-  padding: 4%;
+  /* Inner padding controls how much of the orb the brand mark
+     fills. Bumped from 4% → 14% to make the logos themselves read
+     a touch smaller inside each orb (more breathing room around
+     the mark, orb circle size unchanged). */
+  padding: 14%;
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--orb-color) 35%, transparent),
     0 8px 22px rgba(0, 0, 0, 0.55);
