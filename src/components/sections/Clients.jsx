@@ -15,33 +15,34 @@ import { useEffect, useRef, useState } from "react";
 // the /brands page). User-specified order at the top (most well-known
 // brands first), then the rest mixed so no single category clusters.
 const FULL_BRANDS = [
-  // Adam's Ale moved up to lead line 1; DNS Hospitals slides one slot
-  // down behind it. Park Avenue uses the supplied transparent PNG so
-  // the wordmark sits flush with the other transparent-PNG logos.
-  // Agrawal Namkeen added to the FMCG block.
-  { name: "Adam's Ale",                   logo: "/logos/hospitality/1.png" },
+  // Brands updated to use the new client-supplied logos in
+  // /public/logos/new-clients/ wherever a matching asset exists.
+  // Brands without a new logo keep their original path; three
+  // additional brands (Vaayu, Cosmafood UAE, Shree Balaji Bhumi
+  // Solution) supplied in the new asset set are appended.
+  { name: "Adam's Ale",                   logo: "/logos/new-clients/adams-ale.png" },
   { name: "DNS Hospitals",                logo: "/logos/healthcare/2.png" },
   { name: "Park Avenue",                  logo: "/logos/park-avenue.png" },
-  { name: "Agrawal Namkeen",              logo: "/logos/agrawal-namkeen.png", mod: "boost" },
-  { name: "Madmix",                       logo: "/logos/fmcg/1.png" },
-  { name: "Urban Theka",                  logo: "/logos/hospitality/2.png" },
+  { name: "Agrawal Namkeen",              logo: "/logos/new-clients/aggarwal-namkeen.png" },
+  { name: "Madmix",                       logo: "/logos/new-clients/madmix.png" },
+  { name: "Urban Theka",                  logo: "/logos/new-clients/urban-theka.png" },
   // Line 2 starts here:
-  { name: "Pro Brew Republic",            logo: "/logos/hospitality/3.png" },
-  { name: "Round Table India",            logo: "/logos/management/1.png" },
-  { name: "Indore Management Association",logo: "/logos/management/2.png" },
-  { name: "Zawaa",                        logo: "/logos/fmcg/3.png" },
-  { name: "CamPure",                      logo: "/logos/home-kitchen/1.png" },
-  { name: "FICCI Flo",                    logo: "/logos/management/5.png" },
-  { name: "Swastik Habitates",            logo: "/logos/real-estate/2.png" },
+  { name: "Pro Brew Republic",            logo: "/logos/new-clients/pro-brew-republic.png" },
+  { name: "Round Table India",            logo: "/logos/new-clients/round-table-india.png" },
+  { name: "Indore Management Association",logo: "/logos/new-clients/indore-management-association.png" },
+  { name: "Zawaa",                        logo: "/logos/new-clients/zawaa.png" },
+  { name: "CamPure",                      logo: "/logos/new-clients/campure.png" },
+  { name: "FICCI Flo",                    logo: "/logos/new-clients/ficci-flo.png" },
+  { name: "Swastik Habitates",            logo: "/logos/new-clients/swastik-habitates.png" },
   // Mixed-order tail (no category clustering)
   { name: "The Indian Krunch",            logo: "/logos/fmcg/4.png" },
   { name: "Investitute",                  logo: "/logos/education/2.png" },
   { name: "Coloron Yarns",                logo: "/logos/fashion/1.png" },
-  { name: "Conscious Food",               logo: "/logos/fmcg/2.png" },
+  { name: "Conscious Food",               logo: "/logos/new-clients/conscious-food.png" },
   { name: "NM Group",                     logo: "/logos/real-estate/1.png" },
   { name: "Currygram",                    logo: "/logos/fmcg/5.png" },
-  { name: "Whites of London",             logo: "/logos/home-kitchen/2.png" },
-  { name: "Park Avenue Beer Shampoo",     logo: "/logos/personal-care/2.png" },
+  { name: "Whites of London",             logo: "/logos/new-clients/whites-of-london.png" },
+  { name: "Park Avenue Beer Shampoo",     logo: "/logos/new-clients/park-avenue-beer-shampoo.png" },
   { name: "Tushar Enterprises",           logo: "/logos/management/3.png" },
   { name: "Bamboosa",                     logo: "/logos/fmcg/6.png" },
   { name: "Eduvest Connect",              logo: "/logos/education/1.png" },
@@ -57,6 +58,11 @@ const FULL_BRANDS = [
   { name: "Shreeji Cotfab",               logo: "/logos/fashion/3.png" },
   { name: "Regain",                       logo: "/logos/healthcare/3.png" },
   { name: "Brew Saga",                    logo: "/logos/fmcg/9.png" },
+  // New brands shipped with the latest client-logo set — not in
+  // any prior list, added at the end of the roster.
+  { name: "Vaayu",                        logo: "/logos/new-clients/vaayu.png" },
+  { name: "Cosmafood UAE",                logo: "/logos/new-clients/cosmafood-uae.png" },
+  { name: "Shree Balaji Bhumi Solution",  logo: "/logos/new-clients/shree-balaji-bhumi.png" },
 ];
 
 // Honeycomb row pattern: strictly alternating, centred by flexbox.
