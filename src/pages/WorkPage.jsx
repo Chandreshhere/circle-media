@@ -984,30 +984,7 @@ export default function WorkPage() {
           </p>
         </section>
 
-        {/* ---------------- 12. WEBSITE DEVELOPMENT ---------------- */}
-        <section className="w-sec w-sec-web">
-          <p className="w-sec-eye anim-rise">[12] Website Development</p>
-          <h2 className="w-sec-title anim-rise">Website Development.</h2>
-          <p className="w-sec-copy anim-rise">
-            Fast, accessible, considered websites, built to convert today and
-            crafted to scale as the business grows.
-          </p>
-
-          <div className="w-web-stage">
-            <div className="w-web-laptop">
-              <div className="w-web-screen">
-                <p className="w-web-brand">tushar enterprises</p>
-                <p className="w-web-headline">Crafting unforgettable experiences</p>
-              </div>
-            </div>
-            <div className="w-web-phone">
-              <div className="w-web-phone-screen">
-                <p className="w-web-brand">NM Group</p>
-                <p className="w-web-headline">Turning normal spaces into stunning masterpieces</p>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Website Development section removed per request. */}
 
       </div>
       <Footer />
