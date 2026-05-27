@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import BlurInText from "../components/fx/BlurInText.jsx";
 import HandwriteText from "../components/fx/HandwriteText.jsx";
+import CarouselMarquee from "../components/fx/CarouselMarquee.jsx";
 import Footer from "../components/sections/Footer.jsx";
 import "../styles/work-sections.css";
 
@@ -379,9 +380,11 @@ export default function WorkPage() {
             Multi-frame creatives that earn the swipe: story arcs designed for
             the scroll, not the press kit.
           </p>
-          <div className="w-carousel-stage">
-            {/* Realistic phone silhouette behind the carousel, with a
-                stylised Instagram feed mocked inside the screen. */}
+          <CarouselMarquee />
+
+          {/* Phone mockup kept below for reference but hidden —
+              the marquee replaces the old phone + card layout. */}
+          <div className="w-carousel-stage" style={{ display: "none" }}>
             <div className="w-rp" aria-hidden="true">
               <div className="w-rp-frame">
                 <span className="w-rp-btn w-rp-btn-mute" />

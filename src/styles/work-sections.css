@@ -1663,3 +1663,161 @@
 }
 .w-cta-arrow { transition: transform 0.3s ease; }
 .w-cta-link:hover .w-cta-arrow { transform: translate(3px, -3px); }
+
+/* ============================================================
+   CAROUSEL MARQUEE — auto-scrolling strip of carousel covers.
+   Clicks open a fullscreen draggable carousel of that project's
+   slides. The strip loops seamlessly via CSS animation on a
+   doubled track (items rendered twice).
+   ============================================================ */
+
+.cm-marquee {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: clamp(1.5rem, 3vh, 2.5rem) 0;
+  mask:
+    linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask:
+    linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.cm-track {
+  display: flex;
+  gap: clamp(1rem, 2vw, 2rem);
+  width: max-content;
+  animation: cm-scroll 35s linear infinite;
+}
+
+.cm-marquee:hover .cm-track {
+  animation-play-state: paused;
+}
+
+@keyframes cm-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.cm-card {
+  flex: 0 0 auto;
+  position: relative;
+  width: clamp(260px, 22vw, 380px);
+  aspect-ratio: 4 / 5;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #111;
+  cursor: pointer;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.35s ease,
+              box-shadow 0.35s ease;
+}
+
+.cm-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.55);
+}
+
+.cm-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.cm-card-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem 1rem 0.85rem;
+  background: linear-gradient(0deg, rgba(0,0,0,0.75) 0%, transparent 100%);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  pointer-events: none;
+}
+
+/* --- Fullscreen overlay for selected carousel --- */
+
+.cm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: cm-fade 0.35s ease forwards;
+  cursor: zoom-out;
+}
+
+@keyframes cm-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.cm-overlay-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: min(960px, 96vw);
+  max-height: 94vh;
+  cursor: default;
+  animation: cm-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes cm-rise {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.cm-close {
+  position: absolute;
+  top: -0.5rem;
+  right: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background 0.25s ease, transform 0.3s ease;
+}
+.cm-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: rotate(90deg);
+}
+
+.cm-overlay-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .cm-card { width: clamp(200px, 55vw, 300px); border-radius: 14px; }
+  .cm-card-label { font-size: 0.72rem; padding: 1.2rem 0.75rem 0.7rem; }
+  .cm-track { gap: 0.85rem; }
+  .cm-overlay-inner { width: 98vw; }
+  .cm-close { width: 40px; height: 40px; font-size: 1.2rem; top: -0.25rem; }
+}
